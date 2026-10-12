@@ -4,6 +4,7 @@ import { createRequire } from 'node:module';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import { loadBlocks, isWritten } from '../../lib/blocks';
+import { drawable } from '../../lib/card';
 import { LAYERS, type Layer } from '../../lib/vocab';
 
 // latin and latin-ext must be registered under different names, or IAST letters render as boxes.
@@ -18,15 +19,6 @@ const fonts = [
 const C = { leaf: '#e4dcc4', ink: '#2a2620', muted: '#5f5747', rubric: '#8e3b2c', line: '#c9bd9c', rule: '#9c8f6e' };
 
 type Props = { title: string; gloss: string; layer?: Layer };
-
-// The card fonts cover Latin only. Fail the build rather than draw a box (or a stray mark) on a shared card.
-const UNDRAWABLE = /\p{M}|[^\p{Script=Latin}\p{Script=Common}\p{Script=Inherited}]/u;
-function drawable(slug: string, text: string): string {
-  const t = text.normalize('NFC');
-  const bad = t.match(UNDRAWABLE);
-  if (bad) throw new Error(`og card for "${slug}": "${bad[0]}" can't be drawn by the card fonts; use precomposed IAST`);
-  return t;
-}
 
 export const getStaticPaths = (async () => {
   const { all, tree } = await loadBlocks();

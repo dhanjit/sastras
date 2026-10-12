@@ -97,3 +97,28 @@ it('strips trailing punctuation before the ellipsis when the cut is mid-sentence
 it('never leaves half of a surrogate pair before the ellipsis', () => {
   expect(describePage('𝒜𝒜𝒜𝒜𝒜𝒜', '', 6)).toBe('𝒜𝒜…');
 });
+
+// An abbreviation's full stop belongs to the word, not to the sentence. A cut right after one is mid-sentence:
+// the stop stays and the ellipsis follows it directly ("c.…"), so the result never ends in a bare "c.".
+it('treats a cut after "c." as mid-sentence: keeps the stop, adds the ellipsis', () => {
+  const out = describePage('x', 'Śaṅkara lived c. 788 CE and wrote much', 20); // "X. Śaṅkara lived c." is 19 chars
+  expect(out).toBe('X. Śaṅkara lived c.…');
+  expect(out.length).toBeLessThanOrEqual(20);
+  expect(out).not.toMatch(/c\.$/);
+});
+
+it.each(['c.', 'C.', 'ca.', 'cf.', 'fl.', 'd.', 'b.', 'r.', 'vol.', 'ed.', 'e.g.'])('treats a cut after "%s" as mid-sentence', (abbr) => {
+  const out = describePage('x', `He wrote it ${abbr} 788 and more`, `X. He wrote it ${abbr}`.length + 1);
+  expect(out).toBe(`X. He wrote it ${abbr}…`);
+});
+
+it('treats a cut after an abbreviation inside brackets as mid-sentence', () => {
+  expect(describePage('x', 'Lived (fl. 5th c.) in the north', 'X. Lived (fl. 5th c.)'.length + 1)).toBe('X. Lived (fl. 5th c.)…');
+  expect(describePage('x', 'Lived (c. 788) in the north', 'X. Lived (c.'.length + 1)).toBe('X. Lived (c.…');
+});
+
+it('still ends a cut on a real word-final stop as a sentence', () => {
+  expect(describePage('x', 'He wrote the book. Then more', 'X. He wrote the book.'.length + 1)).toBe('X. He wrote the book.'); // "book." is not an abbreviation
+  expect(describePage('x', 'He wrote it in 788. Then more', 'X. He wrote it in 788.'.length + 1)).toBe('X. He wrote it in 788.');
+  expect(describePage('x', 'See verse 2 of ch. Then more', 'X. See verse 2 of ch.'.length + 1)).toBe('X. See verse 2 of ch.'); // two letters, not on the list
+});

@@ -1,5 +1,4 @@
 ---
-import { createHash } from 'node:crypto';
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
@@ -10,6 +9,7 @@ import StatusPill from '../components/StatusPill.astro';
 import { loadBlocks, isWritten, type BlockEntry } from '../lib/blocks';
 import { correctionUrl } from '../lib/links';
 import { describe } from '../lib/describe';
+import { cardVersion } from '../lib/card';
 
 export async function getStaticPaths() {
   const { all } = await loadBlocks();
@@ -22,9 +22,9 @@ const children = tree.children(b.id);
 const related = b.data.related.map((r) => tree.get(r)).filter((x): x is BlockEntry => Boolean(x));
 const layer = tree.layerOf(b.id);
 // What the card shows, as a version: a crawler that cached the old image fetches the new one after an edit.
-const cardVersion = createHash('sha1').update(`${b.data.title}|${b.data.gloss}|${layer ?? ''}`).digest('hex').slice(0, 8);
+const version = cardVersion({ title: b.data.title, gloss: b.data.gloss, layer });
 ---
-<Base title={b.data.title} description={describe(b.data.gloss, b.body ?? '')} type="article" path={`/${b.id}`} og={`/og/${b.id}.png?v=${cardVersion}`} ogAlt={`${b.data.title} — ${b.data.gloss}`}>
+<Base title={b.data.title} description={describe(b.data.gloss, b.body ?? '')} type="article" path={`/${b.id}`} og={`/og/${b.id}.png?v=${version}`} ogAlt={`${b.data.title} — ${b.data.gloss}`}>
   <Breadcrumb trail={tree.ancestors(b.id)} current={b.data.title} />
   {layer && <LayerStrip current={layer} />}
   <header class="block-head">
