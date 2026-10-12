@@ -1,0 +1,107 @@
+---
+import '@fontsource/gentium-book-plus/400.css';
+import '@fontsource/gentium-book-plus/400-italic.css';
+import '@fontsource/gentium-book-plus/700.css';
+import '@fontsource/tiro-devanagari-sanskrit/400.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/manuscript.css';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  og: string;
+  wide?: boolean;
+}
+const { title, description, path, og, wide = false } = Astro.props;
+const url = new URL(path, Astro.site).href;
+const image = new URL(og, Astro.site).href;
+const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and the classical sciences' : `${title} · Śāstras`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={url} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Śāstras" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#e4dcc4" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1c1914" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class:list={['site-head', { wide }]}>
+      <a class="site-name" href="/">Śāstras</a>
+      <span class="hole" aria-hidden="true"></span>
+    </header>
+    <main id="main" class:list={['page', { wide }]}><slot /></main>
+    <footer class="site-foot">
+      <span class="danda" aria-hidden="true">॥</span>
+      <p>Drafted from public sources; every page lists its own. <a href="/about">About this map</a> · <a href="/glossary">Glossary</a> · <a href="https://github.com/dhanjit/sastras">Source on GitHub</a></p>
+    </footer>
+    <script>
+      const pop = document.createElement('div');
+      pop.id = 'gloss-pop';
+      pop.setAttribute('role', 'tooltip');
+      pop.hidden = true;
+      document.body.append(pop);
+      let current: HTMLElement | null = null;
+      const hover = matchMedia('(hover: hover)');
+
+      function show(term: HTMLElement) {
+        current?.removeAttribute('aria-describedby');
+        current = term;
+        const b = document.createElement('b');
+        b.textContent = term.textContent;
+        pop.replaceChildren(b, ' · ', term.dataset.gloss ?? '');
+        pop.hidden = false;
+        const r = term.getBoundingClientRect();
+        const maxX = scrollX + document.documentElement.clientWidth - pop.offsetWidth - 8;
+        pop.style.left = `${Math.max(scrollX + 8, Math.min(r.left + scrollX, maxX))}px`;
+        pop.style.top = `${r.bottom + scrollY + 6}px`;
+        term.setAttribute('aria-describedby', 'gloss-pop');
+      }
+      function hide() {
+        pop.hidden = true;
+        current?.removeAttribute('aria-describedby');
+        current = null;
+      }
+      const termOf = (t: EventTarget | null) => (t instanceof Element ? t.closest<HTMLElement>('a.term') : null);
+
+      document.addEventListener('click', (e) => {
+        const t = termOf(e.target);
+        if (t) {
+          e.preventDefault();
+          show(t); // tap or click always shows; tapping elsewhere or Escape hides
+        } else if (!pop.contains(e.target as Node)) hide();
+      });
+      document.addEventListener('mouseover', (e) => {
+        const t = termOf(e.target);
+        if (t && hover.matches) show(t);
+      });
+      document.addEventListener('mouseout', (e) => {
+        if (termOf(e.target) && hover.matches) hide();
+      });
+      document.addEventListener('focusin', (e) => {
+        const t = termOf(e.target);
+        if (t?.matches(':focus-visible')) show(t); // keyboard focus only; taps are handled by click
+        else if (!t) hide();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') hide();
+      });
+    </script>
+  </body>
+</html>
