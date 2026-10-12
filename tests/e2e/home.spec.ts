@@ -36,4 +36,5 @@ test('an unknown address shows the 404 page', async ({ page }) => {
   const res = await page.goto('/no-such-page');
   expect(res?.status()).toBe(404);
   await expect(page.getByRole('link', { name: 'Back to the map' })).toBeVisible();
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
 });
