@@ -108,7 +108,7 @@ playwright-report/
     "build": "astro build",
     "preview": "astro preview --port 4321",
     "check": "astro check",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "e2e": "playwright test"
   }
 }
@@ -454,6 +454,8 @@ From then on every merge to `main` deploys. Nothing to commit.
 ---
 
 ### Task 5: The content tree and build-time checks
+
+> **As built (review fix, commit 6494864):** links and citations are read from the parsed Markdown by `src/lib/refs.ts` (unified + remark-parse + remark-directive), not by the `CITE`/`LINK` regexes shown below. Every link form (fragments, queries, titles, reference definitions, relative links) is checked, and `:cite` without an id is an error. Ordering ties break by code point; `children()` returns a copy. The unit suite has 20 tests after this task.
 
 **Files:**
 - Create: `src/lib/tree.ts`, `src/lib/blocks.ts`, `tests/unit/tree.test.ts`
@@ -1265,7 +1267,7 @@ const layer = tree.layerOf(b.id);
 - [ ] **Step 4: Run the tests and watch them pass**
 
 Run: `npm test && npm run check && npm run e2e`
-Expected: all pass (13 unit tests; e2e 3 tests × 2 projects).
+Expected: all pass (21 unit tests; e2e 3 tests × 2 projects).
 
 - [ ] **Step 5: Create the `correction` label and commit**
 
@@ -1385,7 +1387,7 @@ export function remarkCite() {
 - [ ] **Step 4: Run the unit tests and watch them pass**
 
 Run: `npm test`
-Expected: PASS, 16 tests.
+Expected: PASS, 24 tests.
 
 - [ ] **Step 5: Wire the plugins into Astro and use them in content**
 
@@ -1596,7 +1598,7 @@ export function rehypeGloss({ glossary }: { glossary: Glossary }) {
 - [ ] **Step 4: Run the unit tests and watch them pass**
 
 Run: `npm test`
-Expected: PASS, 21 tests.
+Expected: PASS, 29 tests.
 
 - [ ] **Step 5: Seed the glossary from the annotated map**
 
@@ -2135,7 +2137,7 @@ These four tasks turn 13 stubs into written pages. They are writing, not code, s
    - Name schools' views in their own terms ("For Advaita, …"). Never write a school's claim as plain fact.
    - Put `:cite[id]` after every sentence or clause that states a fact. Each one must point to a source you read that says it.
    - Add at least one `:note[...]` where a term needs a deeper explanation than a gloss gives.
-   - Link other blocks with `[text](/slug)`, and only to blocks that are written (the build rejects links to stubs).
+   - Link other blocks with `[text](/slug)`, always starting with `/`, and only to blocks that are written. The build rejects relative links, links to stubs and links to missing pages, in any link form.
    - Say when dates, authorship or interpretation are contested, and cite both views.
    - Write in your own words. Quote at most a short phrase, in quotation marks, with its source.
    - No "ancient India discovered X" claims and no dismissive framing.
