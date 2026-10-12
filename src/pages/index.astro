@@ -1,7 +1,30 @@
 ---
 import Base from '../layouts/Base.astro';
+import BlockList from '../components/BlockList.astro';
+import { loadBlocks } from '../lib/blocks';
+import { LAYERS, LAYER_LABEL, SIDES, SIDE_LABEL } from '../lib/vocab';
+
+const { tree } = await loadBlocks();
+const schools = tree.topLevel('schools');
 ---
-<Base title="Śāstras" description="A map of Indian philosophy and the classical sciences." path="/" og="/og/home.png" wide>
-  <h1 class="title">Śāstras</h1>
-  <p class="gloss">a map of Indian philosophy and the classical sciences</p>
+<Base title="Śāstras" description="An explorable map of Indian philosophy and the classical sciences: Sanskrit first, every claim sourced." path="/" og="/og/home.png" wide>
+  <header class="intro">
+    <h1 class="title">Śāstras</h1>
+    <p class="gloss">a map of Indian philosophy and the classical sciences</p>
+    <p class="lede">Read it top to bottom, in the order a student learns: the language, then grammar and the ways of knowing, then one of the schools, then its texts, and finally the debates. Every name opens its own page.</p>
+  </header>
+  {LAYERS.map((layer, i) => (
+    <section class="layer" id={layer} aria-labelledby={`h-${layer}`}>
+      <h2 class="layer-title" id={`h-${layer}`}><span class="layer-n">{i + 1}</span>{LAYER_LABEL[layer].title}</h2>
+      <p class="layer-gloss">{LAYER_LABEL[layer].gloss}</p>
+      {layer === 'schools'
+        ? SIDES.map((side) => (
+            <>
+              <p class="side-label"><b>{SIDE_LABEL[side].title}</b> · {SIDE_LABEL[side].gloss}</p>
+              <BlockList blocks={schools.filter((s) => (s.data.vedic_authority ?? 'n/a') === side)} variant="map" />
+            </>
+          ))
+        : <BlockList blocks={tree.topLevel(layer)} variant="map" />}
+    </section>
+  ))}
 </Base>

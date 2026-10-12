@@ -57,3 +57,10 @@ test('a Sanskrit term shows its meaning when tapped or clicked', async ({ page }
   else await page.locator('#gloss-pop').click();
   await expect(page.locator('#gloss-pop')).toBeVisible();
 });
+
+test('a stub child shows as "in preparation" and is not a link', async ({ page }) => {
+  await page.goto('/vedanta');
+  const deeper = page.locator('section', { has: page.getByRole('heading', { name: 'Go deeper' }) });
+  await expect(deeper.locator('.row.prep', { hasText: /^Dvaita/ })).toContainText('in preparation');
+  await expect(deeper.getByRole('link', { name: /^Dvaita/ })).toHaveCount(0);
+});
