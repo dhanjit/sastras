@@ -11,6 +11,8 @@ test('written blocks are links, unwritten ones say "in preparation"', async ({ p
   await expect(schools.getByRole('link', { name: /Vedānta/ })).toHaveAttribute('href', '/vedanta');
   const carvaka = schools.locator('.row', { hasText: 'Cārvāka' });
   await expect(carvaka).toContainText('in preparation');
+  await expect(carvaka.locator('.row-tag')).toHaveCount(0);
+  await expect(page.locator('.intro .legend')).toContainText('bold');
   await expect(schools.getByRole('link', { name: /Cārvāka/ })).toHaveCount(0);
 });
 
