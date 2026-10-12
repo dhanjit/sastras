@@ -93,6 +93,8 @@ test-results/
 playwright-report/
 .wrangler/
 .DS_Store
+.env*
+.dev.vars*
 ```
 
 `package.json`:
@@ -140,7 +142,7 @@ export default defineConfig({
   "account_id": "939a7fa8a072b9ac7f9c41885fe71380",
   "workers_dev": false,
   "routes": [{ "pattern": "sastras.dhanjit.me", "custom_domain": true }],
-  "assets": { "directory": "./dist", "not_found_handling": "404-page" }
+  "assets": { "directory": "./dist", "not_found_handling": "404-page", "html_handling": "drop-trailing-slash" }
 }
 ```
 
@@ -159,7 +161,7 @@ export default defineConfig({
 
 ```bash
 npm i -E astro@7.3.5 @astrojs/markdown-remark@7.3.2 remark-directive@4.0.0 unist-util-visit@5.1.0 yaml@2.9.1 satori@0.47.1 @resvg/resvg-js@2.6.2 @fontsource/gentium-book-plus@5.3.0 @fontsource/tiro-devanagari-sanskrit@5.3.0
-npm i -DE @astrojs/check@0.9.10 typescript@6.0.3 vitest@5.0.3 @playwright/test@1.64.0 @axe-core/playwright@4.13.0 wrangler@4.149.0 unified remark-parse remark-rehype rehype-stringify @types/mdast @types/hast @types/node
+npm i -DE @astrojs/check@0.9.10 typescript@6.0.3 vitest@5.0.3 @playwright/test@1.64.0 @axe-core/playwright@4.13.0 wrangler@4.149.0 unified remark-parse remark-rehype rehype-stringify @types/mdast @types/hast @types/node@24
 ```
 
 - [ ] **Step 4: Build and confirm the output**
@@ -2294,7 +2296,7 @@ Expected: all pass locally. `gh pr checks` shows `ci` passing on the PR.
 
 - [ ] **Step 2: Ask Dhanjit before merging**
 
-Merging deploys to the public site. Show him the PR link and the preview build, and wait for a clear yes. Then:
+Merging deploys to the public site. Show him the PR link and have him look at the full site locally (`npm run build && npm run preview`, then open http://localhost:4321); branch previews stay off so unpublished drafts aren't public. Wait for a clear yes. Then:
 ```bash
 gh pr ready && gh pr merge --squash --delete-branch
 ```
