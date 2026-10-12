@@ -2,7 +2,8 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: 'tests/e2e',
-  use: { baseURL: 'http://localhost:4399' },
+  reporter: process.env.CI ? [['dot'], ['html', { open: 'never' }]] : 'list',
+  use: { baseURL: 'http://localhost:4399', trace: 'retain-on-failure' },
   webServer: {
     command: 'npm run build && npx astro preview --port 4399',
     url: 'http://localhost:4399',

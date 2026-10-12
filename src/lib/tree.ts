@@ -1,4 +1,5 @@
 import type { Layer, Status } from './vocab';
+import { extractRefs } from './refs';
 
 export const ROOT = 'map';
 export const PAGES = ['about', 'glossary'] as const;
@@ -27,7 +28,7 @@ export interface Tree<T extends Block> {
   topLevel(layer: Layer): T[];
 }
 
-const byOrder = (a: Block, b: Block) => a.data.order - b.data.order || a.id.localeCompare(b.id);
+const byOrder = (a: Block, b: Block) => a.data.order - b.data.order || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 
 export function buildTree<T extends Block>(blocks: T[]): Tree<T> {
   const byId = new Map(blocks.map((b) => [b.id, b]));
@@ -51,15 +52,12 @@ export function buildTree<T extends Block>(blocks: T[]): Tree<T> {
 
   return {
     get: (id) => byId.get(id),
-    children: (id) => kids.get(id) ?? [],
+    children: (id) => [...(kids.get(id) ?? [])],
     ancestors,
     layerOf: (id) => (ancestors(id)[0] ?? byId.get(id))?.data.layer,
     topLevel: (layer) => (kids.get(ROOT) ?? []).filter((b) => b.data.layer === layer),
   };
 }
-
-const CITE = /:cite\[([^\]]*)\]/g;
-const LINK = /\]\(\/([a-z0-9-]+)\)/g;
 
 export function validate(blocks: Block[]): string[] {
   const errors: string[] = [];
@@ -86,12 +84,20 @@ export function validate(blocks: Block[]): string[] {
     for (const r of related) if (!byId.has(r)) errors.push(`${b.id}: related block "${r}" does not exist`);
     const ids = sources.map((s) => s.id);
     for (const id of new Set(ids.filter((x, i) => ids.indexOf(x) !== i))) errors.push(`${b.id}: source id "${id}" is used twice`);
-    const body = b.body ?? '';
-    for (const [, id] of body.matchAll(CITE)) if (!ids.includes(id)) errors.push(`${b.id}: :cite[${id}] has no matching source`);
-    for (const [, slug] of body.matchAll(LINK)) {
-      const target = byId.get(slug);
-      if (!target && !(PAGES as readonly string[]).includes(slug)) errors.push(`${b.id}: link to /${slug} goes nowhere`);
-      else if (target?.data.status === 'stub') errors.push(`${b.id}: link to /${slug} points at a page that does not exist yet`);
+    const { cites, links } = extractRefs(b.body ?? '');
+    for (const id of cites) {
+      if (id === null) errors.push(`${b.id}: :cite needs a source id, like :cite[wiki]`);
+      else if (!ids.includes(id)) errors.push(`${b.id}: :cite[${id}] has no matching source`);
+    }
+    for (const { url, path } of links) {
+      if (path === null) {
+        errors.push(`${b.id}: link "${url}" must start with / (write /slug)`);
+        continue;
+      }
+      if (path === '') continue; // the home page
+      const target = byId.get(path);
+      if (!target && !(PAGES as readonly string[]).includes(path)) errors.push(`${b.id}: link to ${url} goes nowhere`);
+      else if (target?.data.status === 'stub') errors.push(`${b.id}: link to ${url} points at a page that does not exist yet`);
     }
   }
   return errors;
