@@ -37,7 +37,7 @@ r/sanskrit, r/hinduism, r/Buddhism, r/philosophy). Concretely:
 
 ```
 src/content/blocks/*.md ─┐
-src/content/glossary.yaml ┴─► astro build ──► dist/  (one HTML page + one preview PNG per block)
+src/data/glossary.yaml    ┴─► astro build ──► dist/  (one HTML page + one preview PNG per block)
                               │                 │
                               │ fails on:       └─► Cloudflare Worker, static assets
                               │ schema errors,      sastras.dhanjit.me
@@ -53,11 +53,15 @@ stored in GitHub.
 
 ```
 src/
-  content.config.ts         schema for blocks and glossary (Astro content collections, zod)
+  content.config.ts         schema for blocks (Astro content collections, zod)
   content/blocks/<slug>.md  one file per block
-  content/glossary.yaml     term → meaning; seeded from the annotated map's 134 terms
-  lib/tree.ts               parent/child tree, breadcrumbs, map layers, and the build-time checks
+  data/glossary.yaml        term → meaning; seeded from the annotated map's 134 terms
+  lib/vocab.ts              the five map layers and six pramāṇas, with labels
+  lib/tree.ts               parent/child tree, breadcrumbs, layer lookup, and the build-time checks (pure, unit-tested)
+  lib/blocks.ts             loads the collection, runs the checks, caches the tree
+  lib/glossary.ts           loads and checks glossary.yaml
   lib/remark-note.ts        :note[...] → margin note
+  lib/remark-cite.ts        :cite[id] → numbered link to the source list
   lib/rehype-gloss.ts       wraps glossary terms for hover/tap
   components/               Map, MapRow, Breadcrumb, LayerStrip, Term, Note, SourceList, StatusPill
   pages/index.astro         the map
@@ -80,12 +84,13 @@ URLs are flat and ASCII, and they don't encode the tree, so moving a block never
 title: Advaita Vedānta              # IAST, shown as the heading
 devanagari: अद्वैत वेदान्त           # optional, shown small beside the gloss
 gloss: non-dualism · “not two”      # English, one line, always visible under the title
-kind: subschool                     # layer | school | subschool | person | text | concept
-parent: vedanta                     # slug of the parent block; the root layers use `map`
+kind: subschool                     # topic | school | subschool | person | text | concept
+parent: vedanta                     # slug of the parent block; top-level blocks use `map`
+# layer: schools                    # top-level blocks only: foundation | pramana | schools | corpus | vada
 order: 1                            # position among siblings
 dates: c. 8th century CE onward     # optional, free text, sourced in the body
-status: draft                       # draft | reviewed — only Dhanjit sets reviewed
-sources:                            # at least one
+status: draft                       # stub | draft | reviewed — a stub shows on the map as "in preparation" and gets no page; only Dhanjit sets reviewed
+sources:                            # at least one, unless status is stub
   - { id: sep, title: "Stanford Encyclopedia of Philosophy — Śaṅkara", url: "https://plato.stanford.edu/..." }
 read:                               # optional: free texts to read (translations, Sanskrit e-texts)
   - { title: "Brahmasūtra-bhāṣya, tr. G. Thibaut", kind: translation, url: "https://..." }
@@ -96,12 +101,12 @@ vedic_authority: accepts            # accepts | rejects | n/a — places it on t
 ---
 For Advaita, ātman is brahman:note[The witness behind your own thinking is the same as
 ultimate reality — not the ego or personality.]. Śaṅkara systematised it in his bhāṣya on the
-Brahmasūtra[^sep].
+Brahmasūtra:cite[sep].
 ```
 
-- **Citations:** `[^id]` refers to an entry in `sources`, and renders as a numbered footnote that links to the source list.
+- **Citations:** `:cite[id]` refers to an entry in `sources`, and renders as a superscript number (that source's position in the list) that links to it.
 - **Deeper notes:** `:note[...]` renders as a red-ochre `*`. On wide screens the note sits in the margin beside its line, the way marginal glosses (ṭippaṇī) were written in manuscripts. On narrow screens tapping `*` opens it inline. This needs no JavaScript (the sidenote pattern: a label plus a checkbox).
-- **Glossary:** `glossary.yaml` maps a term to a short English meaning. At build time, the first occurrence of each glossary term in a paragraph is wrapped so that it shows its meaning on hover (desktop) or tap (phone). Headings, titles and existing links are skipped. Without JavaScript the term links to its entry on a glossary page.
+- **Glossary:** `src/data/glossary.yaml` maps a term to a short English meaning. At build time, the first occurrence of each glossary term in a paragraph is wrapped so that it shows its meaning on hover (desktop) or tap (phone). Headings, titles and existing links are skipped. Without JavaScript the term links to its entry on a glossary page.
 - **The tree:** `parent` and `order` produce the map, breadcrumbs, "go deeper" lists and the layer strip. Map positions are never typed in by hand.
 
 ## Pages
@@ -171,7 +176,7 @@ and any token that fails it gets darkened.
 **The build fails on:**
 - schema errors;
 - a block with no `sources`;
-- a `[^id]` with no matching source;
+- a `:cite[id]` with no matching source;
 - a `parent` that doesn't exist, or a cycle in the tree;
 - a block that can't be reached from the map;
 - an internal link to a missing slug;
