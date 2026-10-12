@@ -88,7 +88,7 @@ const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and t
 
       document.addEventListener('click', (e) => {
         const t = termOf(e.target);
-        if (!t || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // let modified clicks open the glossary
+        if (!t || e.detail === 0 || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // keyboard (Enter), screen-reader and modified clicks follow the link to the glossary
         e.preventDefault();
         show(t);
       });

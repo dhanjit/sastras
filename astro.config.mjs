@@ -11,10 +11,17 @@ export default defineConfig({
   site: 'https://sastras.dhanjit.me',
   trailingSlash: 'never',
   build: { format: 'file' },
+  integrations: [
+    {
+      name: 'glossary-watch',
+      hooks: { 'astro:config:setup': ({ addWatchFile }) => addWatchFile(new URL('./src/data/glossary.yaml', import.meta.url)) },
+    },
+  ],
   markdown: {
     processor: unified({
       remarkPlugins: [remarkDirective, remarkNote, remarkCite, remarkRestoreDirectives],
-      rehypePlugins: [[rehypeGloss, { glossary: loadGlossary() }]],
+      // a plain object, not a Map: Astro's content cache keys on the serialized config, and a Map serializes as {}
+      rehypePlugins: [[rehypeGloss, { terms: Object.fromEntries(loadGlossary()) }]],
     }),
   },
 });

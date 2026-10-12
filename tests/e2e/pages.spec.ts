@@ -50,8 +50,7 @@ test('a Sanskrit term shows its meaning when tapped or clicked', async ({ page }
   await expect(page.locator('#gloss-pop')).toBeVisible();
   await expect(page.locator('#gloss-pop')).toContainText('self');
   await expect(page).toHaveURL(/\/advaita-vedanta$/); // stayed on the page
-  const descId = await term.getAttribute('aria-describedby'); // screen readers get the meaning without the pop-up
-  await expect(page.locator(`#${descId}`)).toHaveText(/self/);
+  await expect(term).toHaveAccessibleDescription(/self/); // screen readers get the meaning without the pop-up
   // tapping or clicking inside the pop-up must not close it
   if (info.project.name === 'phone') await page.locator('#gloss-pop').tap();
   else await page.locator('#gloss-pop').click();
@@ -63,4 +62,36 @@ test('a stub child shows as "in preparation" and is not a link', async ({ page }
   const deeper = page.locator('section', { has: page.getByRole('heading', { name: 'Go deeper' }) });
   await expect(deeper.locator('.row.prep', { hasText: /^Dvaita/ })).toContainText('in preparation');
   await expect(deeper.getByRole('link', { name: /^Dvaita/ })).toHaveCount(0);
+});
+
+test('every glossed term links to an entry that exists on the glossary page', async ({ page }) => {
+  await page.goto('/advaita-vedanta');
+  const hrefs = await page.locator('a.term').evaluateAll((els) => els.map((e) => e.getAttribute('href')!));
+  expect(hrefs.length).toBeGreaterThan(0);
+  const ids = hrefs.map((h) => h.split('#')[1]);
+  await page.goto('/glossary');
+  for (const id of ids) await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
+  await expect(page.locator('.glossary > div')).not.toHaveCount(0);
+});
+
+test('a term near the bottom of the window opens its pop-up above it', async ({ page }, info) => {
+  test.skip(info.project.name !== 'desktop', 'hover placement is a mouse behaviour');
+  await page.goto('/advaita-vedanta');
+  const term = page.locator('a.term', { hasText: 'ātman' }).first();
+  const box = (await term.boundingBox())!;
+  await page.setViewportSize({ width: 1280, height: Math.ceil(box.y + box.height) + 10 }); // no room below the term
+  await term.hover();
+  const pop = page.locator('#gloss-pop');
+  await expect(pop).toBeVisible();
+  await expect(pop).toHaveAttribute('data-side', 'above');
+  const pb = (await pop.boundingBox())!;
+  expect(pb.y + pb.height).toBeLessThanOrEqual(box.y); // sits above the term, not over it
+});
+
+test('Enter on a focused term follows the link to its glossary entry', async ({ page }) => {
+  await page.goto('/advaita-vedanta');
+  await page.locator('a.term', { hasText: 'ātman' }).first().focus();
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/\/glossary#g-aatman$/);
+  await expect(page.locator('#g-aatman')).toBeVisible();
 });
