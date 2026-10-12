@@ -1,9 +1,10 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
+import { loadBlocks, isWritten } from '../lib/blocks';
 
 export async function getStaticPaths() {
-  const blocks = await getCollection('blocks', (b) => b.data.status !== 'stub');
-  return blocks.map((b) => ({ params: { slug: b.id }, props: { b } }));
+  const { all } = await loadBlocks();
+  return all.filter(isWritten).map((b) => ({ params: { slug: b.id }, props: { b } }));
 }
 const { b } = Astro.props;
 const { Content } = await render(b);
