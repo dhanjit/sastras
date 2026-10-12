@@ -23,7 +23,7 @@ const { blocks, variant = 'list', labelledby } = Astro.props;
       )}
       {variant === 'map' && !!b.data.pramanas?.length && (
         <div class="pramanas">
-          {b.data.pramanas_per && <span class="per">per {b.data.pramanas_per}:</span>}
+          {b.data.pramanas_per && <span class="per" aria-hidden="true">per {b.data.pramanas_per}:</span>}
           <ul class="chips" aria-label={`Ways of knowing accepted${b.data.pramanas_per ? ` (per ${b.data.pramanas_per})` : ''}`}>
             {b.data.pramanas.map((p) => <li class="chip">{PRAMANA_LABEL[p].title}<span class="sr-only"> ({PRAMANA_LABEL[p].gloss})</span></li>)}
           </ul>

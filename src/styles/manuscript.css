@@ -88,7 +88,7 @@ a.term { text-decoration: underline dotted var(--rubric); text-underline-offset:
 .blocks-map > li { display: flex; flex-direction: column; border-bottom: 1px solid var(--line); }
 .blocks-map .row { border-bottom: 0; }
 @media (min-width: 640px) { .blocks-map { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 0 1.5rem; } }
-@media (min-width: 1100px) { .blocks-map { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+@media (min-width: 1088px) { .blocks-map { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
 
 /* glossary page */
 .glossary div { padding: 0.5rem 0; border-bottom: 1px solid var(--line); }

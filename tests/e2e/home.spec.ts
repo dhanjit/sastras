@@ -25,3 +25,15 @@ test('schools are grouped by whether they accept the Veda, with their pramāṇa
   await expect(vedanta.locator('.chip')).toHaveCount(6);
   await expect(vedanta).toContainText('per Advaita:');
 });
+
+test('the about page explains the method and credits the original map', async ({ page }) => {
+  await page.goto('/about');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Paricaya');
+  await expect(page.getByRole('link', { name: /Navigating Indian Śāstras/ })).toHaveAttribute('href', 'https://youtu.be/hj6yzj_HlvA');
+});
+
+test('an unknown address shows the 404 page', async ({ page }) => {
+  const res = await page.goto('/no-such-page');
+  expect(res?.status()).toBe(404);
+  await expect(page.getByRole('link', { name: 'Back to the map' })).toBeVisible();
+});
