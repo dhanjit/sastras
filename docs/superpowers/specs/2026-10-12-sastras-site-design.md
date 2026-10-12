@@ -150,13 +150,13 @@ and any token that fails it gets darkened.
 | `--line` | `#c9bd9c` | `#3a3428` | row dividers |
 | `--rule` | `#9c8f6e` | `#6b6150` | double margin rules, string-hole mark |
 | `--ink` | `#2a2620` | `#ddd3b8` | text |
-| `--ink-muted` | `#6e6552` | `#9a8f76` | glosses, metadata |
+| `--ink-muted` | `#5f5747` | `#a39880` | glosses, metadata (darkened from the first draft to pass AA contrast) |
 | `--rubric` | `#8e3b2c` | `#d0806a` | IAST subtitles, `*`, ॥, section labels: the scribe's red |
 | `--sourced` / `--draft` | `#4f5838` / `#7a4f1c` | `#a9b58a` / `#d9a85f` | status pills |
 
 - **Type.** All fonts are self-hosted through fontsource and subset to the scripts used.
   - Gentium Book Plus for headings and body, chosen for its complete IAST coverage.
-  - Tiro Devanagari Sanskrit for Devanagari, a face designed for Sanskrit.
+  - Devanagari uses the reader's system face (Kohinoor/Devanagari Sangam on Apple, Noto on Android, Nirmala on Windows), so it costs no download. A self-hosted Tiro Devanagari Sanskrit, cut down to the characters actually used, is a later improvement; the full font is 180 KB.
   - A small system sans for breadcrumbs and labels.
 - **Motifs, used sparingly.** A thin double rule under each page header. A string-hole circle in the header margin. ॥ as the divider between sections. Red-ochre for subtitles, notes and section labels, as manuscripts used it.
 - **No textures or images in the background.** Text has to stay sharp, and pages have to stay light on mobile data.
@@ -215,7 +215,8 @@ The other eight schools follow, one pull request per school.
 - analytics beyond Cloudflare's built-in counts;
 - Devanagari-only mode;
 - translations of the site into other languages;
-- an interactive pan/zoom map.
+- an interactive pan/zoom map;
+- a self-hosted, subset Devanagari font.
 
 ## Open
 

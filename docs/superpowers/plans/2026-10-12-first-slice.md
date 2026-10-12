@@ -6,7 +6,7 @@
 
 **Architecture:** Astro 7 builds static HTML from one Markdown file per block. A pure TypeScript tree module (unit-tested) checks the content and derives the map, breadcrumbs and child lists; any content error fails the build. Three Markdown plugins add margin notes (`:note[...]`), citations (`:cite[id]`) and the tap-for-meaning glossary. A Cloudflare Worker serves `dist/` as static assets.
 
-**Tech stack:** Astro 7.3.5 with `@astrojs/markdown-remark` 7.3.2 (the `unified` processor), remark-directive, satori + resvg for link-preview images, fontsource (Gentium Book Plus, Tiro Devanagari Sanskrit), Vitest 5, Playwright 1.64 + axe, Wrangler 4, GitHub Actions. TypeScript is pinned to 6.0.3, because `@astrojs/check` does not support TypeScript 7.
+**Tech stack:** Astro 7.3.5 with `@astrojs/markdown-remark` 7.3.2 (the `unified` processor), remark-directive, satori + resvg for link-preview images, fontsource Gentium Book Plus (Devanagari uses system fonts), Vitest 5, Playwright 1.64 + axe, Wrangler 4, GitHub Actions. TypeScript is pinned to 6.0.3, because `@astrojs/check` does not support TypeScript 7.
 
 **Spec:** [docs/superpowers/specs/2026-10-12-sastras-site-design.md](../specs/2026-10-12-sastras-site-design.md)
 
@@ -160,7 +160,7 @@ export default defineConfig({
 - [ ] **Step 3: Install pinned dependencies**
 
 ```bash
-npm i -E astro@7.3.5 @astrojs/markdown-remark@7.3.2 remark-directive@4.0.0 unist-util-visit@5.1.0 yaml@2.9.1 satori@0.47.1 @resvg/resvg-js@2.6.2 @fontsource/gentium-book-plus@5.3.0 @fontsource/tiro-devanagari-sanskrit@5.3.0
+npm i -E astro@7.3.5 @astrojs/markdown-remark@7.3.2 remark-directive@4.0.0 unist-util-visit@5.1.0 yaml@2.9.1 satori@0.47.1 @resvg/resvg-js@2.6.2 @fontsource/gentium-book-plus@5.3.0
 npm i -DE @astrojs/check@0.9.10 typescript@6.0.3 vitest@5.0.3 @playwright/test@1.64.0 @axe-core/playwright@4.13.0 wrangler@4.149.0 unified remark-parse remark-rehype rehype-stringify @types/mdast @types/hast @types/node@24
 ```
 
@@ -744,6 +744,14 @@ git add -A && git commit -m "feat: content tree with build-time checks"
 ---
 
 ### Task 6: Palm-leaf look: tokens, fonts, base layout
+
+> **As built (review fixes, commits 6c1e574, 1d6a19a, f20e9cf):**
+> - Header and footer share the page column.
+> - The pop-up script was rewritten: it measures at the origin, closes on pointerdown, keeps hover-to-pop-up open, lets modified clicks through, and is `aria-hidden`.
+> - `.note-toggle` is hidden from 1100px up.
+> - The layer strip has outlined segments.
+> - Tiro was removed; Devanagari uses system faces (block pages went from 384 KB to 179 KB of fonts).
+> - The code below is the original; the repo is the reference.
 
 **Files:**
 - Create: `src/styles/tokens.css`, `src/styles/base.css`, `src/styles/manuscript.css`, `src/layouts/Base.astro`
@@ -1387,7 +1395,7 @@ export function remarkCite() {
 - [ ] **Step 4: Run the unit tests and watch them pass**
 
 Run: `npm test`
-Expected: PASS, 24 tests.
+Expected: PASS, 26 tests.
 
 - [ ] **Step 5: Wire the plugins into Astro and use them in content**
 
@@ -1443,6 +1451,23 @@ git add -A && git commit -m "feat: margin notes (:note) and citations (:cite)"
 
 ---
 
+### Additions from the Task 5 review (do these in this task, in the same TDD style)
+
+Two gaps between the link/cite checker (`src/lib/refs.ts`, which already exists and is used by `validate()` in `src/lib/tree.ts`) and what the renderer does:
+
+1. **The checker must parse GFM like Astro does.** Astro's Markdown has GFM on, the checker doesn't, so a footnote line such as `[^1]: Ibid` is wrongly read as a link definition and fails the build.
+   - Make `remark-gfm` a direct dependency at the version already installed: `npm i -E --save-prod remark-gfm@4.0.1`.
+   - In `refs.ts`: `import remarkGfm from 'remark-gfm';` and `const parser = unified().use(remarkParse).use(remarkGfm).use(remarkDirective);`.
+   - Test (tests/unit/tree.test.ts): a written block whose body is `A claim[^1].\n\n[^1]: Ibid` gives `[]`.
+2. **A citation on its own line (`::cite[w]`, a leaf directive) must be rejected.** `remarkCite` only renders inline `:cite[...]`.
+   - In `refs.ts`, change `cites` to `{ id: string | null; inline: boolean }[]`: `inline` is true for `textDirective` and false for `leafDirective`.
+   - In `validate()`, before the existing checks, add `if (!c.inline) errors.push(`${b.id}: write :cite[${c.id ?? '…'}] inline, not on its own line`)`, and keep the id checks using `c.id`.
+   - Test: body `Claim.\n\n::cite[w]` gives `['a: write :cite[w] inline, not on its own line']` (with a source `w` present).
+
+After these, the unit count is 26 (24 + 2), not 24.
+
+---
+
 ### Task 9: The glossary — tap or hover for meaning
 
 **Files:**
@@ -1495,13 +1520,13 @@ describe('loadGlossary', () => {
 describe('rehypeGloss', () => {
   it('wraps the first occurrence of each term in a paragraph', async () => {
     expect(await gloss('For Advaita, ātman is brahman; ātman again.')).toBe(
-      '<p>For Advaita, <a class="term" href="/glossary#g-atman" data-gloss="the self">ātman</a> is <a class="term" href="/glossary#g-brahman" data-gloss="ultimate reality">brahman</a>; ātman again.</p>',
+      '<p>For Advaita, <a class="term" href="/glossary#g-atman" data-gloss="the self" aria-describedby="gd-1">ātman</a><span id="gd-1" hidden>the self</span> is <a class="term" href="/glossary#g-brahman" data-gloss="ultimate reality" aria-describedby="gd-2">brahman</a><span id="gd-2" hidden>ultimate reality</span>; ātman again.</p>',
     );
   });
 
   it('prefers the longest term, keeps the original case, and respects word edges', async () => {
     expect(await gloss('The Brahmasūtra, not brahmanical.')).toBe(
-      '<p>The <a class="term" href="/glossary#g-brahmasutra" data-gloss="aphorisms on brahman">Brahmasūtra</a>, not brahmanical.</p>',
+      '<p>The <a class="term" href="/glossary#g-brahmasutra" data-gloss="aphorisms on brahman" aria-describedby="gd-1">Brahmasūtra</a><span id="gd-1" hidden>aphorisms on brahman</span>, not brahmanical.</p>',
     );
   });
 
@@ -1554,6 +1579,7 @@ const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 export function rehypeGloss({ glossary }: { glossary: Glossary }) {
   const terms = [...glossary.keys()].sort((a, b) => b.length - a.length).map(escape);
   const re = terms.length ? new RegExp(`(?<![\\p{L}\\p{M}])(${terms.join('|')})(?![\\p{L}\\p{M}])`, 'giu') : null;
+  let n = 0; // reset per document in the transformer
 
   function split(node: Text, used: Set<string>): ElementContent[] {
     const out: ElementContent[] = [];
@@ -1563,12 +1589,16 @@ export function rehypeGloss({ glossary }: { glossary: Glossary }) {
       if (used.has(key)) continue;
       used.add(key);
       out.push({ type: 'text', value: node.value.slice(last, m.index) });
+      n += 1;
+      const meaning = glossary.get(key)!;
+      // the description lives next to the term, so screen readers announce it without the visual pop-up
       out.push({
         type: 'element',
         tagName: 'a',
-        properties: { className: ['term'], href: `/glossary#${termAnchor(key)}`, dataGloss: glossary.get(key)! },
+        properties: { className: ['term'], href: `/glossary#${termAnchor(key)}`, dataGloss: meaning, ariaDescribedBy: `gd-${n}` },
         children: [{ type: 'text', value: m[0] }],
       });
+      out.push({ type: 'element', tagName: 'span', properties: { id: `gd-${n}`, hidden: true }, children: [{ type: 'text', value: meaning }] });
       last = m.index! + m[0].length;
     }
     if (last === 0) return [node];
@@ -1586,6 +1616,7 @@ export function rehypeGloss({ glossary }: { glossary: Glossary }) {
 
   return (tree: Root) => {
     if (!re) return;
+    n = 0;
     visit(tree, 'element', (el: Element) => {
       if (!CONTAINERS.has(el.tagName)) return;
       wrap(el, new Set());
@@ -1598,7 +1629,7 @@ export function rehypeGloss({ glossary }: { glossary: Glossary }) {
 - [ ] **Step 4: Run the unit tests and watch them pass**
 
 Run: `npm test`
-Expected: PASS, 29 tests.
+Expected: PASS, 31 tests.
 
 - [ ] **Step 5: Seed the glossary from the annotated map**
 
@@ -1668,6 +1699,8 @@ test('a Sanskrit term shows its meaning when tapped or clicked', async ({ page }
   await expect(page.locator('#gloss-pop')).toBeVisible();
   await expect(page.locator('#gloss-pop')).toContainText('self');
   await expect(page).toHaveURL(/\/advaita-vedanta$/); // stayed on the page
+  const descId = await term.getAttribute('aria-describedby'); // screen readers get the meaning without the pop-up
+  await expect(page.locator(`#${descId}`)).toHaveText(/self/);
 });
 ```
 
@@ -1681,6 +1714,8 @@ Expected: all pass. Then open `/glossary#g-atman` in preview and confirm the ent
 ```bash
 git add -A && git commit -m "feat: glossary with tap/hover meanings and a glossary page"
 ```
+
+---
 
 ---
 
