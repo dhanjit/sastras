@@ -93,6 +93,7 @@ export function validate(blocks: Block[]): string[] {
     for (const id of new Set(ids.filter((x, i) => ids.indexOf(x) !== i))) errors.push(`${b.id}: source id "${id}" is used twice`);
     const { cites, notes, unknown, links } = extractRefs(b.body ?? '');
     for (const n of notes) {
+      if (!n.inline) errors.push(`${b.id}: write :note[…] inline, not on its own line`);
       if (n.empty) errors.push(`${b.id}: :note needs text, like :note[…]`);
       if (n.inLink) errors.push(`${b.id}: :note cannot sit inside a link`);
       if (n.inHeading) errors.push(`${b.id}: :note cannot sit inside a heading`);

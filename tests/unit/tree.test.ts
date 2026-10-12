@@ -167,6 +167,10 @@ describe('validate', () => {
     expect(validate([block('a', {}, 'Gītā 2:47 says.')])).toEqual([]);
   });
 
+  it('rejects a note on its own line, which the renderer would not turn into a margin note', () => {
+    expect(validate([block('a', {}, 'Claim.\n\n::note[x]')])).toEqual(['a: write :note[…] inline, not on its own line']);
+  });
+
   it('rejects a note without text', () => {
     expect(validate([block('a', {}, 'A claim:note[].')])).toEqual(['a: :note needs text, like :note[…]']);
   });

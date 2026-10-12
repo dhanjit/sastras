@@ -8,8 +8,8 @@ import { visitParents } from 'unist-util-visit-parents';
 export interface InternalLink { url: string; path: string | null }
 /** A `:cite` directive's source id (null when empty), whether it sits inline (the only form the renderer turns into a link), and where it sits. */
 export interface Cite { id: string | null; inline: boolean; inLink: boolean; inHeading: boolean }
-/** A `:note` directive: whether it has text, and where it sits. */
-export interface Note { empty: boolean; inLink: boolean; inHeading: boolean; inNote: boolean }
+/** A `:note` directive: whether it sits inline (the only form the renderer turns into a margin note), whether it has text, and where it sits. */
+export interface Note { inline: boolean; empty: boolean; inLink: boolean; inHeading: boolean; inNote: boolean }
 export interface Refs { cites: Cite[]; notes: Note[]; unknown: string[]; links: InternalLink[] }
 
 const parser = unified().use(remarkParse).use(remarkGfm).use(remarkDirective);
@@ -39,9 +39,9 @@ export function extractRefs(body: string): Refs {
     const inHeading = ancestors.some((a) => a.type === 'heading');
     if (DIRECTIVES.has(node.type) && node.name === 'cite') {
       cites.push({ id: citeLabel(node) || null, inline: node.type === 'textDirective', inLink, inHeading });
-    } else if (node.type === 'textDirective' && node.name === 'note') {
+    } else if (DIRECTIVES.has(node.type) && node.name === 'note') {
       const inNote = ancestors.some((a) => a.type === 'textDirective' && a.name === 'note');
-      notes.push({ empty: plainText(node).trim() === '', inLink, inHeading, inNote });
+      notes.push({ inline: node.type === 'textDirective', empty: plainText(node).trim() === '', inLink, inHeading, inNote });
     } else if (DIRECTIVES.has(node.type) && !KNOWN.has(node.name) && hasLabelOrAttributes(node)) {
       unknown.push(node.name);
     }
