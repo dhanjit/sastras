@@ -159,6 +159,38 @@ describe('validate', () => {
     expect(validate([block('a', {}, 'See :cite.')])).toEqual(['a: :cite needs a source id, like :cite[wiki]']);
   });
 
+  it('reports a misspelt directive instead of letting the renderer drop it', () => {
+    expect(validate([block('a', {}, 'A :ntoe[typo] here.')])).toEqual(['a: ":ntoe[…]" is not a directive (use :note or :cite)']);
+  });
+
+  it('leaves ordinary colons alone', () => {
+    expect(validate([block('a', {}, 'Gītā 2:47 says.')])).toEqual([]);
+  });
+
+  it('rejects a note without text', () => {
+    expect(validate([block('a', {}, 'A claim:note[].')])).toEqual(['a: :note needs text, like :note[…]']);
+  });
+
+  it('rejects a note inside a link', () => {
+    expect(validate([block('a', {}, '[a link:note[x]](/glossary)')])).toEqual(['a: :note cannot sit inside a link']);
+  });
+
+  it('rejects a note inside a heading', () => {
+    expect(validate([block('a', {}, '## Heading:note[x]')])).toEqual(['a: :note cannot sit inside a heading']);
+  });
+
+  it('rejects a note inside another note', () => {
+    expect(validate([block('a', {}, 'A:note[outer :note[inner]]')])).toEqual(['a: :note cannot sit inside another :note']);
+  });
+
+  it('rejects a citation inside a link', () => {
+    expect(validate([block('a', {}, '[a link:cite[w]](/glossary)')])).toEqual(['a: :cite[w] cannot sit inside a link']);
+  });
+
+  it('rejects a citation inside a heading', () => {
+    expect(validate([block('a', {}, '## Heading:cite[w]')])).toEqual(['a: :cite[w] cannot sit inside a heading']);
+  });
+
   it('requires every ancestor of a written block to be written, so the map can reach it', () => {
     expect(validate([...fixture, block('x', { parent: 'dvaita', layer: undefined })])).toContain(
       'x: sits under "dvaita", which is not written yet; write it first or keep this block a stub',

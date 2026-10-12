@@ -36,5 +36,8 @@ test('a citation links to its source and a note opens', async ({ page }, info) =
     await expect(body).toBeVisible();
   } else {
     await expect(body).toBeVisible(); // margin note, always shown on wide screens
+    const prose = await page.locator('.prose').boundingBox();
+    const nb = await body.boundingBox();
+    expect(nb!.x).toBeGreaterThan(prose!.x + prose!.width);
   }
 });

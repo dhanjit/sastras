@@ -91,13 +91,24 @@ export function validate(blocks: Block[]): string[] {
     }
     const ids = sources.map((s) => s.id);
     for (const id of new Set(ids.filter((x, i) => ids.indexOf(x) !== i))) errors.push(`${b.id}: source id "${id}" is used twice`);
-    const { cites, links } = extractRefs(b.body ?? '');
+    const { cites, notes, unknown, links } = extractRefs(b.body ?? '');
+    for (const n of notes) {
+      if (n.empty) errors.push(`${b.id}: :note needs text, like :note[…]`);
+      if (n.inLink) errors.push(`${b.id}: :note cannot sit inside a link`);
+      if (n.inHeading) errors.push(`${b.id}: :note cannot sit inside a heading`);
+      if (n.inNote) errors.push(`${b.id}: :note cannot sit inside another :note`);
+    }
     for (const c of cites) {
       const id = c.id;
       if (!c.inline) errors.push(`${b.id}: write :cite[${id ?? '…'}] inline, not on its own line`);
       if (id === null) errors.push(`${b.id}: :cite needs a source id, like :cite[wiki]`);
-      else if (!ids.includes(id)) errors.push(`${b.id}: :cite[${id}] has no matching source`);
+      else {
+        if (!ids.includes(id)) errors.push(`${b.id}: :cite[${id}] has no matching source`);
+        if (c.inLink) errors.push(`${b.id}: :cite[${id}] cannot sit inside a link`);
+        if (c.inHeading) errors.push(`${b.id}: :cite[${id}] cannot sit inside a heading`);
+      }
     }
+    for (const name of unknown) errors.push(`${b.id}: ":${name}[…]" is not a directive (use :note or :cite)`);
     for (const { url, path } of links) {
       if (path === null) {
         errors.push(`${b.id}: link "${url}" must start with / (write /slug)`);

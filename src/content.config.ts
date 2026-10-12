@@ -4,7 +4,7 @@ import { z } from 'astro/zod';
 import { KINDS, LAYERS, PRAMANAS, SIDES, STATUSES } from './lib/vocab';
 
 const source = z.strictObject({
-  id: z.string().regex(/^[a-z0-9-]+$/),
+  id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   title: z.string().min(1),
   url: z.url({ protocol: /^https?$/ }),
 });
