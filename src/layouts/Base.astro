@@ -11,9 +11,10 @@ interface Props {
   description: string;
   path: string;
   og: string;
+  type?: 'website' | 'article';
   wide?: boolean;
 }
-const { title, description, path, og, wide = false } = Astro.props;
+const { title, description, path, og, type = 'website', wide = false } = Astro.props;
 const url = new URL(path, Astro.site).href;
 const image = new URL(og, Astro.site).href;
 const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and the classical sciences' : `${title} · Śāstras`;
@@ -27,7 +28,7 @@ const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and t
     <meta name="description" content={description} />
     <link rel="canonical" href={url} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:site_name" content="Śāstras" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />

@@ -8,6 +8,7 @@ import SourceList from '../components/SourceList.astro';
 import StatusPill from '../components/StatusPill.astro';
 import { loadBlocks, isWritten, type BlockEntry } from '../lib/blocks';
 import { correctionUrl } from '../lib/links';
+import { describe } from '../lib/describe';
 
 export async function getStaticPaths() {
   const { all } = await loadBlocks();
@@ -20,7 +21,7 @@ const children = tree.children(b.id);
 const related = b.data.related.map((r) => tree.get(r)).filter((x): x is BlockEntry => Boolean(x));
 const layer = tree.layerOf(b.id);
 ---
-<Base title={b.data.title} description={`${b.data.title}: ${b.data.gloss}`} path={`/${b.id}`} og={`/og/${b.id}.png`}>
+<Base title={b.data.title} description={describe(b.data.gloss, b.body ?? '')} type="article" path={`/${b.id}`} og={`/og/${b.id}.png`}>
   <Breadcrumb trail={tree.ancestors(b.id)} current={b.data.title} />
   {layer && <LayerStrip current={layer} />}
   <header class="block-head">
