@@ -193,12 +193,14 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: 'tests/e2e',
-  use: { baseURL: 'http://localhost:4321' },
+  use: { baseURL: 'http://localhost:4399' },
   webServer: {
-    command: 'npm run build && npm run preview',
-    url: 'http://localhost:4321',
-    reuseExistingServer: !process.env.CI,
+    command: 'npm run build && npx astro preview --port 4399',
+    url: 'http://localhost:4399',
+    reuseExistingServer: false,
     timeout: 180_000,
+    // Astro 7's preview backgrounds itself when it detects an AI agent, which Playwright reads as a crash.
+    env: { ASTRO_PREVIEW_BACKGROUND: '1' },
   },
   projects: [
     {
@@ -264,6 +266,11 @@ export const SIDE_LABEL: Record<Side, { title: string; gloss: string }> = {
   accepts: { title: 'āstika', gloss: 'accept the Veda’s authority' },
   'n/a': { title: 'śāstra', gloss: 'sciences, not schools of philosophy' },
 };
+export const KINDS = ['topic', 'school', 'subschool', 'person', 'text', 'concept'] as const;
+export type Kind = (typeof KINDS)[number];
+
+export const STATUSES = ['stub', 'draft', 'reviewed'] as const;
+export type Status = (typeof STATUSES)[number];
 ```
 
 `src/content.config.ts`:
@@ -271,32 +278,32 @@ export const SIDE_LABEL: Record<Side, { title: string; gloss: string }> = {
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
-import { LAYERS, PRAMANAS, SIDES } from './lib/vocab';
+import { KINDS, LAYERS, PRAMANAS, SIDES, STATUSES } from './lib/vocab';
 
-const source = z.object({
+const source = z.strictObject({
   id: z.string().regex(/^[a-z0-9-]+$/),
   title: z.string().min(1),
-  url: z.url(),
+  url: z.url({ protocol: /^https?$/ }),
 });
 
-const readLink = z.object({
+const readLink = z.strictObject({
   title: z.string().min(1),
   kind: z.enum(['translation', 'etext', 'scan']),
-  url: z.url(),
+  url: z.url({ protocol: /^https?$/ }),
 });
 
 const blocks = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/blocks' }),
-  schema: z.object({
+  schema: z.strictObject({
     title: z.string().min(1),
     devanagari: z.string().optional(),
     gloss: z.string().min(1),
-    kind: z.enum(['topic', 'school', 'subschool', 'person', 'text', 'concept']),
+    kind: z.enum(KINDS),
     parent: z.string().min(1),
     layer: z.enum(LAYERS).optional(),
     order: z.number().int(),
     dates: z.string().optional(),
-    status: z.enum(['stub', 'draft', 'reviewed']),
+    status: z.enum(STATUSES),
     sources: z.array(source).default([]),
     read: z.array(readLink).default([]),
     related: z.array(z.string()).default([]),
@@ -501,6 +508,13 @@ describe('validate', () => {
     expect(validate(fixture)).toEqual([]);
   });
 
+  it('rejects non-ASCII and reserved block names', () => {
+    expect(validate([block('śaṅkara'), block('about')])).toEqual([
+      'śaṅkara: file name must be lower-case ASCII words joined by hyphens',
+      'about: that name is reserved for a fixed page',
+    ]);
+  });
+
   it('reports a missing parent', () => {
     expect(validate([block('x', { parent: 'nowhere', layer: undefined })])).toEqual(['x: parent "nowhere" does not exist']);
   });
@@ -551,10 +565,12 @@ Expected: FAIL. The import of `../../src/lib/tree` can't be resolved.
 
 `src/lib/tree.ts`:
 ```ts
-import type { Layer } from './vocab';
+import type { Layer, Status } from './vocab';
 
 export const ROOT = 'map';
 export const PAGES = ['about', 'glossary'] as const;
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const RESERVED = new Set<string>([ROOT, 'index', '404', 'og', ...PAGES]);
 
 export interface Block {
   id: string;
@@ -564,7 +580,7 @@ export interface Block {
     parent: string;
     layer?: Layer;
     order: number;
-    status: 'stub' | 'draft' | 'reviewed';
+    status: Status;
     sources: { id: string }[];
     related: string[];
   };
@@ -617,6 +633,8 @@ export function validate(blocks: Block[]): string[] {
   const byId = new Map(blocks.map((b) => [b.id, b]));
   for (const b of blocks) {
     const { parent, layer, related, sources, status } = b.data;
+    if (!SLUG.test(b.id)) errors.push(`${b.id}: file name must be lower-case ASCII words joined by hyphens`);
+    if (RESERVED.has(b.id)) errors.push(`${b.id}: that name is reserved for a fixed page`);
     if (parent === ROOT) {
       if (!layer) errors.push(`${b.id}: a top-level block needs a layer`);
     } else {
@@ -650,7 +668,7 @@ export function validate(blocks: Block[]): string[] {
 - [ ] **Step 4: Run the unit tests and watch them pass**
 
 Run: `npm test`
-Expected: PASS, 11 tests.
+Expected: PASS, 12 tests.
 
 - [ ] **Step 5: Load blocks through the checks**
 
@@ -1247,7 +1265,7 @@ const layer = tree.layerOf(b.id);
 - [ ] **Step 4: Run the tests and watch them pass**
 
 Run: `npm test && npm run check && npm run e2e`
-Expected: all pass (12 unit tests; e2e 3 tests × 2 projects).
+Expected: all pass (13 unit tests; e2e 3 tests × 2 projects).
 
 - [ ] **Step 5: Create the `correction` label and commit**
 
@@ -1367,7 +1385,7 @@ export function remarkCite() {
 - [ ] **Step 4: Run the unit tests and watch them pass**
 
 Run: `npm test`
-Expected: PASS, 15 tests.
+Expected: PASS, 16 tests.
 
 - [ ] **Step 5: Wire the plugins into Astro and use them in content**
 
@@ -1578,7 +1596,7 @@ export function rehypeGloss({ glossary }: { glossary: Glossary }) {
 - [ ] **Step 4: Run the unit tests and watch them pass**
 
 Run: `npm test`
-Expected: PASS, 20 tests.
+Expected: PASS, 21 tests.
 
 - [ ] **Step 5: Seed the glossary from the annotated map**
 
