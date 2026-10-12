@@ -92,7 +92,9 @@ export function validate(blocks: Block[]): string[] {
     const ids = sources.map((s) => s.id);
     for (const id of new Set(ids.filter((x, i) => ids.indexOf(x) !== i))) errors.push(`${b.id}: source id "${id}" is used twice`);
     const { cites, links } = extractRefs(b.body ?? '');
-    for (const id of cites) {
+    for (const c of cites) {
+      const id = c.id;
+      if (!c.inline) errors.push(`${b.id}: write :cite[${id ?? '…'}] inline, not on its own line`);
       if (id === null) errors.push(`${b.id}: :cite needs a source id, like :cite[wiki]`);
       else if (!ids.includes(id)) errors.push(`${b.id}: :cite[${id}] has no matching source`);
     }

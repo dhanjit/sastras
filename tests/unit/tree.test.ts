@@ -147,6 +147,14 @@ describe('validate', () => {
     expect(validate([block('a', {}, body)])).toEqual([]);
   });
 
+  it('reads footnote definitions as GFM does, not as link definitions', () => {
+    expect(validate([block('a', {}, 'A claim[^1].\n\n[^1]: Ibid')])).toEqual([]);
+  });
+
+  it('rejects a citation on its own line, which the renderer would not turn into a link', () => {
+    expect(validate([block('a', {}, 'Claim.\n\n::cite[w]')])).toEqual(['a: write :cite[w] inline, not on its own line']);
+  });
+
   it('rejects a citation without an id', () => {
     expect(validate([block('a', {}, 'See :cite.')])).toEqual(['a: :cite needs a source id, like :cite[wiki]']);
   });

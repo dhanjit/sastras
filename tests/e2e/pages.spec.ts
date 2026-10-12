@@ -25,3 +25,16 @@ test('a parent page lists its children under "Go deeper"', async ({ page }) => {
   await deeper.getByRole('link', { name: /Advaita Vedānta/ }).click();
   await expect(page).toHaveURL(/\/advaita-vedanta$/);
 });
+
+test('a citation links to its source and a note opens', async ({ page }, info) => {
+  await page.goto('/advaita-vedanta');
+  await expect(page.locator('sup.cite a')).toHaveAttribute('href', '#src-wiki');
+  const body = page.locator('.note-body').first();
+  if (info.project.name === 'phone') {
+    await expect(body).toBeHidden();
+    await page.locator('.note-mark').first().tap();
+    await expect(body).toBeVisible();
+  } else {
+    await expect(body).toBeVisible(); // margin note, always shown on wide screens
+  }
+});
