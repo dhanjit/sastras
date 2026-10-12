@@ -1,7 +1,7 @@
 ---
 title: Vāda
 devanagari: वादः
-gloss: "the debates between the schools"
+gloss: "the classic debate texts"
 kind: topic
 parent: map
 layer: vada

@@ -72,6 +72,8 @@ a.term { text-decoration: underline dotted var(--rubric); text-underline-offset:
 
 /* home map */
 .intro .lede { color: var(--ink-muted); max-width: 36rem; }
+.intro .legend { font: 0.8125rem/1.5 var(--sans); color: var(--ink-muted); margin-top: 0.5rem; }
+.intro .legend b { color: var(--ink); }
 .layer { margin-top: 2.5rem; }
 .layer-title { font-size: 1.6rem; margin: 0; }
 .layer-n { font: 600 0.8rem var(--sans); color: var(--rubric); vertical-align: middle; margin-right: 0.4rem; }
