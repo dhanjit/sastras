@@ -20,8 +20,10 @@ jobs:
           # where the root is to resolve them before the scheme filter can skip them, or each one is reported as an error.
           # The site's own generated self-references (canonical, og:image) are skipped: the e2e suite already checks
           # them, and content links between pages are root-relative.
+          # 403 counts as alive: sacred-texts.com and britannica.com answer non-browser clients with 403, while a page
+          # that has really gone usually returns 404 or 410.
           args: >-
-            --no-progress --max-concurrency 4 --scheme https --scheme http --accept 200,206,429
+            --no-progress --max-concurrency 4 --scheme https --scheme http --accept 200,206,403,429
             --root-dir '${{ github.workspace }}/dist'
             --exclude '^https://sastras\.dhanjit\.me(/|$)' --exclude-path dist/og 'dist/**/*.html'
           output: lychee/out.md
