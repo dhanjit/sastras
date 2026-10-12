@@ -47,7 +47,7 @@ const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and t
       <span class="hole" aria-hidden="true"></span>
     </header>
     <main id="main" class:list={['page', { wide }]}><slot /></main>
-    <footer class="site-foot">
+    <footer class:list={['site-foot', { wide }]}>
       <span class="danda" aria-hidden="true">॥</span>
       <p>Drafted from public sources; every page lists its own. <a href="/about">About this map</a> · <a href="/glossary">Glossary</a> · <a href="https://github.com/dhanjit/sastras">Source on GitHub</a></p>
     </footer>
