@@ -29,3 +29,9 @@ export const SIDE_LABEL: Record<Side, { title: string; gloss: string }> = {
   accepts: { title: 'āstika', gloss: 'accept the Veda’s authority' },
   'n/a': { title: 'śāstra', gloss: 'sciences, not schools of philosophy' },
 };
+
+export const KINDS = ['topic', 'school', 'subschool', 'person', 'text', 'concept'] as const;
+export type Kind = (typeof KINDS)[number];
+
+export const STATUSES = ['stub', 'draft', 'reviewed'] as const;
+export type Status = (typeof STATUSES)[number];
