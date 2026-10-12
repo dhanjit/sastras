@@ -1,0 +1,7 @@
+---
+interface Props { status: 'stub' | 'draft' | 'reviewed' }
+const { status } = Astro.props;
+---
+{status === 'reviewed'
+  ? <span class="pill pill-reviewed">reviewed</span>
+  : <span class="pill pill-draft">draft · sourced, not yet reviewed</span>}

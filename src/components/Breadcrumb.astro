@@ -1,0 +1,12 @@
+---
+import type { BlockEntry } from '../lib/blocks';
+interface Props { trail: BlockEntry[]; current: string }
+const { trail, current } = Astro.props;
+---
+<nav class="crumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Map</a></li>
+    {trail.map((b) => <li>{b.data.status === 'stub' ? b.data.title : <a href={`/${b.id}`}>{b.data.title}</a>}</li>)}
+    <li aria-current="page">{current}</li>
+  </ol>
+</nav>
