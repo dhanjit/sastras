@@ -30,6 +30,7 @@ const version = cardVersion({ title: b.data.title, gloss: b.data.gloss, layer })
   <header class="block-head">
     <h1 class="title">{b.data.title}</h1>
     <p class="gloss">{b.data.gloss}{b.data.devanagari && <>{' '}<span class="deva" lang="sa">{b.data.devanagari}</span></>}</p>
+    {/* Stubs get no page, so the status check is always true here; it narrows the type StatusPill needs. */}
     <p class="meta">{b.data.dates && <span>{b.data.dates}</span>}{b.data.status !== 'stub' && <StatusPill status={b.data.status} />}</p>
   </header>
   <div class="rule-double" aria-hidden="true"></div>

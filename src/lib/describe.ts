@@ -1,9 +1,9 @@
+import { DIRECTIVE_NODES } from './directives';
 import { parser } from './refs';
 import { remarkRestoreDirectives } from './remark-restore-directives';
 
 /** Subtrees that are not running prose: citations and notes, link definitions, footnotes, raw HTML, code, images. */
 const SKIP = new Set(['definition', 'footnoteDefinition', 'footnoteReference', 'html', 'code', 'image', 'imageReference', 'yaml', 'toml']);
-const DIRECTIVE_NODES = new Set(['textDirective', 'leafDirective', 'containerDirective']);
 /** Inline nodes: their text runs straight on. Everything else is a block and is set off by a space. */
 const PHRASING = new Set(['text', 'inlineCode', 'emphasis', 'strong', 'delete', 'link', 'linkReference', 'textDirective']);
 

@@ -3,7 +3,7 @@ import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
 import remarkDirective from 'remark-directive';
 import { visitParents } from 'unist-util-visit-parents';
-import { DIRECTIVES } from './directives';
+import { DIRECTIVES, DIRECTIVE_NODES } from './directives';
 
 /** An internal link's path without the leading slash ('' is the home page), or null when the link is relative. */
 export interface InternalLink { url: string; path: string | null }
@@ -15,8 +15,6 @@ export interface Refs { cites: Cite[]; notes: Note[]; unknown: string[]; links: 
 
 /** The Markdown parser the page pipeline starts from; describe() reads the same tree. */
 export const parser = unified().use(remarkParse).use(remarkGfm).use(remarkDirective);
-
-const DIRECTIVE_NODES = new Set(['textDirective', 'leafDirective', 'containerDirective']);
 
 /** The label exactly as remarkCite reads it: the text children only. */
 const citeLabel = (node: any): string => (node.children ?? []).map((c: any) => c.value ?? '').join('').trim();

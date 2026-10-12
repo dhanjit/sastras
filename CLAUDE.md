@@ -15,7 +15,7 @@ Design: `docs/superpowers/specs/2026-10-12-sastras-site-design.md`. It was writt
   - It builds first, then previews on its own port, 4399, and never reuses a server.
   - `ASTRO_PREVIEW_BACKGROUND=1` is set in `playwright.config.ts`: Astro 7's preview backgrounds itself under AI agents, which Playwright would read as a crash.
   - Don't run two e2e runs in one checkout at once: they share `dist/` and `test-results/`. Check `npx astro preview status` and for other Playwright processes first.
-  - `quality.spec.ts` runs axe (wcag2a/aa, 21, 22aa, best-practice) in light and dark on the home, two block pages, About, Glossary and 404. It fails on serious or critical violations. It also checks for sideways scroll on both projects (375 px on the phone one) and for reflow at 320 px.
+  - `quality.spec.ts` runs axe (wcag2a/aa, 21, 22aa, best-practice) in light and dark on the home, every written block page (listed from the frontmatter in `src/content/blocks/`), About, Glossary and 404. It fails on serious or critical violations. It also checks for sideways scroll on both projects (375 px on the phone one) and for reflow at 320 px.
 - `npm run preview`: serves an existing `dist/` on port 4321. Not used by the tests.
 
 ## Content
@@ -39,7 +39,7 @@ One block = one file, `src/content/blocks/<id>.md`. The file name is the id and 
 - Links in the body are `[text](/slug)`: root-relative, to a written block, `/about`, `/glossary` or `/`. Relative links, missing pages and stubs fail, in every link form.
 
 **Citations and notes**
-- `:cite[id]` after each sourced statement. The id must be one of the block's `sources`. It renders as a superscript number (the source's position in the list) linking to the source list.
+- `:cite[id]` after each sourced statement. The id must be one of the block's `sources`. It renders as a superscript number (the source's position in the list) linking to the source list. A cite straight after another starts with a comma, so two read ¹,³.
 - `:note[...]` is a margin note on desktop and a tap-to-open block on a phone.
 - Both must be inline: not on their own line, not inside a link or a heading. A note can't nest inside another note and needs text.
 - By convention, a note goes at the end of its sentence, after the full stop and any cite. The build doesn't check this.
@@ -70,7 +70,13 @@ One block = one file, `src/content/blocks/<id>.md`. The file name is the id and 
 - `.github/workflows/links.yml` is the weekly (Monday, 03:23 UTC) and on-demand link check. It builds, then runs lychee over the external http(s) links in `dist/`. 200, 206, 403 and 429 count as alive, because some hosts answer bots with 403. It opens, updates or closes one issue labelled `links` ("Dead source links"). It never fails the run. A dead source is fixed in the block's `sources` or `read` with a page that supports the same claim.
 
 ## Deploy
-`wrangler.jsonc` makes the Worker `sastras` serve `dist/` on the custom domain `sastras.dhanjit.me`. Deploys go through Cloudflare Workers Builds on every push to `main`; nothing to run, and no Cloudflare token in GitHub. Connecting the repo is a manual dashboard step that **has not been done yet**, so the site is not live.
+`wrangler.jsonc` makes the Worker `sastras` serve `dist/` on the custom domain `sastras.dhanjit.me`. Its build command is `npm run build`, which `wrangler deploy` runs before it uploads. Preview URLs are off. `public/_headers` marks the hashed files under `/_astro/` immutable for a year.
+
+Deploys go through Cloudflare Workers Builds on every push to `main`; nothing to run, and no Cloudflare token in GitHub. Connecting the repo is a manual dashboard step that **has not been done yet**, so the site is not live. The order:
+1. Merge the PR into `main`.
+2. In the Cloudflare dashboard, go to Workers & Pages → Create → Import a repository → `dhanjit/sastras`. Production branch is `main`; the build command comes from `wrangler.jsonc`, the deploy command is `npx wrangler deploy`, and non-production branch builds are off.
+3. Verify https://sastras.dhanjit.me.
+4. Run `gh workflow run links` once.
 
 ## Tracking
 - Site-level tracker: dhanjit/brain#208.

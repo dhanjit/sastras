@@ -1,8 +1,17 @@
+import { readdirSync, readFileSync } from 'node:fs';
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { parse } from 'yaml';
 
+// Every written block page, read from the content files: a stub has no page.
+const blocksDir = new URL('../../src/content/blocks/', import.meta.url);
+const blockPages = readdirSync(blocksDir)
+  .filter((f) => f.endsWith('.md'))
+  .filter((f) => parse(readFileSync(new URL(f, blocksDir), 'utf8').split(/^---\s*$/m)[1]).status !== 'stub')
+  .map((f) => `/${f.slice(0, -'.md'.length)}`)
+  .sort();
 // '/no-such-page' is served the 404 page by `astro preview`.
-const pages = ['/', '/advaita-vedanta', '/vedanta', '/about', '/glossary', '/no-such-page'];
+const pages = ['/', ...blockPages, '/about', '/glossary', '/no-such-page'];
 const schemes = ['light', 'dark'] as const;
 
 // A failure names the elements that stick out, not just a pixel count. The skip link is off-screen on purpose.

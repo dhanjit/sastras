@@ -33,6 +33,20 @@ describe('remarkCite', () => {
     const html = await md('A claim:cite[iep].', { sources: [{ id: 'sep', title: 'SEP' }, { id: 'iep', title: 'IEP' }] });
     expect(html).toContain('<sup class="cite"><a href="#src-iep" aria-label="Source 2: IEP">2</a></sup>');
   });
+
+  const ab = { sources: [{ id: 'a', title: 'A' }, { id: 'b', title: 'B' }] };
+
+  it('separates adjacent cites with a comma inside the second one', async () => {
+    expect(await md('A:cite[a]:cite[b].', ab)).toContain(
+      '<sup class="cite"><a href="#src-a" aria-label="Source 1: A">1</a></sup><sup class="cite">,<a href="#src-b" aria-label="Source 2: B">2</a></sup>',
+    );
+  });
+
+  it('gives no comma to a cite separated from the last by text', async () => {
+    const html = await md('A:cite[a] and B:cite[b].', ab);
+    expect(html).toContain('<sup class="cite"><a href="#src-b" aria-label="Source 2: B">2</a></sup>');
+    expect(html).not.toContain('<sup class="cite">,');
+  });
 });
 
 describe('ordinary colons', () => {

@@ -1,8 +1,6 @@
 import type { Root } from 'mdast';
 import { SKIP, visit } from 'unist-util-visit';
-import { DIRECTIVES } from './directives';
-
-const DIRECTIVE_NODES = new Set(['textDirective', 'leafDirective', 'containerDirective']);
+import { DIRECTIVES, DIRECTIVE_NODES } from './directives';
 
 /**
  * remark-directive reads any `:word` as a directive, so ordinary text like "Gītā 2:47" or
