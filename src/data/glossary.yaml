@@ -1,10 +1,13 @@
 # term (IAST, lower case) → short English meaning, shown on hover or tap
+abhidharma: systematic Buddhist analysis of experience into its elements
 abhidharmakośa: “Treasury of Higher Teaching”
 advaita: "“non-dual”: self and brahman are one"
 advaitasiddhi: "“Proof of Non-duality”: Madhusūdana's reply to the Nyāyāmṛta"
 ajīva: "non-soul: matter, space, time"
 alaṅkāra: figures of speech; ornament
+anātman: "“not-self”: Buddhist teaching that no lasting self exists"
 anekāntavāda: "doctrine of many-sidedness: reality has many aspects"
+anirvacanīya: "“indeterminable”: neither real nor unreal (Advaita)"
 anumāna: inference
 anupalabdhi: "non-perception: knowing that something is absent"
 āptamīmāṃsā: “Examination of the Trustworthy Teacher”
@@ -18,12 +21,14 @@ aṣṭādhyāyī: "“Eight Chapters”: Pāṇini's grammar of Sanskrit"
 āstika: schools that accept the Veda as authoritative
 ātman: the self
 avacchedaka: "delimitor: specifies exactly in what respect something holds"
+avidyā: ignorance, above all of the self's true nature
 bālabodha: “Instruction for Beginners”
 bauddha: Buddhist
 bhāgavata: the Bhāgavata Purāṇa, devoted to Viṣṇu/Kṛṣṇa
 bhakti: devotion to a personal God
 bhāṣya: authoritative commentary
 bhāṭṭa: Mīmāṃsā school of Kumārila Bhaṭṭa
+bhedābheda: "“difference and non-difference”: a family of Vedānta schools"
 bhūta: material element
 bhūtas: material elements
 brahman: ultimate reality
@@ -50,6 +55,7 @@ dīpikā: "“The Lamp”: Annaṃbhaṭṭa's own commentary"
 dvaita: "“dual”: God and souls are eternally distinct (Madhva)"
 gaṇita: mathematics; computation
 gītā: Bhagavad Gītā, “Song of the Lord”
+īśvara: the Lord; God as creator and ruler
 itihāsa: "“so it was”: epic history"
 jaina: Jain
 jīva: living soul
@@ -69,6 +75,7 @@ mahābhārata: “The Great Epic of the Bhārata dynasty”
 mahābhāṣya: "“Great Commentary”: Patañjali on Pāṇini's grammar"
 mahāvākya: "“great saying”: an Upaniṣad sentence on self and brahman"
 mahāyāna: "“Great Vehicle”: a major branch of Buddhism"
+māyā: "magic; appearance; for Advaita, brahman appearing as the many"
 meghadūta: “The Cloud Messenger”
 mīmāṃsā: "“inquiry”: the school of Vedic interpretation"
 mitākṣarā: "“Concise”: Vijñāneśvara's law commentary"
@@ -78,7 +85,9 @@ nāstika: schools that reject the Veda's authority
 nāṭaka: drama
 navya: “new”
 navya-nyāya: “New Logic”, after Gaṅgeśa (c.1325)
+nirguṇa: without qualities
 nirukta: etymology
+nirvāṇa: "Buddhist liberation: the end of craving and rebirth"
 nyāya: "“method / rule”: the school of logic"
 nyāyāmṛta: "“Nectar of Logic”: Vyāsatīrtha's critique of Advaita"
 nyāyapariśuddhi: “Purification of Logic”
@@ -88,6 +97,7 @@ padārthas: ontological categories (lit. “meanings of words”)
 paramalaghumañjūṣā: “The Very Short Casket”
 paramparā: unbroken teacher-to-student lineage
 parīkṣāmukha: “Gateway to Examination”
+pariṇāma: real transformation of a cause into its effect
 prābhākara: Mīmāṃsā school of Prabhākara
 prācīna: "“old”: Nyāya before Gaṅgeśa"
 prakriyākaumudī: "“Moonlight on Derivation”: Rāmacandra’s grammar, Bhaṭṭoji’s model"
@@ -113,6 +123,7 @@ rasa: aesthetic emotion, the “flavour” of art
 rasagaṅgādhara: “The Ganges of Rasa”
 ṛgveda: the oldest Veda, a collection of hymns
 śabda: testimony; reliable word
+saguṇa: with qualities
 sāhitya: literature; poetics
 śakuntalā: “(The Recognition of) Śakuntalā”
 saṃhitā: hymn collection
@@ -121,6 +132,7 @@ sāṅkhya: "“enumeration”: the dualist school of spirit and matter"
 sāṅkhyakārikā: “Verses on Sāṅkhya”
 śāstra: a rule-bound field of knowledge (lit. “instrument of instruction”)
 śāstras: rule-bound fields of knowledge
+sat-cit-ānanda: "“being, consciousness, bliss”: a description of brahman"
 satkāryavāda: doctrine that the effect pre-exists in its cause
 siddhānta: "established conclusion (in astronomy: a treatise)"
 siddhāntabindu: “Drop of Doctrine”
@@ -133,8 +145,10 @@ sphoṭa: the whole meaning that “bursts forth” from a word
 śruti: "“what was heard”: revealed scripture"
 sūtra: terse aphorism; a text made of them
 sūtras: terse aphorisms
+śvetāśvatara: an Upaniṣad of the Black Yajurveda
 syādvāda: "“maybe” doctrine: every claim holds only in some respect"
 syādvādamañjarī: “Bouquet of Syādvāda”
+taittirīya: a principal Upaniṣad of the Yajurveda
 tarkasaṅgraha: “Compendium of Reasoning”
 tattvacintāmaṇi: “Wish-Gem of Truth” (Gaṅgeśa)
 tattvārthasūtra: “Aphorisms on the Meaning of the Realities”
@@ -145,6 +159,7 @@ upaniṣad: philosophical text at the end of the Veda
 upaniṣads: philosophical texts at the end of the Veda
 vāda: formal debate aimed at truth
 vaiśeṣika: "“school of distinctions”: atomist ontology"
+vaiṣṇava: devoted to Viṣṇu; a worshipper of Viṣṇu
 vaiyākaraṇabhūṣaṇa: “Ornament of the Grammarians”
 vārttikas: critical notes on the sūtras of a text
 veda: "“knowledge”: the oldest scriptures, held to be revealed"
@@ -154,9 +169,12 @@ vedānta: "“end of the Veda”: philosophy of the Upaniṣads"
 vedāntaparibhāṣā: “Terminology of Vedānta”
 vedāntasūtra: another name for the Brahmasūtra
 viśiṣṭādvaita: "“qualified non-dual”: one reality with real parts (Rāmānuja)"
+vivaraṇa: Advaita sub-school named after Prakāśātman's commentary
+vivarta: "apparent change: a cause seems to become its effect"
 vyākaraṇa: grammar
 vyāpti: "pervasion: the universal rule behind an inference"
 yoga: "“discipline / union”: the meditative school paired with Sāṅkhya"
 yogācāra: "“practice of yoga” school: only consciousness is real"
+yogamāyā: "God’s veiling power of māyā (Gītā 7.25)"
 yogasūtra: “Aphorisms on Yoga”
 yuktibhāṣā: “Language of Reasoning” (written in Malayalam)
