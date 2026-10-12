@@ -13,7 +13,8 @@ export interface Cite { id: string | null; inline: boolean; inLink: boolean; inH
 export interface Note { inline: boolean; empty: boolean; inLink: boolean; inHeading: boolean; inNote: boolean }
 export interface Refs { cites: Cite[]; notes: Note[]; unknown: string[]; links: InternalLink[] }
 
-const parser = unified().use(remarkParse).use(remarkGfm).use(remarkDirective);
+/** The Markdown parser the page pipeline starts from; describe() reads the same tree. */
+export const parser = unified().use(remarkParse).use(remarkGfm).use(remarkDirective);
 
 const DIRECTIVE_NODES = new Set(['textDirective', 'leafDirective', 'containerDirective']);
 

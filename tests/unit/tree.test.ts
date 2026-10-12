@@ -66,9 +66,10 @@ describe('validate', () => {
   });
 
   it('rejects non-ASCII and reserved block names', () => {
-    expect(validate([block('śaṅkara'), block('about')])).toEqual([
+    expect(validate([block('śaṅkara'), block('about'), block('home')])).toEqual([
       'śaṅkara: file name must be lower-case ASCII words joined by hyphens',
       'about: that name is reserved for a fixed page',
+      'home: that name is reserved for a fixed page',
     ]);
   });
 

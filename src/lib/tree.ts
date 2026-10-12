@@ -4,7 +4,7 @@ import { extractRefs } from './refs';
 export const ROOT = 'map';
 export const PAGES = ['about', 'glossary'] as const;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const RESERVED = new Set<string>([ROOT, 'index', '404', 'og', ...PAGES]);
+const RESERVED = new Set<string>([ROOT, 'index', '404', 'og', 'home', ...PAGES]);
 
 export interface Block {
   id: string;
