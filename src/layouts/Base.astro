@@ -2,7 +2,6 @@
 import '@fontsource/gentium-book-plus/400.css';
 import '@fontsource/gentium-book-plus/400-italic.css';
 import '@fontsource/gentium-book-plus/700.css';
-import '@fontsource/tiro-devanagari-sanskrit/400.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/manuscript.css';
@@ -54,54 +53,69 @@ const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and t
     <script>
       const pop = document.createElement('div');
       pop.id = 'gloss-pop';
-      pop.setAttribute('role', 'tooltip');
+      pop.setAttribute('aria-hidden', 'true'); // visual only; each term carries its own description (Task 9)
       pop.hidden = true;
       document.body.append(pop);
       let current: HTMLElement | null = null;
-      const hover = matchMedia('(hover: hover)');
 
+      function place(term: HTMLElement) {
+        pop.style.left = '0px'; // measure at the origin, not at the last position
+        pop.style.top = '0px';
+        pop.hidden = false;
+        const r = term.getBoundingClientRect();
+        const w = pop.offsetWidth;
+        const h = pop.offsetHeight;
+        const vw = document.documentElement.clientWidth;
+        const left = Math.max(8, Math.min(r.left, vw - w - 8));
+        const below = r.bottom + h + 8 <= innerHeight || r.top < h + 8;
+        pop.style.left = `${left + scrollX}px`;
+        pop.style.top = `${(below ? r.bottom : r.top - h) + scrollY}px`;
+      }
       function show(term: HTMLElement) {
-        current?.removeAttribute('aria-describedby');
         current = term;
         const b = document.createElement('b');
         b.textContent = term.textContent;
         pop.replaceChildren(b, ' · ', term.dataset.gloss ?? '');
-        pop.hidden = false;
-        const r = term.getBoundingClientRect();
-        const maxX = scrollX + document.documentElement.clientWidth - pop.offsetWidth - 8;
-        pop.style.left = `${Math.max(scrollX + 8, Math.min(r.left + scrollX, maxX))}px`;
-        pop.style.top = `${r.bottom + scrollY + 6}px`;
-        term.setAttribute('aria-describedby', 'gloss-pop');
+        place(term);
       }
       function hide() {
         pop.hidden = true;
-        current?.removeAttribute('aria-describedby');
         current = null;
       }
       const termOf = (t: EventTarget | null) => (t instanceof Element ? t.closest<HTMLElement>('a.term') : null);
+      const within = (n: EventTarget | null, el: Element | null) => n instanceof Node && !!el?.contains(n);
 
       document.addEventListener('click', (e) => {
         const t = termOf(e.target);
-        if (t) {
-          e.preventDefault();
-          show(t); // tap or click always shows; tapping elsewhere or Escape hides
-        } else if (!pop.contains(e.target as Node)) hide();
+        if (!t || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // let modified clicks open the glossary
+        e.preventDefault();
+        show(t);
       });
-      document.addEventListener('mouseover', (e) => {
+      // pointerdown (not click) so a tap on plain prose also closes it on iOS
+      document.addEventListener('pointerdown', (e) => {
+        if (!termOf(e.target) && !within(e.target, pop)) hide();
+      });
+      document.addEventListener('pointerover', (e) => {
         const t = termOf(e.target);
-        if (t && hover.matches) show(t);
+        if (t && e.pointerType === 'mouse') show(t);
       });
-      document.addEventListener('mouseout', (e) => {
-        if (termOf(e.target) && hover.matches) hide();
+      document.addEventListener('pointerout', (e) => {
+        if (e.pointerType !== 'mouse' || !current) return;
+        if (within(e.relatedTarget, pop) || within(e.relatedTarget, current)) return; // moving onto the pop-up keeps it open
+        if (termOf(e.target) === current || within(e.target, pop)) hide();
       });
       document.addEventListener('focusin', (e) => {
         const t = termOf(e.target);
-        if (t?.matches(':focus-visible')) show(t); // keyboard focus only; taps are handled by click
+        if (t?.matches(':focus-visible')) show(t);
         else if (!t) hide();
+      });
+      document.addEventListener('focusout', (e) => {
+        if (!(e.relatedTarget instanceof Node)) hide(); // focus left the page
       });
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') hide();
       });
+      addEventListener('resize', () => current && place(current));
     </script>
   </body>
 </html>
