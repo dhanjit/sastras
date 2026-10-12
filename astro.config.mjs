@@ -30,7 +30,7 @@ export default defineConfig({
     processor: unified({
       remarkPlugins: [remarkDirective, remarkNote, remarkCite, remarkRestoreDirectives],
       // a plain object, not a Map: Astro's content cache keys on the serialized config, and a Map serializes as {}
-      rehypePlugins: [[rehypeGloss, { terms: Object.fromEntries(loadGlossary()) }]],
+      rehypePlugins: [[rehypeGloss, { terms: Object.fromEntries(loadGlossary(fileURLToPath(new URL('./src/data/glossary.yaml', import.meta.url)))) }]],
     }),
   },
 });

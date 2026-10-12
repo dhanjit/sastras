@@ -30,6 +30,7 @@ test('the about page explains the method and credits the original map', async ({
   await page.goto('/about');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Paricaya');
   await expect(page.getByRole('link', { name: /Navigating Indian Śāstras/ })).toHaveAttribute('href', 'https://youtu.be/hj6yzj_HlvA');
+  await expect(page.getByText('Prathosh A. P.')).toBeVisible();
 });
 
 test('an unknown address shows the 404 page', async ({ page }) => {
