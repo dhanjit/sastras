@@ -14,10 +14,13 @@ jobs:
       - id: lychee
         uses: lycheeverse/lychee-action@v2
         with:
-          # The site's own canonical and og:image URLs are not sources; skip them so a site that is not live yet
+          # Only external http(s) links are checked. Internal links are root-relative ("/about"); lychee must be told
+          # where the root is to resolve them before the scheme filter can skip them, or each one is reported as an error.
+          # The site's own canonical and og:image URLs are not sources; skip them too, so a site that is not live yet
           # (or a blip on our own host) does not open a "dead source links" issue.
           args: >-
             --no-progress --max-concurrency 4 --scheme https --scheme http --accept 200,206,429
+            --root-dir '${{ github.workspace }}/dist'
             --exclude '^https://sastras\.dhanjit\.me(/|$)' --exclude-path dist/og 'dist/**/*.html'
           output: lychee/out.md
           fail: false
