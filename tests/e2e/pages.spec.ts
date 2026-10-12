@@ -28,7 +28,7 @@ test('a parent page lists its children under "Go deeper"', async ({ page }) => {
 
 test('a citation links to its source and a note opens', async ({ page }, info) => {
   await page.goto('/advaita-vedanta');
-  await expect(page.locator('sup.cite a')).toHaveAttribute('href', '#src-wiki');
+  await expect(page.locator('sup.cite a').first()).toHaveAttribute('href', '#src-wiki'); // the first paragraph's first cite
   const body = page.locator('.note-body').first();
   if (info.project.name === 'phone') {
     await expect(body).toBeHidden();
