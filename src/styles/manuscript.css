@@ -61,6 +61,7 @@ a.row::after { content: '›'; content: '›' / ''; grid-column: 2; grid-row: 1 
 a.term { text-decoration: underline dotted var(--rubric); text-underline-offset: 0.2em; -webkit-tap-highlight-color: transparent; }
 #gloss-pop { position: absolute; z-index: 10; max-width: min(20rem, calc(100vw - 2rem)); background: var(--pop-bg); color: var(--pop-fg); padding: 0.5rem 0.7rem; border-top: 6px solid transparent; background-clip: padding-box; border-radius: 4px; font: 0.875rem/1.45 var(--sans); }
 @media (prefers-color-scheme: dark) { #gloss-pop { box-shadow: inset 0 0 0 1px var(--line); } }
+#gloss-pop[data-side='above'] { border-top-width: 0; border-bottom: 6px solid transparent; }
 #gloss-pop b { font: 700 1rem var(--serif); }
 
 /* sources, texts, correction */
@@ -80,3 +81,9 @@ a.term { text-decoration: underline dotted var(--rubric); text-underline-offset:
 @media (min-width: 1000px) {
   .blocks-map { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 0 1.5rem; }
 }
+
+/* glossary page */
+.glossary div { padding: 0.5rem 0; border-bottom: 1px solid var(--line); }
+.glossary dt { display: inline; }
+.glossary dd { display: inline; margin: 0 0 0 0.5rem; color: var(--ink-muted); }
+.glossary div:target { background: var(--leaf-2); }

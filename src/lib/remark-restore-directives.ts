@@ -1,8 +1,8 @@
 import type { Root } from 'mdast';
 import { SKIP, visit } from 'unist-util-visit';
+import { DIRECTIVES } from './directives';
 
-const DIRECTIVES = new Set(['textDirective', 'leafDirective', 'containerDirective']);
-const KEPT = new Set(['note', 'cite']);
+const DIRECTIVE_NODES = new Set(['textDirective', 'leafDirective', 'containerDirective']);
 
 /**
  * remark-directive reads any `:word` as a directive, so ordinary text like "Gītā 2:47" or
@@ -14,7 +14,7 @@ export function remarkRestoreDirectives() {
   return (tree: Root, file: { value: unknown }) => {
     const source = String(file.value);
     visit(tree, (node: any, index, parent: any) => {
-      if (!DIRECTIVES.has(node.type) || KEPT.has(node.name) || !parent || index === undefined) return;
+      if (!DIRECTIVE_NODES.has(node.type) || DIRECTIVES.has(node.name) || !parent || index === undefined) return;
       const { start, end } = node.position ?? {};
       if (start?.offset === undefined || end?.offset === undefined) return;
       const text = { type: 'text', value: source.slice(start.offset, end.offset) };

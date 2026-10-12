@@ -41,3 +41,19 @@ test('a citation links to its source and a note opens', async ({ page }, info) =
     expect(nb!.x).toBeGreaterThan(prose!.x + prose!.width);
   }
 });
+
+test('a Sanskrit term shows its meaning when tapped or clicked', async ({ page }, info) => {
+  await page.goto('/advaita-vedanta');
+  const term = page.locator('a.term', { hasText: 'ātman' }).first();
+  if (info.project.name === 'phone') await term.tap();
+  else await term.click();
+  await expect(page.locator('#gloss-pop')).toBeVisible();
+  await expect(page.locator('#gloss-pop')).toContainText('self');
+  await expect(page).toHaveURL(/\/advaita-vedanta$/); // stayed on the page
+  const descId = await term.getAttribute('aria-describedby'); // screen readers get the meaning without the pop-up
+  await expect(page.locator(`#${descId}`)).toHaveText(/self/);
+  // tapping or clicking inside the pop-up must not close it
+  if (info.project.name === 'phone') await page.locator('#gloss-pop').tap();
+  else await page.locator('#gloss-pop').click();
+  await expect(page.locator('#gloss-pop')).toBeVisible();
+});

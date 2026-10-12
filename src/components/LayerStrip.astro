@@ -7,7 +7,7 @@ const { current } = Astro.props;
   <ol class="layer-strip">
     {LAYERS.map((l) => (
       <li class:list={{ on: l === current }}>
-        <a href={`/#${l}`} title={`${LAYER_LABEL[l].title}: ${LAYER_LABEL[l].gloss}`} aria-current={l === current ? 'location' : undefined}>
+        <a href={`/#${l}`} title={`${LAYER_LABEL[l].title}, ${LAYER_LABEL[l].gloss}`} aria-current={l === current ? 'location' : undefined}>
           <span class="sr-only">{LAYER_LABEL[l].title}, {LAYER_LABEL[l].gloss}</span>
         </a>
       </li>

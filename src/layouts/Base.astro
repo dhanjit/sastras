@@ -68,6 +68,7 @@ const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and t
         const vw = document.documentElement.clientWidth;
         const left = Math.max(8, Math.min(r.left, vw - w - 8));
         const below = r.bottom + h + 8 <= innerHeight || r.top < h + 8;
+        pop.dataset.side = below ? 'below' : 'above';
         pop.style.left = `${left + scrollX}px`;
         pop.style.top = `${(below ? r.bottom : r.top - h) + scrollY}px`;
       }
@@ -109,9 +110,7 @@ const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and t
         if (t?.matches(':focus-visible')) show(t);
         else if (!t) hide();
       });
-      document.addEventListener('focusout', (e) => {
-        if (!(e.relatedTarget instanceof Node)) hide(); // focus left the page
-      });
+      addEventListener('blur', hide); // focus left the page; taps elsewhere are handled by pointerdown
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') hide();
       });

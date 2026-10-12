@@ -3,6 +3,7 @@ import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
 import remarkDirective from 'remark-directive';
 import { visitParents } from 'unist-util-visit-parents';
+import { DIRECTIVES } from './directives';
 
 /** An internal link's path without the leading slash ('' is the home page), or null when the link is relative. */
 export interface InternalLink { url: string; path: string | null }
@@ -14,8 +15,7 @@ export interface Refs { cites: Cite[]; notes: Note[]; unknown: string[]; links: 
 
 const parser = unified().use(remarkParse).use(remarkGfm).use(remarkDirective);
 
-const DIRECTIVES = new Set(['textDirective', 'leafDirective', 'containerDirective']);
-const KNOWN = new Set(['note', 'cite']);
+const DIRECTIVE_NODES = new Set(['textDirective', 'leafDirective', 'containerDirective']);
 
 /** The label exactly as remarkCite reads it: the text children only. */
 const citeLabel = (node: any): string => (node.children ?? []).map((c: any) => c.value ?? '').join('').trim();
@@ -37,12 +37,12 @@ export function extractRefs(body: string): Refs {
   visitParents(parser.parse(body), (node: any, ancestors: any[]) => {
     const inLink = ancestors.some((a) => a.type === 'link' || a.type === 'linkReference');
     const inHeading = ancestors.some((a) => a.type === 'heading');
-    if (DIRECTIVES.has(node.type) && node.name === 'cite') {
+    if (DIRECTIVE_NODES.has(node.type) && node.name === 'cite') {
       cites.push({ id: citeLabel(node) || null, inline: node.type === 'textDirective', inLink, inHeading });
-    } else if (DIRECTIVES.has(node.type) && node.name === 'note') {
+    } else if (DIRECTIVE_NODES.has(node.type) && node.name === 'note') {
       const inNote = ancestors.some((a) => a.type === 'textDirective' && a.name === 'note');
       notes.push({ inline: node.type === 'textDirective', empty: plainText(node).trim() === '', inLink, inHeading, inNote });
-    } else if (DIRECTIVES.has(node.type) && !KNOWN.has(node.name) && hasLabelOrAttributes(node)) {
+    } else if (DIRECTIVE_NODES.has(node.type) && !DIRECTIVES.has(node.name) && hasLabelOrAttributes(node)) {
       unknown.push(node.name);
     }
     if (node.type === 'link' || node.type === 'definition') {
