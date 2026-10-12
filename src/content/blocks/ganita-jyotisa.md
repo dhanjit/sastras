@@ -2,7 +2,7 @@
 title: Gaṇita-Jyotiṣa
 devanagari: गणितज्योतिषम्
 gloss: "mathematics and astronomy"
-kind: school
+kind: topic
 parent: map
 layer: schools
 order: 9

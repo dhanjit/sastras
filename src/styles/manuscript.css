@@ -37,7 +37,10 @@ a.row::after { content: '›'; content: '›' / ''; grid-column: 2; grid-row: 1 
 .row.prep .row-title { font-weight: 400; }
 .row-tag { grid-column: 2; grid-row: 1 / span 2; align-self: center; font: italic 0.75rem var(--sans); }
 .chips { display: flex; flex-wrap: wrap; gap: 0.3rem; list-style: none; padding: 0; margin: 0.4rem 0 0.6rem; }
-.chip { font: 0.6875rem var(--sans); border: 1px solid var(--line); border-radius: 999px; padding: 0.05rem 0.5rem; color: var(--ink-muted); }
+.pramanas { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 0.4rem; margin: 0.4rem 0 0.6rem; }
+.pramanas .chips { margin: 0; }
+.per { font: italic 0.75rem var(--sans); color: var(--ink-muted); }
+.chip { font: 0.75rem var(--sans); border: 1px solid var(--line); border-radius: 999px; padding: 0.05rem 0.5rem; color: var(--ink-muted); }
 
 /* prose, citations, margin notes, glossary terms */
 .prose p { margin: 0 0 1em; }
@@ -74,15 +77,18 @@ a.term { text-decoration: underline dotted var(--rubric); text-underline-offset:
 .intro .lede { color: var(--ink-muted); max-width: 36rem; }
 .intro .legend { font: 0.8125rem/1.5 var(--sans); color: var(--ink-muted); margin-top: 0.5rem; }
 .intro .legend b { color: var(--ink); }
-.layer { margin-top: 2.5rem; }
+.map-note { font: 0.8125rem/1.5 var(--sans); color: var(--ink-muted); margin: 0 0 0.5rem; }
+.page > section.layer { margin-top: 2.5rem; }
 .layer-title { font-size: 1.6rem; margin: 0; }
 .layer-n { font: 600 0.8rem var(--sans); color: var(--rubric); vertical-align: middle; margin-right: 0.4rem; }
 .layer-gloss { margin: 0.2rem 0 0.75rem; color: var(--rubric); font-style: italic; }
 .side-label { font: 0.75rem var(--sans); letter-spacing: 0.06em; color: var(--ink-muted); margin: 1rem 0 0.2rem; border-top: 1px dashed var(--rule); padding-top: 0.5rem; }
 .side-label b { color: var(--rubric); font-weight: 600; }
-@media (min-width: 1000px) {
-  .blocks-map { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 0 1.5rem; }
-}
+/* the divider sits on the map cell, so a school's chips stay inside it and the rows line up */
+.blocks-map > li { display: flex; flex-direction: column; border-bottom: 1px solid var(--line); }
+.blocks-map .row { border-bottom: 0; }
+@media (min-width: 640px) { .blocks-map { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 0 1.5rem; } }
+@media (min-width: 1100px) { .blocks-map { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
 
 /* glossary page */
 .glossary div { padding: 0.5rem 0; border-bottom: 1px solid var(--line); }

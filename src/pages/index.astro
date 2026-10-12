@@ -11,20 +11,28 @@ const schools = tree.topLevel('schools');
   <header class="intro">
     <h1 class="title">Śāstras</h1>
     <p class="gloss">a map of Indian philosophy and the classical sciences</p>
-    <p class="lede">Read it top to bottom, in the order a student learns: the language, then grammar and the ways of knowing, then one of the schools, then its texts, and finally the debates.</p>
-    <p class="legend">Names in <b>bold</b> open a page. The rest are still being written.</p>
+    <p class="lede">Read it top to bottom, in the order a student learns: the language, grammar and the ways of knowing first, then the schools, then the Veda and the applied sciences, and finally the debates.</p>
+    <p class="legend"><span aria-hidden="true">Names in <b>bold</b> open a page. The rest are still being written.</span><span class="sr-only">Names that are links open a page; the others are still being written.</span></p>
   </header>
   {LAYERS.map((layer, i) => (
     <section class="layer" id={layer} aria-labelledby={`h-${layer}`}>
-      <h2 class="layer-title" id={`h-${layer}`}><span class="layer-n">{i + 1}</span>{LAYER_LABEL[layer].title}</h2>
+      <h2 class="layer-title" id={`h-${layer}`}><span class="layer-n" aria-hidden="true">{i + 1}</span>{' '}{LAYER_LABEL[layer].title}</h2>
       <p class="layer-gloss">{LAYER_LABEL[layer].gloss}</p>
       {layer === 'schools'
-        ? SIDES.map((side) => (
+        ? (
             <>
-              <p class="side-label"><b>{SIDE_LABEL[side].title}</b> · {SIDE_LABEL[side].gloss}</p>
-              <BlockList blocks={schools.filter((s) => (s.data.vedic_authority ?? 'n/a') === side)} variant="map" />
+              <p class="map-note">Under each school: the pramāṇas it accepts (see layer 2).</p>
+              {SIDES.map((side) => {
+                const headingId = `h-side-${side === 'n/a' ? 'sastra' : side}`;
+                return (
+                  <>
+                    <h3 class="side-label" id={headingId}><b>{SIDE_LABEL[side].title}</b> · {SIDE_LABEL[side].gloss}</h3>
+                    <BlockList blocks={schools.filter((s) => s.data.vedic_authority === side)} variant="map" labelledby={headingId} />
+                  </>
+                );
+              })}
             </>
-          ))
+          )
         : <BlockList blocks={tree.topLevel(layer)} variant="map" />}
     </section>
   ))}

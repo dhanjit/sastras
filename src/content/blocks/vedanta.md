@@ -9,6 +9,7 @@ order: 7
 status: draft
 vedic_authority: accepts
 pramanas: [pratyaksa, anumana, sabda, upamana, arthapatti, anupalabdhi]
+pramanas_per: Advaita
 sources:
   - { id: wiki, title: "Wikipedia — Vedanta", url: "https://en.wikipedia.org/wiki/Vedanta" }
 ---

@@ -23,4 +23,5 @@ test('schools are grouped by whether they accept the Veda, with their pramāṇa
   await expect(labels.nth(0)).toContainText('nāstika');
   const vedanta = page.locator('#schools li', { has: page.getByRole('link', { name: /Vedānta/ }) });
   await expect(vedanta.locator('.chip')).toHaveCount(6);
+  await expect(vedanta).toContainText('per Advaita:');
 });

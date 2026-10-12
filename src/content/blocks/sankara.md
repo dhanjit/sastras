@@ -1,7 +1,7 @@
 ---
 title: Śaṅkara
-devanagari: शङ्कराचार्यः
-gloss: "the great teacher of Advaita"
+devanagari: शङ्करः
+gloss: "systematiser of Advaita, c. 8th century"
 kind: person
 parent: advaita-vedanta
 order: 1

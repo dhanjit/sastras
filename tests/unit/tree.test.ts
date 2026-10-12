@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { buildTree, validate, type Block } from '../../src/lib/tree';
 
-const block = (id: string, data: Partial<Block['data']> = {}, body = ''): Block => ({
-  id,
-  body,
-  data: { title: id, parent: 'map', layer: 'schools', order: 1, status: 'draft', sources: [{ id: 'w' }], related: [], ...data },
-});
+const block = (id: string, data: Partial<Block['data']> = {}, body = ''): Block => {
+  const d: Block['data'] = { title: id, parent: 'map', layer: 'schools', order: 1, status: 'draft', sources: [{ id: 'w' }], related: [], ...data };
+  // A top-level school must say whether it accepts the Veda; give the fixtures one unless a test sets it explicitly.
+  if (d.parent === 'map' && d.layer === 'schools' && !('vedic_authority' in data)) d.vedic_authority = 'accepts';
+  return { id, body, data: d };
+};
 
 const fixture = [
   block('vedanta', { order: 7 }),
@@ -80,6 +81,32 @@ describe('validate', () => {
       'a: a top-level block needs a layer',
       'b: only top-level blocks set a layer',
     ]);
+  });
+
+  it('requires a school to say whether it accepts the Veda', () => {
+    expect(validate([block('a', { vedic_authority: undefined })])).toEqual(['a: a school needs vedic_authority']);
+  });
+
+  it.each<[string, Partial<Block['data']>]>([
+    ['pramanas', { pramanas: ['pratyaksa'] }],
+    ['pramanas_per', { pramanas: ['pratyaksa'], pramanas_per: 'Advaita' }],
+    ['vedic_authority', { vedic_authority: 'accepts' }],
+  ])('lets only schools set %s', (field, extra) => {
+    const nested = block('b', { parent: 'a', layer: undefined, ...extra });
+    const otherLayer = block('c', { layer: 'foundation', ...extra });
+    const errors = validate([block('a'), nested, otherLayer]);
+    expect(errors.filter((e) => e.endsWith(`only schools set ${field}`))).toEqual([
+      `b: only schools set ${field}`,
+      `c: only schools set ${field}`,
+    ]);
+  });
+
+  it('requires pramanas wherever pramanas_per is given', () => {
+    expect(validate([block('a', { pramanas_per: 'Advaita' })])).toEqual(['a: pramanas_per needs pramanas']);
+  });
+
+  it('accepts a school that sets all three fields', () => {
+    expect(validate([block('a', { pramanas: ['pratyaksa'], pramanas_per: 'Advaita', vedic_authority: 'accepts' })])).toEqual([]);
   });
 
   it('reports a parent loop', () => {

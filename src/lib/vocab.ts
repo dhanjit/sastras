@@ -3,8 +3,8 @@ export type Layer = (typeof LAYERS)[number];
 
 export const LAYER_LABEL: Record<Layer, { title: string; gloss: string }> = {
   foundation: { title: 'Ādhāra', gloss: 'the foundation: language, grammar and logic' },
-  pramana: { title: 'Pramāṇa', gloss: 'the ways of knowing each school accepts' },
-  schools: { title: 'Darśana', gloss: 'the schools, and what each says exists' },
+  pramana: { title: 'Pramāṇa', gloss: 'the ways of knowing' },
+  schools: { title: 'Darśana', gloss: 'the schools of philosophy, and the sciences' },
   corpus: { title: 'Śruti and Śāstra', gloss: 'the Veda and the applied sciences' },
   vada: { title: 'Vāda', gloss: 'the debates between the schools' },
 };

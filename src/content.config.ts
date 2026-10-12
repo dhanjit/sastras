@@ -31,6 +31,7 @@ const blocks = defineCollection({
     read: z.array(readLink).default([]),
     related: z.array(z.string()).default([]),
     pramanas: z.array(z.enum(PRAMANAS)).optional(),
+    pramanas_per: z.string().min(1).optional(),
     vedic_authority: z.enum(SIDES).optional(),
   }),
 });

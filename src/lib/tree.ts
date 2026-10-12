@@ -1,4 +1,4 @@
-import type { Layer, Status } from './vocab';
+import type { Layer, Pramana, Side, Status } from './vocab';
 import { extractRefs } from './refs';
 
 export const ROOT = 'map';
@@ -17,6 +17,9 @@ export interface Block {
     status: Status;
     sources: { id: string }[];
     related: string[];
+    vedic_authority?: Side;
+    pramanas?: Pramana[];
+    pramanas_per?: string;
   };
 }
 
@@ -63,7 +66,7 @@ export function validate(blocks: Block[]): string[] {
   const errors: string[] = [];
   const byId = new Map(blocks.map((b) => [b.id, b]));
   for (const b of blocks) {
-    const { parent, layer, related, sources, status } = b.data;
+    const { parent, layer, related, sources, status, vedic_authority, pramanas, pramanas_per } = b.data;
     if (!SLUG.test(b.id)) errors.push(`${b.id}: file name must be lower-case ASCII words joined by hyphens`);
     if (RESERVED.has(b.id)) errors.push(`${b.id}: that name is reserved for a fixed page`);
     if (parent === ROOT) {
@@ -72,6 +75,13 @@ export function validate(blocks: Block[]): string[] {
       if (!byId.has(parent)) errors.push(`${b.id}: parent "${parent}" does not exist`);
       if (layer) errors.push(`${b.id}: only top-level blocks set a layer`);
     }
+    const isSchool = parent === ROOT && layer === 'schools';
+    if (isSchool && !vedic_authority) errors.push(`${b.id}: a school needs vedic_authority`);
+    if (!isSchool) {
+      const set = { pramanas, pramanas_per, vedic_authority };
+      for (const [field, value] of Object.entries(set)) if (value !== undefined) errors.push(`${b.id}: only schools set ${field}`);
+    }
+    if (pramanas_per !== undefined && !pramanas?.length) errors.push(`${b.id}: pramanas_per needs pramanas`);
     const seen = new Set([b.id]);
     let stubAbove: string | undefined;
     for (let cur = parent; cur !== ROOT && byId.has(cur); cur = byId.get(cur)!.data.parent) {

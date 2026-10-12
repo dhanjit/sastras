@@ -9,4 +9,5 @@ order: 5
 status: stub
 vedic_authority: "accepts"
 pramanas: [pratyaksa, anumana, sabda, upamana]
+pramanas_per: Nyāya
 ---
