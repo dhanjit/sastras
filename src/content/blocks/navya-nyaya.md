@@ -1,12 +1,12 @@
 ---
 title: Navya-Nyāya
 devanagari: नव्यन्यायः
-gloss: "the new logic, after c. 1325"
+gloss: "the new logic, from the first half of the 14th century"
 kind: topic
 parent: map
 layer: foundation
 order: 5
-dates: from c. 1325 CE
+dates: from the 14th century CE
 status: draft
 sources:
   - { id: sep, title: "Stanford Encyclopedia of Philosophy — Analytic Philosophy in Early Modern India", url: "https://plato.stanford.edu/entries/early-modern-india/" }
@@ -25,6 +25,6 @@ The Tattvacintāmaṇi has four books, one for each [source of knowledge](/prama
 
 In its vocabulary, an absence is analysed as something missing from a place, and the missing thing is the pratiyogin:cite[sep].:note[Pratiyogin, “counterpositive”: in “there is no pot in the room”, the pot is the counterpositive of the absence and the room is its locus:cite[sep].] A property can hold of a thing in one respect, such as one part, and not in another; what delimits it is the avacchedaka:cite[sep].:note[Avacchedaka, “delimitor”: a monkey sits on one branch of a tree, so the tree both is and is not in contact with it. Saying the contact is delimited (avacchinna) by the branch removes the contradiction:cite[sep].]
 
-The school kept developing for about four centuries and reached its height with Raghunātha Śiromaṇi, Jagadīśa and Gadādhara:cite[sep]. Raghunātha worked at Navadvīpa in Bengal:cite[wiki], which became a leading centre of Nyāya learning:cite[wiki-madhusudana]. Its techniques spread to poetics, grammar and legal theory:cite[sep]. They reached Vedānta too: the Dvaita philosopher Vyāsatīrtha built Navya-Nyāya elements into his arguments:cite[wiki-vyasatirtha], and his Advaita opponent Madhusūdana Sarasvatī, trained in Navya-Nyāya at Navadvīpa, answered Vyāsatīrtha's Nyāyāmṛta with the Advaitasiddhi:cite[wiki-madhusudana].
+The school kept developing for about four centuries and reached its height with Raghunātha Śiromaṇi, Jagadīśa and Gadādhara:cite[sep]. Raghunātha worked at Navadvīpa in Bengal:cite[wiki], which became a leading centre of Nyāya learning:cite[wiki-madhusudana]. Its techniques spread to poetics, [grammar](/vyakarana) and legal theory:cite[sep]. They reached [Vedānta](/vedanta) too: the Dvaita philosopher Vyāsatīrtha built Navya-Nyāya elements into his arguments:cite[wiki-vyasatirtha], and his [Advaita](/advaita-vedanta) opponent Madhusūdana Sarasvatī, trained in Navya-Nyāya at Navadvīpa, answered Vyāsatīrtha's Nyāyāmṛta with the Advaitasiddhi:cite[wiki-madhusudana].
 
 The idiom grew so dense that 17th- and 18th-century authors wrote simpler manuals:cite[sep]. The most successful was Annaṃbhaṭṭa's Tarkasaṅgraha, with his own commentary, the Dīpikā:cite[sep]. This short book has been the basic text for beginners for generations:cite[wiki-tarkasangraha].
