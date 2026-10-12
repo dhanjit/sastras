@@ -57,9 +57,9 @@ a.row::after { content: '›'; grid-column: 2; grid-row: 1 / span 2; align-self:
   }
   .note-mark { cursor: default; }
 }
-a.term { text-decoration: underline dotted var(--rubric); text-underline-offset: 0.2em; }
+a.term { text-decoration: underline dotted var(--rubric); text-underline-offset: 0.2em; -webkit-tap-highlight-color: transparent; }
 #gloss-pop { position: absolute; z-index: 10; max-width: min(20rem, calc(100vw - 2rem)); background: var(--pop-bg); color: var(--pop-fg); padding: 0.5rem 0.7rem; border-top: 6px solid transparent; background-clip: padding-box; border-radius: 4px; font: 0.875rem/1.45 var(--sans); }
-@media (prefers-color-scheme: dark) { #gloss-pop { box-shadow: 0 0 0 1px var(--line); } }
+@media (prefers-color-scheme: dark) { #gloss-pop { box-shadow: inset 0 0 0 1px var(--line); } }
 #gloss-pop b { font: 700 1rem var(--serif); }
 
 /* sources, texts, correction */
