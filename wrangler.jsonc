@@ -1,0 +1,8 @@
+{
+  "name": "sastras",
+  "compatibility_date": "2026-10-01",
+  "account_id": "939a7fa8a072b9ac7f9c41885fe71380",
+  "workers_dev": false,
+  "routes": [{ "pattern": "sastras.dhanjit.me", "custom_domain": true }],
+  "assets": { "directory": "./dist", "not_found_handling": "404-page" }
+}
