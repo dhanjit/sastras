@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
 import { unified } from '@astrojs/markdown-remark';
 import remarkDirective from 'remark-directive';
@@ -13,8 +14,16 @@ export default defineConfig({
   build: { format: 'file' },
   integrations: [
     {
+      // the glossary is read once at startup; Astro's in-place restart would not rebuild the content layer, so ask for a real one
       name: 'glossary-watch',
-      hooks: { 'astro:config:setup': ({ addWatchFile }) => addWatchFile(new URL('./src/data/glossary.yaml', import.meta.url)) },
+      hooks: {
+        'astro:server:setup': ({ server, logger }) => {
+          const file = fileURLToPath(new URL('./src/data/glossary.yaml', import.meta.url));
+          server.watcher.on('change', (f) => {
+            if (f === file) logger.warn('glossary.yaml changed: stop and restart the dev server to re-gloss pages');
+          });
+        },
+      },
     },
   ],
   markdown: {

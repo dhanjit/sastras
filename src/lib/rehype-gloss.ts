@@ -13,7 +13,8 @@ const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
  * the config, and a Map serializes as `{}`, so a glossary edit would never reach the cached pages.
  */
 export function rehypeGloss({ terms }: { terms: Record<string, string> }) {
-  const glossary = new Map(Object.entries(terms));
+  // normalize here too, so a caller other than loadGlossary cannot hand in keys the matcher would never see
+  const glossary = new Map(Object.entries(terms).map(([k, v]) => [k.normalize('NFC').toLowerCase(), v] as const));
   const keys = [...glossary.keys()].sort((a, b) => b.length - a.length).map(escape);
   const re = keys.length ? new RegExp(`(?<![\\p{L}\\p{M}])(${keys.join('|')})(?![\\p{L}\\p{M}])`, 'giu') : null;
 

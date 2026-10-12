@@ -129,4 +129,11 @@ describe('rehypeGloss', () => {
     // "ſ" (long s) case-folds to "s" under the regex's i flag, but lower-cases to itself
     expect(await gloss('ſūtra', undefined, { sūtra: 'thread' })).toBe('<p>ſūtra</p>');
   });
+
+  it('normalizes the keys it is given, so callers other than loadGlossary are safe', async () => {
+    const html = await gloss('the ātman here', undefined, { 'A\u0304tman': 'the self' }); // upper case and decomposed key
+    expect(html).toContain('data-gloss="the self"');
+    expect(html).toContain('href="/glossary#g-aatman"');
+    expect(await gloss('the ātman here', undefined, { Ātman: 'the self' })).toContain('data-gloss="the self"');
+  });
 });
