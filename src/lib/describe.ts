@@ -16,11 +16,13 @@ function textOf(node: any): string {
 }
 
 /**
- * A word that ends in a full stop without ending a sentence: any single letter ("c.", "d.", "b.", "r.", the
- * "g." of "e.g.", an initial) or one of the listed short forms, optionally followed by closing quotes or
- * brackets. The word must start the text or follow a non-letter, so "book." and "ch." do not match.
+ * A word that ends in a full stop without ending a sentence: any single letter, with any combining marks
+ * ("c.", "d.", "b.", "r.", the "g." of "e.g.", an initial) or one of the listed short forms ("ca.", "cf.", "fl.",
+ * "vol.", "ed.", "eds.", "lit.", "Skt.", "pp.", "vv.", "ch.", "viz.", "vs.", "tr.", "trans.", "esp."), optionally
+ * followed by closing quotes or brackets. The word must start the text or follow a non-letter, so "book." does not match.
+ * Era markers ("CE.", "BCE.", "AD.") are deliberately not listed: they usually do end the sentence.
  */
-const ABBREVIATION = /(?<![\p{L}\p{M}\p{N}])(?:\p{L}|ca|cf|fl|vol|ed)\.[”’"')\]]*$/iu;
+const ABBREVIATION = /(?<![\p{L}\p{M}\p{N}])(?:\p{L}\p{M}*|ca|cf|fl|vol|ed|eds|lit|skt|pp|vv|ch|viz|vs|tr|trans|esp)\.[”’"')\]]*$/iu;
 
 /** The Markdown body as plain running text. */
 function plain(body: string): string {
@@ -37,7 +39,8 @@ function plain(body: string): string {
  * - A cut that lands on the end of a sentence (`.`, `?` or `!`, optionally followed by a closing quote or
  *   bracket) keeps its punctuation and gets no ellipsis.
  * - A cut that lands right after an abbreviation (see `ABBREVIATION`) is mid-sentence: its stop belongs
- *   to the word, so it stays, and the ellipsis follows it directly ("lived c.…"). Never a bare "c.".
+ *   to the word, so it stays, and the ellipsis follows it directly ("lived c.…"). Never a bare "c.". A comma,
+ *   semicolon, colon, dot or dash after the abbreviation is dropped first ("e.g.," becomes "e.g.…").
  * - Any other mid-sentence cut loses its trailing `,;:.·—` and gets "…", so the result never ends in `.…`
  *   except after an abbreviation.
  */
@@ -50,7 +53,8 @@ export function describe(gloss: string, body: string, max = 155): string {
   const room = full.slice(0, max - 1); // leave a column for the ellipsis
   const atBoundary = /\s/.test(full.charAt(max - 1));
   const cut = (atBoundary || !room.includes(' ') ? room : room.slice(0, room.lastIndexOf(' '))).replace(/[\uD800-\uDBFF]$/, '').trimEnd();
-  if (ABBREVIATION.test(cut)) return `${cut}…`;
+  const bare = cut.replace(/[\s,;:·—]+$/, ''); // the stop of an abbreviation survives this; an ordinary word's is stripped below
+  if (ABBREVIATION.test(bare)) return `${bare}…`;
   if (/[.?!][”’"')\]]*$/.test(cut)) return cut;
   return `${cut.replace(/[\s,;:.·—]+$/, '')}…`;
 }

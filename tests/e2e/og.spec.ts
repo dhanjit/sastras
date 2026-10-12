@@ -14,6 +14,15 @@ test('every page points at its own preview image, and the image exists', async (
   expect((await request.get('/og/home.png')).status()).toBe(200);
 });
 
+test('the home card is versioned too, on every page that uses it', async ({ page, request }) => {
+  for (const path of ['/', '/about', '/glossary']) {
+    await page.goto(path);
+    const og = await page.locator('meta[property="og:image"]').getAttribute('content');
+    expect(og, path).toMatch(/^https:\/\/sastras\.dhanjit\.me\/og\/home\.png\?v=[0-9a-f]{8}$/);
+    expect((await request.get(og!.replace('https://sastras.dhanjit.me', ''))).status(), path).toBe(200);
+  }
+});
+
 test('block pages describe themselves, not just repeat the title', async ({ page }) => {
   await page.goto('/advaita-vedanta');
   const desc = await page.locator('meta[name="description"]').getAttribute('content');

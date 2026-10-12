@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import { loadGlossary, termAnchor } from '../lib/glossary';
 const entries = [...loadGlossary().entries()].sort(([a], [b]) => a.localeCompare(b, 'en'));
 ---
-<Base title="Glossary" description="Short English meanings for the Sanskrit terms used across the map." path="/glossary" og="/og/home.png">
+<Base title="Glossary" description="Short English meanings for the Sanskrit terms used across the map." path="/glossary">
   <header class="block-head">
     <h1 class="title">Kośa</h1>
     <p class="gloss">glossary · the Sanskrit terms used on this site</p>

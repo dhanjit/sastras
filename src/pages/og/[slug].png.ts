@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
 import { loadBlocks, isWritten } from '../../lib/blocks';
-import { drawable } from '../../lib/card';
+import { drawable, HOME_CARD } from '../../lib/card';
 import { LAYERS, type Layer } from '../../lib/vocab';
 
 // latin and latin-ext must be registered under different names, or IAST letters render as boxes.
@@ -23,7 +23,7 @@ type Props = { title: string; gloss: string; layer?: Layer };
 export const getStaticPaths = (async () => {
   const { all, tree } = await loadBlocks();
   return [
-    { params: { slug: 'home' }, props: { title: 'Śāstras', gloss: 'a map of Indian philosophy and the classical sciences' } },
+    { params: { slug: 'home' }, props: { ...HOME_CARD } },
     ...all.filter(isWritten).map((b) => ({
       params: { slug: b.id },
       props: { title: b.data.title, gloss: b.data.gloss, layer: tree.layerOf(b.id) },

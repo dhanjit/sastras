@@ -5,18 +5,20 @@ import '@fontsource/gentium-book-plus/700.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/manuscript.css';
+import { cardVersion, HOME_CARD } from '../lib/card';
 
 interface Props {
   title: string;
   description: string;
   path: string;
-  og: string;
+  /** Path of the link-preview image. Defaults to the versioned home card. */
+  og?: string;
   ogAlt?: string;
   type?: 'website' | 'article';
   wide?: boolean;
   noindex?: boolean;
 }
-const { title, description, path, og, ogAlt = 'Śāstras — a map of Indian philosophy and the classical sciences', type = 'website', wide = false, noindex = false } = Astro.props;
+const { title, description, path, og = `/og/home.png?v=${cardVersion(HOME_CARD)}`, ogAlt = 'Śāstras — a map of Indian philosophy and the classical sciences', type = 'website', wide = false, noindex = false } = Astro.props;
 const url = new URL(path, Astro.site).href;
 const image = new URL(og, Astro.site).href;
 const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and the classical sciences' : `${title} · Śāstras`;

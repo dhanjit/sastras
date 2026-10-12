@@ -120,5 +120,27 @@ it('treats a cut after an abbreviation inside brackets as mid-sentence', () => {
 it('still ends a cut on a real word-final stop as a sentence', () => {
   expect(describePage('x', 'He wrote the book. Then more', 'X. He wrote the book.'.length + 1)).toBe('X. He wrote the book.'); // "book." is not an abbreviation
   expect(describePage('x', 'He wrote it in 788. Then more', 'X. He wrote it in 788.'.length + 1)).toBe('X. He wrote it in 788.');
-  expect(describePage('x', 'See verse 2 of ch. Then more', 'X. See verse 2 of ch.'.length + 1)).toBe('X. See verse 2 of ch.'); // two letters, not on the list
+  expect(describePage('x', 'See verse 2 of it. Then more', 'X. See verse 2 of it.'.length + 1)).toBe('X. See verse 2 of it.'); // two letters, not on the list
+  expect(describePage('x', 'It was built in the 8th c. CE. Then more', 'X. It was built in the 8th c. CE.'.length + 1)).toBe('X. It was built in the 8th c. CE.'); // "CE." is not an abbreviation; the era marker ends the sentence
+});
+
+it.each(['lit.', 'Skt.', 'pp.', 'vv.', 'ch.', 'viz.', 'vs.', 'eds.', 'tr.', 'trans.', 'esp.', 'i.e.'])('treats a cut after "%s" as mid-sentence', (abbr) => {
+  expect(describePage('x', `He wrote it ${abbr} 788 and more`, `X. He wrote it ${abbr}`.length + 1)).toBe(`X. He wrote it ${abbr}…`);
+});
+
+// A comma, semicolon, colon or dash after the abbreviation is dropped, but the abbreviation's own stop stays.
+it.each([',', ';', ':', ' —', ' ·'])('keeps the stop of an abbreviation followed by "%s"', (after) => {
+  expect(describePage('x', `He wrote it, e.g.${after} the book and more`, `X. He wrote it, e.g.${after}`.length + 1)).toBe('X. He wrote it, e.g.…');
+  expect(describePage('x', `Lived c.${after} 788 and more`, `X. Lived c.${after}`.length + 1)).toBe('X. Lived c.…');
+});
+
+it('still strips the comma and the stop of an ordinary word before the ellipsis', () => {
+  expect(describePage('x', 'He wrote the book., then more', 'X. He wrote the book.,'.length + 1)).toBe('X. He wrote the book…');
+});
+
+it('recognises a one-letter abbreviation written with a combining mark (NFD ṛ.)', () => {
+  const nfd = 'r\u0323.';
+  expect(nfd.normalize('NFC')).not.toBe(nfd); // precondition: really decomposed
+  expect(describePage('x', `Root ${nfd} and more`, `X. Root ${nfd}`.length + 1)).toBe(`X. Root ${nfd}…`);
+  expect(describePage('x', 'The syllable Veda\u0304nta. Then more', 'X. The syllable Veda\u0304nta.'.length + 1)).toBe('X. The syllable Veda\u0304nta.'); // a word ending in a decomposed ā is not a one-letter word
 });

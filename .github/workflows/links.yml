@@ -1,13 +1,15 @@
 name: links
 on:
-  schedule: [{ cron: '0 3 * * 1' }]
+  schedule: [{ cron: '23 3 * * 1' }]
   workflow_dispatch: {}
 permissions: { contents: read, issues: write }
 jobs:
   links:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+        with: { persist-credentials: false }
       - uses: actions/setup-node@v7
         with: { node-version-file: .node-version, cache: npm }
       - run: npm ci && npm run build
@@ -16,18 +18,26 @@ jobs:
         with:
           # Only external http(s) links are checked. Internal links are root-relative ("/about"); lychee must be told
           # where the root is to resolve them before the scheme filter can skip them, or each one is reported as an error.
-          # The site's own canonical and og:image URLs are not sources; skip them too, so a site that is not live yet
-          # (or a blip on our own host) does not open a "dead source links" issue.
+          # The site's own generated self-references (canonical, og:image) are skipped: the e2e suite already checks
+          # them, and content links between pages are root-relative.
           args: >-
             --no-progress --max-concurrency 4 --scheme https --scheme http --accept 200,206,429
             --root-dir '${{ github.workspace }}/dist'
             --exclude '^https://sastras\.dhanjit\.me(/|$)' --exclude-path dist/og 'dist/**/*.html'
           output: lychee/out.md
           fail: false
+      # Everything resolves again: close the open issue, so an open one always means "still failing".
+      - if: steps.lychee.outputs.exit_code == 0
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          n=$(gh issue list --repo '${{ github.repository }}' --label links --state open --json number -q '.[0].number')
+          [ -z "$n" ] || gh issue close "$n" --repo '${{ github.repository }}' --comment "All external links resolve: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
       - id: existing
         if: steps.lychee.outputs.exit_code != 0
         env: { GH_TOKEN: '${{ github.token }}' }
-        run: echo "number=$(gh issue list --repo '${{ github.repository }}' --label links --state open --json number -q '.[0].number')" >> "$GITHUB_OUTPUT"
+        run: |
+          n=$(gh issue list --repo '${{ github.repository }}' --label links --state open --json number -q '.[0].number')
+          echo "number=$n" >> "$GITHUB_OUTPUT"
       - if: steps.lychee.outputs.exit_code != 0
         uses: peter-evans/create-issue-from-file@v6
         with:
@@ -35,3 +45,8 @@ jobs:
           content-filepath: lychee/out.md
           labels: links
           issue-number: ${{ steps.existing.outputs.number }}
+      # Editing an issue's body notifies nobody; a comment does.
+      - if: steps.lychee.outputs.exit_code != 0 && steps.existing.outputs.number != ''
+        env: { GH_TOKEN: '${{ github.token }}', ISSUE: '${{ steps.existing.outputs.number }}' }
+        run: |
+          gh issue comment "$ISSUE" --repo '${{ github.repository }}' --body "Still failing or newly failing links: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
