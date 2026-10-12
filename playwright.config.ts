@@ -8,6 +8,8 @@ export default defineConfig({
     url: 'http://localhost:4321',
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
+    // Astro 7's preview backgrounds itself when it detects an AI agent, which Playwright reads as a crash.
+    env: { ASTRO_PREVIEW_BACKGROUND: '1' },
   },
   projects: [
     {
