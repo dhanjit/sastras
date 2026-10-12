@@ -151,6 +151,20 @@ describe('validate', () => {
     expect(validate([block('a', {}, 'See :cite.')])).toEqual(['a: :cite needs a source id, like :cite[wiki]']);
   });
 
+  it('requires every ancestor of a written block to be written, so the map can reach it', () => {
+    expect(validate([...fixture, block('x', { parent: 'dvaita', layer: undefined })])).toContain(
+      'x: sits under "dvaita", which is not written yet; write it first or keep this block a stub',
+    );
+  });
+
+  it('allows a stub under a stub', () => {
+    expect(validate([...fixture, block('y', { parent: 'dvaita', layer: undefined, status: 'stub', sources: [] })])).toEqual([]);
+  });
+
+  it('rejects a block that lists itself as related', () => {
+    expect(validate([block('a', { related: ['a'] })])).toEqual(['a: lists itself as related']);
+  });
+
   it('reports a self-parent and a chain that runs into a loop', () => {
     expect(validate([block('s', { parent: 's', layer: undefined })])).toContain('s: parent chain loops through "s"');
     const errors = validate([

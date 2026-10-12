@@ -3,12 +3,14 @@ import { LAYERS, LAYER_LABEL, type Layer } from '../lib/vocab';
 interface Props { current: Layer }
 const { current } = Astro.props;
 ---
-<ol class="layer-strip" aria-label="Where this sits on the map">
-  {LAYERS.map((l) => (
-    <li class:list={{ on: l === current }}>
-      <a href={`/#${l}`} aria-current={l === current ? 'location' : undefined}>
-        <span class="sr-only">{LAYER_LABEL[l].title}: {LAYER_LABEL[l].gloss}</span>
-      </a>
-    </li>
-  ))}
-</ol>
+<nav aria-label="Map layers">
+  <ol class="layer-strip">
+    {LAYERS.map((l) => (
+      <li class:list={{ on: l === current }}>
+        <a href={`/#${l}`} title={`${LAYER_LABEL[l].title}: ${LAYER_LABEL[l].gloss}`} aria-current={l === current ? 'location' : undefined}>
+          <span class="sr-only">{LAYER_LABEL[l].title}, {LAYER_LABEL[l].gloss}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</nav>

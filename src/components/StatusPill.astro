@@ -1,5 +1,6 @@
 ---
-interface Props { status: 'stub' | 'draft' | 'reviewed' }
+import type { Status } from '../lib/vocab';
+interface Props { status: Exclude<Status, 'stub'> }
 const { status } = Astro.props;
 ---
 {status === 'reviewed'

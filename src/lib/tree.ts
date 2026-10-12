@@ -73,15 +73,22 @@ export function validate(blocks: Block[]): string[] {
       if (layer) errors.push(`${b.id}: only top-level blocks set a layer`);
     }
     const seen = new Set([b.id]);
+    let stubAbove: string | undefined;
     for (let cur = parent; cur !== ROOT && byId.has(cur); cur = byId.get(cur)!.data.parent) {
       if (seen.has(cur)) {
         errors.push(`${b.id}: parent chain loops through "${cur}"`);
         break;
       }
       seen.add(cur);
+      if (status !== 'stub' && !stubAbove && byId.get(cur)!.data.status === 'stub') stubAbove = cur;
     }
+    // Pages are reached through their parents on the map, so a written block cannot sit under a stub.
+    if (stubAbove) errors.push(`${b.id}: sits under "${stubAbove}", which is not written yet; write it first or keep this block a stub`);
     if (status !== 'stub' && sources.length === 0) errors.push(`${b.id}: a written block needs at least one source`);
-    for (const r of related) if (!byId.has(r)) errors.push(`${b.id}: related block "${r}" does not exist`);
+    for (const r of related) {
+      if (r === b.id) errors.push(`${b.id}: lists itself as related`);
+      else if (!byId.has(r)) errors.push(`${b.id}: related block "${r}" does not exist`);
+    }
     const ids = sources.map((s) => s.id);
     for (const id of new Set(ids.filter((x, i) => ids.indexOf(x) !== i))) errors.push(`${b.id}: source id "${id}" is used twice`);
     const { cites, links } = extractRefs(b.body ?? '');

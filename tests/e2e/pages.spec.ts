@@ -12,6 +12,8 @@ test('a block page shows where it sits, its status, its sources and a correction
   await expect(crumbs.getByRole('link', { name: 'Map' })).toHaveAttribute('href', '/');
   await expect(crumbs.getByRole('link', { name: 'Vedānta' })).toHaveAttribute('href', '/vedanta');
   await expect(page.locator('.layer-strip li.on')).toHaveCount(1);
+  await expect(page.locator('.layer-strip a[aria-current="location"]')).toHaveAttribute('href', '/#schools');
+  await expect(page.getByRole('navigation', { name: 'Map layers' })).toBeVisible();
   await expect(page.locator('.pill')).toContainText('draft');
   await expect(page.locator('#src-wiki a')).toHaveAttribute('href', 'https://en.wikipedia.org/wiki/Advaita_Vedanta');
   await expect(page.getByRole('link', { name: 'Suggest a correction' })).toHaveAttribute('href', /github\.com\/dhanjit\/sastras\/issues\/new/);

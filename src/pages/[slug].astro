@@ -25,11 +25,11 @@ const layer = tree.layerOf(b.id);
   {layer && <LayerStrip current={layer} />}
   <header class="block-head">
     <h1 class="title">{b.data.title}</h1>
-    <p class="gloss">{b.data.gloss}{b.data.devanagari && <span class="deva" lang="sa">{b.data.devanagari}</span>}</p>
-    <p class="meta">{b.data.dates && <span>{b.data.dates}</span>}<StatusPill status={b.data.status} /></p>
+    <p class="gloss">{b.data.gloss}{b.data.devanagari && <>{' '}<span class="deva" lang="sa">{b.data.devanagari}</span></>}</p>
+    <p class="meta">{b.data.dates && <span>{b.data.dates}</span>}{b.data.status !== 'stub' && <StatusPill status={b.data.status} />}</p>
   </header>
   <div class="rule-double" aria-hidden="true"></div>
-  <article class="prose"><Content /></article>
+  <div class="prose"><Content /></div>
   {children.length > 0 && (
     <section><h2 class="sec">Go deeper</h2><BlockList blocks={children} /></section>
   )}
@@ -40,7 +40,7 @@ const layer = tree.layerOf(b.id);
     <section>
       <h2 class="sec">Read the text</h2>
       <ul class="read">
-        {b.data.read.map((r) => <li><a href={r.url} rel="noopener">{r.title}</a> <span class="read-kind">{r.kind}</span></li>)}
+        {b.data.read.map((r) => <li><a href={r.url}>{r.title}</a> <span class="read-kind">{r.kind}</span></li>)}
       </ul>
     </section>
   )}

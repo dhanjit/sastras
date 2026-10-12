@@ -10,16 +10,18 @@ const { blocks, variant = 'list' } = Astro.props;
       {b.data.status === 'stub' ? (
         <div class="row prep">
           <span class="row-title">{b.data.title}</span>
+          <span class="sr-only">, </span>
           <span class="row-gloss">{b.data.gloss}</span>
           <span class="row-tag">in preparation</span>
         </div>
       ) : (
         <a class="row" href={`/${b.id}`}>
           <span class="row-title">{b.data.title}</span>
+          <span class="sr-only">, </span>
           <span class="row-gloss">{b.data.gloss}</span>
         </a>
       )}
-      {variant === 'map' && b.data.pramanas && (
+      {variant === 'map' && !!b.data.pramanas?.length && (
         <ul class="chips" aria-label="Ways of knowing accepted">
           {b.data.pramanas.map((p) => <li class="chip" title={PRAMANA_LABEL[p].gloss}>{PRAMANA_LABEL[p].title}</li>)}
         </ul>
