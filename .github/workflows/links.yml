@@ -22,10 +22,13 @@ jobs:
           # them, and content links between pages are root-relative.
           # 403 counts as alive: sacred-texts.com and britannica.com answer non-browser clients with 403, while a page
           # that has really gone usually returns 404 or 410.
+          # sacred-texts.com is excluded outright: its bot challenge breaks automated HTTP/2 requests ("protocol error"),
+          # so lychee can't tell live from dead there. Check those "Read the text" links by hand in a browser.
           args: >-
             --no-progress --max-concurrency 4 --scheme https --scheme http --accept 200,206,403,429
             --root-dir '${{ github.workspace }}/dist'
-            --exclude '^https://sastras\.dhanjit\.me(/|$)' --exclude-path dist/og 'dist/**/*.html'
+            --exclude '^https://sastras\.dhanjit\.me(/|$)' --exclude '^https://(www\.)?sacred-texts\.com/'
+            --exclude-path dist/og 'dist/**/*.html'
           output: lychee/out.md
           fail: false
       # Everything resolves again: close the open issue, so an open one always means "still failing".
