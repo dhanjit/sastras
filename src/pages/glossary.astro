@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import { loadGlossary, termAnchor } from '../lib/glossary';
+const entries = [...loadGlossary().entries()].sort(([a], [b]) => a.localeCompare(b, 'en'));
+---
+<Base title="Glossary" description="Short English meanings for the Sanskrit terms used across the map." path="/glossary">
+  <header class="block-head">
+    <h1 class="title">Kośa</h1>
+    <p class="gloss">glossary · the Sanskrit terms used on this site</p>
+  </header>
+  <div class="rule-double" aria-hidden="true"></div>
+  <dl class="glossary">
+    {entries.map(([term, meaning]) => (
+      <div id={termAnchor(term)}><dt><b>{term}</b></dt><dd>{meaning}</dd></div>
+    ))}
+  </dl>
+</Base>

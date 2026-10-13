@@ -1,0 +1,1 @@
+Text in `src/content/` and `src/data/` is © 2026 Dhanjit Das and contributors, licensed CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Attribute as “Śāstras, sastras.dhanjit.me”. Quotations from published translations remain with their translators and publishers. The MIT `LICENSE` covers the code only, not these paths.

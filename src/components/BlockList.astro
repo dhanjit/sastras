@@ -1,0 +1,34 @@
+---
+import type { BlockEntry } from '../lib/blocks';
+import { PRAMANA_LABEL } from '../lib/vocab';
+interface Props { blocks: BlockEntry[]; variant?: 'list' | 'map'; labelledby?: string }
+const { blocks, variant = 'list', labelledby } = Astro.props;
+---
+<ul class:list={['blocks', `blocks-${variant}`]} aria-labelledby={labelledby}>
+  {blocks.map((b) => (
+    <li>
+      {b.data.status === 'stub' ? (
+        <div class="row prep">
+          <span class="row-title">{b.data.title}</span>
+          <span class="sr-only">, </span>
+          <span class="row-gloss">{b.data.gloss}</span>
+          {variant === 'map' ? <span class="sr-only"> (in preparation)</span> : <span class="row-tag">in preparation</span>}
+        </div>
+      ) : (
+        <a class="row" href={`/${b.id}`}>
+          <span class="row-title">{b.data.title}</span>
+          <span class="sr-only">, </span>
+          <span class="row-gloss">{b.data.gloss}</span>
+        </a>
+      )}
+      {variant === 'map' && !!b.data.pramanas?.length && (
+        <div class="pramanas">
+          {b.data.pramanas_per && <span class="per" aria-hidden="true">per {b.data.pramanas_per}:</span>}
+          <ul class="chips" aria-label={`Ways of knowing accepted${b.data.pramanas_per ? ` (per ${b.data.pramanas_per})` : ''}`}>
+            {b.data.pramanas.map((p) => <li class="chip">{PRAMANA_LABEL[p].title}<span class="sr-only"> ({PRAMANA_LABEL[p].gloss})</span></li>)}
+          </ul>
+        </div>
+      )}
+    </li>
+  ))}
+</ul>

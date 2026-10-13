@@ -1,0 +1,57 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import LayerStrip from '../components/LayerStrip.astro';
+import BlockList from '../components/BlockList.astro';
+import SourceList from '../components/SourceList.astro';
+import StatusPill from '../components/StatusPill.astro';
+import { loadBlocks, isWritten, type BlockEntry } from '../lib/blocks';
+import { correctionUrl } from '../lib/links';
+import { describe } from '../lib/describe';
+import { cardVersion } from '../lib/card';
+
+export async function getStaticPaths() {
+  const { all } = await loadBlocks();
+  return all.filter(isWritten).map((b) => ({ params: { slug: b.id }, props: { b } }));
+}
+const { b } = Astro.props;
+const { tree } = await loadBlocks();
+const { Content } = await render(b);
+const children = tree.children(b.id);
+const related = b.data.related.map((r) => tree.get(r)).filter((x): x is BlockEntry => Boolean(x));
+const layer = tree.layerOf(b.id);
+// What the card shows, as a version: a crawler that cached the old image fetches the new one after an edit.
+const version = cardVersion({ title: b.data.title, gloss: b.data.gloss, layer });
+---
+<Base title={b.data.title} description={describe(b.data.gloss, b.body ?? '')} type="article" path={`/${b.id}`} og={`/og/${b.id}.png?v=${version}`} ogAlt={`${b.data.title} — ${b.data.gloss}`}>
+  <Breadcrumb trail={tree.ancestors(b.id)} current={b.data.title} />
+  {layer && <LayerStrip current={layer} />}
+  <header class="block-head">
+    <h1 class="title">{b.data.title}</h1>
+    <p class="gloss">{b.data.gloss}{b.data.devanagari && <>{' '}<span class="deva" lang="sa">{b.data.devanagari}</span></>}</p>
+    {/* Stubs get no page, so the status check is always true here; it narrows the type StatusPill needs. */}
+    <p class="meta">{b.data.dates && <span>{b.data.dates}</span>}{b.data.status !== 'stub' && <StatusPill status={b.data.status} />}</p>
+  </header>
+  <div class="rule-double" aria-hidden="true"></div>
+  <div class="prose"><Content /></div>
+  {children.length > 0 && (
+    <section><h2 class="sec">Go deeper</h2><BlockList blocks={children} /></section>
+  )}
+  {related.length > 0 && (
+    <section><h2 class="sec">Related</h2><BlockList blocks={related} /></section>
+  )}
+  {b.data.read.length > 0 && (
+    <section>
+      <h2 class="sec">Read the text</h2>
+      <ul class="read">
+        {b.data.read.map((r) => <li><a href={r.url}>{r.title}</a> <span class="read-kind">{r.kind}</span></li>)}
+      </ul>
+    </section>
+  )}
+  <section>
+    <h2 class="sec">Sources</h2>
+    <SourceList sources={b.data.sources} />
+    <p class="correct"><a href={correctionUrl(b.id, b.data.title)}>Suggest a correction</a></p>
+  </section>
+</Base>

@@ -1,0 +1,38 @@
+:root {
+  --leaf: #e4dcc4;
+  --leaf-2: #ddd3b6;
+  --line: #c9bd9c;
+  --rule: #9c8f6e;
+  --ink: #2a2620;
+  --ink-muted: #5f5747;
+  --rubric: #8e3b2c;
+  --sourced: #4f5838;
+  --draft: #7a4f1c;
+  --focus: #8e3b2c;
+  --pop-bg: var(--ink);
+  --pop-fg: var(--leaf);
+  --serif: 'Gentium Book Plus', 'Gentium Plus', Georgia, serif;
+  --deva: 'Kohinoor Devanagari', 'Devanagari Sangam MN', 'Noto Serif Devanagari', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', serif;
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --measure: 40rem;
+  --margin-col: 15rem;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --leaf: #1c1914;
+    --leaf-2: #26221b;
+    --line: #3a3428;
+    --rule: #6b6150;
+    --ink: #ddd3b8;
+    --ink-muted: #a39880;
+    --rubric: #d0806a;
+    --sourced: #a9b58a;
+    --draft: #d9a85f;
+    --focus: #d0806a;
+    --pop-bg: #2e2921;
+    --pop-fg: var(--ink);
+    color-scheme: dark;
+  }
+}

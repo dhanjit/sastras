@@ -6,7 +6,7 @@
 
 **Architecture:** Astro 7 builds static HTML from one Markdown file per block. A pure TypeScript tree module (unit-tested) checks the content and derives the map, breadcrumbs and child lists; any content error fails the build. Three Markdown plugins add margin notes (`:note[...]`), citations (`:cite[id]`) and the tap-for-meaning glossary. A Cloudflare Worker serves `dist/` as static assets.
 
-**Tech stack:** Astro 7.3.5 with `@astrojs/markdown-remark` 7.3.2 (the `unified` processor), remark-directive, satori + resvg for link-preview images, fontsource (Gentium Book Plus, Tiro Devanagari Sanskrit), Vitest 5, Playwright 1.64 + axe, Wrangler 4, GitHub Actions. TypeScript is pinned to 6.0.3, because `@astrojs/check` does not support TypeScript 7.
+**Tech stack:** Astro 7.3.5 with `@astrojs/markdown-remark` 7.3.2 (the `unified` processor), remark-directive, satori + resvg for link-preview images, fontsource Gentium Book Plus (Devanagari uses system fonts), Vitest 5, Playwright 1.64 + axe, Wrangler 4, GitHub Actions. TypeScript is pinned to 6.0.3, because `@astrojs/check` does not support TypeScript 7.
 
 **Spec:** [docs/superpowers/specs/2026-10-12-sastras-site-design.md](../specs/2026-10-12-sastras-site-design.md)
 
@@ -93,6 +93,8 @@ test-results/
 playwright-report/
 .wrangler/
 .DS_Store
+.env*
+.dev.vars*
 ```
 
 `package.json`:
@@ -106,7 +108,7 @@ playwright-report/
     "build": "astro build",
     "preview": "astro preview --port 4321",
     "check": "astro check",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "e2e": "playwright test"
   }
 }
@@ -140,7 +142,7 @@ export default defineConfig({
   "account_id": "939a7fa8a072b9ac7f9c41885fe71380",
   "workers_dev": false,
   "routes": [{ "pattern": "sastras.dhanjit.me", "custom_domain": true }],
-  "assets": { "directory": "./dist", "not_found_handling": "404-page" }
+  "assets": { "directory": "./dist", "not_found_handling": "404-page", "html_handling": "drop-trailing-slash" }
 }
 ```
 
@@ -158,8 +160,8 @@ export default defineConfig({
 - [ ] **Step 3: Install pinned dependencies**
 
 ```bash
-npm i -E astro@7.3.5 @astrojs/markdown-remark@7.3.2 remark-directive@4.0.0 unist-util-visit@5.1.0 yaml@2.9.1 satori@0.47.1 @resvg/resvg-js@2.6.2 @fontsource/gentium-book-plus@5.3.0 @fontsource/tiro-devanagari-sanskrit@5.3.0
-npm i -DE @astrojs/check@0.9.10 typescript@6.0.3 vitest@5.0.3 @playwright/test@1.64.0 @axe-core/playwright@4.13.0 wrangler@4.149.0 unified remark-parse remark-rehype rehype-stringify @types/mdast @types/hast @types/node
+npm i -E astro@7.3.5 @astrojs/markdown-remark@7.3.2 remark-directive@4.0.0 unist-util-visit@5.1.0 yaml@2.9.1 satori@0.47.1 @resvg/resvg-js@2.6.2 @fontsource/gentium-book-plus@5.3.0
+npm i -DE @astrojs/check@0.9.10 typescript@6.0.3 vitest@5.0.3 @playwright/test@1.64.0 @axe-core/playwright@4.13.0 wrangler@4.149.0 unified remark-parse remark-rehype rehype-stringify @types/mdast @types/hast @types/node@24
 ```
 
 - [ ] **Step 4: Build and confirm the output**
@@ -191,12 +193,14 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: 'tests/e2e',
-  use: { baseURL: 'http://localhost:4321' },
+  use: { baseURL: 'http://localhost:4399' },
   webServer: {
-    command: 'npm run build && npm run preview',
-    url: 'http://localhost:4321',
-    reuseExistingServer: !process.env.CI,
+    command: 'npm run build && npx astro preview --port 4399',
+    url: 'http://localhost:4399',
+    reuseExistingServer: false,
     timeout: 180_000,
+    // Astro 7's preview backgrounds itself when it detects an AI agent, which Playwright reads as a crash.
+    env: { ASTRO_PREVIEW_BACKGROUND: '1' },
   },
   projects: [
     {
@@ -262,6 +266,11 @@ export const SIDE_LABEL: Record<Side, { title: string; gloss: string }> = {
   accepts: { title: 'āstika', gloss: 'accept the Veda’s authority' },
   'n/a': { title: 'śāstra', gloss: 'sciences, not schools of philosophy' },
 };
+export const KINDS = ['topic', 'school', 'subschool', 'person', 'text', 'concept'] as const;
+export type Kind = (typeof KINDS)[number];
+
+export const STATUSES = ['stub', 'draft', 'reviewed'] as const;
+export type Status = (typeof STATUSES)[number];
 ```
 
 `src/content.config.ts`:
@@ -269,32 +278,32 @@ export const SIDE_LABEL: Record<Side, { title: string; gloss: string }> = {
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
-import { LAYERS, PRAMANAS, SIDES } from './lib/vocab';
+import { KINDS, LAYERS, PRAMANAS, SIDES, STATUSES } from './lib/vocab';
 
-const source = z.object({
+const source = z.strictObject({
   id: z.string().regex(/^[a-z0-9-]+$/),
   title: z.string().min(1),
-  url: z.url(),
+  url: z.url({ protocol: /^https?$/ }),
 });
 
-const readLink = z.object({
+const readLink = z.strictObject({
   title: z.string().min(1),
   kind: z.enum(['translation', 'etext', 'scan']),
-  url: z.url(),
+  url: z.url({ protocol: /^https?$/ }),
 });
 
 const blocks = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/blocks' }),
-  schema: z.object({
+  schema: z.strictObject({
     title: z.string().min(1),
     devanagari: z.string().optional(),
     gloss: z.string().min(1),
-    kind: z.enum(['topic', 'school', 'subschool', 'person', 'text', 'concept']),
+    kind: z.enum(KINDS),
     parent: z.string().min(1),
     layer: z.enum(LAYERS).optional(),
     order: z.number().int(),
     dates: z.string().optional(),
-    status: z.enum(['stub', 'draft', 'reviewed']),
+    status: z.enum(STATUSES),
     sources: z.array(source).default([]),
     read: z.array(readLink).default([]),
     related: z.array(z.string()).default([]),
@@ -446,6 +455,8 @@ From then on every merge to `main` deploys. Nothing to commit.
 
 ### Task 5: The content tree and build-time checks
 
+> **As built (review fix, commit 6494864):** links and citations are read from the parsed Markdown by `src/lib/refs.ts` (unified + remark-parse + remark-directive), not by the `CITE`/`LINK` regexes shown below. Every link form (fragments, queries, titles, reference definitions, relative links) is checked, and `:cite` without an id is an error. Ordering ties break by code point; `children()` returns a copy. The unit suite has 20 tests after this task.
+
 **Files:**
 - Create: `src/lib/tree.ts`, `src/lib/blocks.ts`, `tests/unit/tree.test.ts`
 - Modify: `src/pages/[slug].astro` (load through `loadBlocks`)
@@ -499,6 +510,13 @@ describe('validate', () => {
     expect(validate(fixture)).toEqual([]);
   });
 
+  it('rejects non-ASCII and reserved block names', () => {
+    expect(validate([block('śaṅkara'), block('about')])).toEqual([
+      'śaṅkara: file name must be lower-case ASCII words joined by hyphens',
+      'about: that name is reserved for a fixed page',
+    ]);
+  });
+
   it('reports a missing parent', () => {
     expect(validate([block('x', { parent: 'nowhere', layer: undefined })])).toEqual(['x: parent "nowhere" does not exist']);
   });
@@ -549,10 +567,12 @@ Expected: FAIL. The import of `../../src/lib/tree` can't be resolved.
 
 `src/lib/tree.ts`:
 ```ts
-import type { Layer } from './vocab';
+import type { Layer, Status } from './vocab';
 
 export const ROOT = 'map';
 export const PAGES = ['about', 'glossary'] as const;
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const RESERVED = new Set<string>([ROOT, 'index', '404', 'og', ...PAGES]);
 
 export interface Block {
   id: string;
@@ -562,7 +582,7 @@ export interface Block {
     parent: string;
     layer?: Layer;
     order: number;
-    status: 'stub' | 'draft' | 'reviewed';
+    status: Status;
     sources: { id: string }[];
     related: string[];
   };
@@ -615,6 +635,8 @@ export function validate(blocks: Block[]): string[] {
   const byId = new Map(blocks.map((b) => [b.id, b]));
   for (const b of blocks) {
     const { parent, layer, related, sources, status } = b.data;
+    if (!SLUG.test(b.id)) errors.push(`${b.id}: file name must be lower-case ASCII words joined by hyphens`);
+    if (RESERVED.has(b.id)) errors.push(`${b.id}: that name is reserved for a fixed page`);
     if (parent === ROOT) {
       if (!layer) errors.push(`${b.id}: a top-level block needs a layer`);
     } else {
@@ -648,7 +670,7 @@ export function validate(blocks: Block[]): string[] {
 - [ ] **Step 4: Run the unit tests and watch them pass**
 
 Run: `npm test`
-Expected: PASS, 11 tests.
+Expected: PASS, 12 tests.
 
 - [ ] **Step 5: Load blocks through the checks**
 
@@ -722,6 +744,14 @@ git add -A && git commit -m "feat: content tree with build-time checks"
 ---
 
 ### Task 6: Palm-leaf look: tokens, fonts, base layout
+
+> **As built (review fixes, commits 6c1e574, 1d6a19a, f20e9cf):**
+> - Header and footer share the page column.
+> - The pop-up script was rewritten: it measures at the origin, closes on pointerdown, keeps hover-to-pop-up open, lets modified clicks through, and is `aria-hidden`.
+> - `.note-toggle` is hidden from 1100px up.
+> - The layer strip has outlined segments.
+> - Tiro was removed; Devanagari uses system faces (block pages went from 384 KB to 179 KB of fonts).
+> - The code below is the original; the repo is the reference.
 
 **Files:**
 - Create: `src/styles/tokens.css`, `src/styles/base.css`, `src/styles/manuscript.css`, `src/layouts/Base.astro`
@@ -1245,7 +1275,7 @@ const layer = tree.layerOf(b.id);
 - [ ] **Step 4: Run the tests and watch them pass**
 
 Run: `npm test && npm run check && npm run e2e`
-Expected: all pass (12 unit tests; e2e 3 tests × 2 projects).
+Expected: all pass (21 unit tests; e2e 3 tests × 2 projects).
 
 - [ ] **Step 5: Create the `correction` label and commit**
 
@@ -1365,7 +1395,7 @@ export function remarkCite() {
 - [ ] **Step 4: Run the unit tests and watch them pass**
 
 Run: `npm test`
-Expected: PASS, 15 tests.
+Expected: PASS, 26 tests.
 
 - [ ] **Step 5: Wire the plugins into Astro and use them in content**
 
@@ -1421,6 +1451,23 @@ git add -A && git commit -m "feat: margin notes (:note) and citations (:cite)"
 
 ---
 
+### Additions from the Task 5 review (do these in this task, in the same TDD style)
+
+Two gaps between the link/cite checker (`src/lib/refs.ts`, which already exists and is used by `validate()` in `src/lib/tree.ts`) and what the renderer does:
+
+1. **The checker must parse GFM like Astro does.** Astro's Markdown has GFM on, the checker doesn't, so a footnote line such as `[^1]: Ibid` is wrongly read as a link definition and fails the build.
+   - Make `remark-gfm` a direct dependency at the version already installed: `npm i -E --save-prod remark-gfm@4.0.1`.
+   - In `refs.ts`: `import remarkGfm from 'remark-gfm';` and `const parser = unified().use(remarkParse).use(remarkGfm).use(remarkDirective);`.
+   - Test (tests/unit/tree.test.ts): a written block whose body is `A claim[^1].\n\n[^1]: Ibid` gives `[]`.
+2. **A citation on its own line (`::cite[w]`, a leaf directive) must be rejected.** `remarkCite` only renders inline `:cite[...]`.
+   - In `refs.ts`, change `cites` to `{ id: string | null; inline: boolean }[]`: `inline` is true for `textDirective` and false for `leafDirective`.
+   - In `validate()`, before the existing checks, add `if (!c.inline) errors.push(`${b.id}: write :cite[${c.id ?? '…'}] inline, not on its own line`)`, and keep the id checks using `c.id`.
+   - Test: body `Claim.\n\n::cite[w]` gives `['a: write :cite[w] inline, not on its own line']` (with a source `w` present).
+
+After these, the unit count is 26 (24 + 2), not 24.
+
+---
+
 ### Task 9: The glossary — tap or hover for meaning
 
 **Files:**
@@ -1473,13 +1520,13 @@ describe('loadGlossary', () => {
 describe('rehypeGloss', () => {
   it('wraps the first occurrence of each term in a paragraph', async () => {
     expect(await gloss('For Advaita, ātman is brahman; ātman again.')).toBe(
-      '<p>For Advaita, <a class="term" href="/glossary#g-atman" data-gloss="the self">ātman</a> is <a class="term" href="/glossary#g-brahman" data-gloss="ultimate reality">brahman</a>; ātman again.</p>',
+      '<p>For Advaita, <a class="term" href="/glossary#g-atman" data-gloss="the self" aria-describedby="gd-1">ātman</a><span id="gd-1" hidden>the self</span> is <a class="term" href="/glossary#g-brahman" data-gloss="ultimate reality" aria-describedby="gd-2">brahman</a><span id="gd-2" hidden>ultimate reality</span>; ātman again.</p>',
     );
   });
 
   it('prefers the longest term, keeps the original case, and respects word edges', async () => {
     expect(await gloss('The Brahmasūtra, not brahmanical.')).toBe(
-      '<p>The <a class="term" href="/glossary#g-brahmasutra" data-gloss="aphorisms on brahman">Brahmasūtra</a>, not brahmanical.</p>',
+      '<p>The <a class="term" href="/glossary#g-brahmasutra" data-gloss="aphorisms on brahman" aria-describedby="gd-1">Brahmasūtra</a><span id="gd-1" hidden>aphorisms on brahman</span>, not brahmanical.</p>',
     );
   });
 
@@ -1532,6 +1579,7 @@ const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 export function rehypeGloss({ glossary }: { glossary: Glossary }) {
   const terms = [...glossary.keys()].sort((a, b) => b.length - a.length).map(escape);
   const re = terms.length ? new RegExp(`(?<![\\p{L}\\p{M}])(${terms.join('|')})(?![\\p{L}\\p{M}])`, 'giu') : null;
+  let n = 0; // reset per document in the transformer
 
   function split(node: Text, used: Set<string>): ElementContent[] {
     const out: ElementContent[] = [];
@@ -1541,12 +1589,16 @@ export function rehypeGloss({ glossary }: { glossary: Glossary }) {
       if (used.has(key)) continue;
       used.add(key);
       out.push({ type: 'text', value: node.value.slice(last, m.index) });
+      n += 1;
+      const meaning = glossary.get(key)!;
+      // the description lives next to the term, so screen readers announce it without the visual pop-up
       out.push({
         type: 'element',
         tagName: 'a',
-        properties: { className: ['term'], href: `/glossary#${termAnchor(key)}`, dataGloss: glossary.get(key)! },
+        properties: { className: ['term'], href: `/glossary#${termAnchor(key)}`, dataGloss: meaning, ariaDescribedBy: `gd-${n}` },
         children: [{ type: 'text', value: m[0] }],
       });
+      out.push({ type: 'element', tagName: 'span', properties: { id: `gd-${n}`, hidden: true }, children: [{ type: 'text', value: meaning }] });
       last = m.index! + m[0].length;
     }
     if (last === 0) return [node];
@@ -1564,6 +1616,7 @@ export function rehypeGloss({ glossary }: { glossary: Glossary }) {
 
   return (tree: Root) => {
     if (!re) return;
+    n = 0;
     visit(tree, 'element', (el: Element) => {
       if (!CONTAINERS.has(el.tagName)) return;
       wrap(el, new Set());
@@ -1576,7 +1629,7 @@ export function rehypeGloss({ glossary }: { glossary: Glossary }) {
 - [ ] **Step 4: Run the unit tests and watch them pass**
 
 Run: `npm test`
-Expected: PASS, 20 tests.
+Expected: PASS, 31 tests.
 
 - [ ] **Step 5: Seed the glossary from the annotated map**
 
@@ -1646,6 +1699,8 @@ test('a Sanskrit term shows its meaning when tapped or clicked', async ({ page }
   await expect(page.locator('#gloss-pop')).toBeVisible();
   await expect(page.locator('#gloss-pop')).toContainText('self');
   await expect(page).toHaveURL(/\/advaita-vedanta$/); // stayed on the page
+  const descId = await term.getAttribute('aria-describedby'); // screen readers get the meaning without the pop-up
+  await expect(page.locator(`#${descId}`)).toHaveText(/self/);
 });
 ```
 
@@ -1659,6 +1714,8 @@ Expected: all pass. Then open `/glossary#g-atman` in preview and confirm the ent
 ```bash
 git add -A && git commit -m "feat: glossary with tap/hover meanings and a glossary page"
 ```
+
+---
 
 ---
 
@@ -2115,7 +2172,7 @@ These four tasks turn 13 stubs into written pages. They are writing, not code, s
    - Name schools' views in their own terms ("For Advaita, …"). Never write a school's claim as plain fact.
    - Put `:cite[id]` after every sentence or clause that states a fact. Each one must point to a source you read that says it.
    - Add at least one `:note[...]` where a term needs a deeper explanation than a gloss gives.
-   - Link other blocks with `[text](/slug)`, and only to blocks that are written (the build rejects links to stubs).
+   - Link other blocks with `[text](/slug)`, always starting with `/`, and only to blocks that are written. The build rejects relative links, links to stubs and links to missing pages, in any link form.
    - Say when dates, authorship or interpretation are contested, and cite both views.
    - Write in your own words. Quote at most a short phrase, in quotation marks, with its source.
    - No "ancient India discovered X" claims and no dismissive framing.
@@ -2294,7 +2351,7 @@ Expected: all pass locally. `gh pr checks` shows `ci` passing on the PR.
 
 - [ ] **Step 2: Ask Dhanjit before merging**
 
-Merging deploys to the public site. Show him the PR link and the preview build, and wait for a clear yes. Then:
+Merging deploys to the public site. Show him the PR link and have him look at the full site locally (`npm run build && npm run preview`, then open http://localhost:4321); branch previews stay off so unpublished drafts aren't public. Wait for a clear yes. Then:
 ```bash
 gh pr ready && gh pr merge --squash --delete-branch
 ```

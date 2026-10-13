@@ -1,0 +1,8 @@
+---
+import type { BlockEntry } from '../lib/blocks';
+interface Props { sources: BlockEntry['data']['sources'] }
+const { sources } = Astro.props;
+---
+<ol class="sources">
+  {sources.map((s) => <li id={`src-${s.id}`}><a href={s.url}>{s.title}</a></li>)}
+</ol>
