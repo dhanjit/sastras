@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 388">
   <title>Vaiśeṣika's categories (padārtha)</title>
-  <desc>A tree. At the top, padārtha, category. A line runs down the left and branches to six boxes under the heading six in the Vaiśeṣikasūtra: dravya, substance; guṇa, quality; karma, motion or action; sāmānya, universal; viśeṣa, differentiator; samavāya, inherence. Below them, under the heading added by later Vaiśeṣikas, a dashed line leads to a dashed box: abhāva, absence.</desc>
+  <desc>A tree. At the top, padārtha, category. A line runs down the left and branches to six boxes under the heading six in the Vaiśeṣikasūtra: dravya, substance; guṇa, quality; karma, motion or action; sāmānya, universal; viśeṣa, differentiator; samavāya, inherence. Below them, under the heading added later, a dashed line leads to a dashed box: abhāva, absence.</desc>
 
   <!-- root -->
   <rect class="hi" x="10" y="4" width="240" height="38" rx="4"/>
@@ -26,7 +26,7 @@
   <text x="76" y="295">samavāya<tspan class="sans muted"> · inherence</tspan></text>
 
   <!-- the later seventh -->
-  <text class="sans muted" x="64" y="338">added by later Vaiśeṣikas</text>
+  <text class="sans muted" x="64" y="338">added later</text>
   <path class="line dash" d="M40 362H64"/>
   <rect class="box dash" x="64" y="346" width="286" height="32" rx="4"/>
   <text x="76" y="367">abhāva<tspan class="sans muted"> · absence</tspan></text>
