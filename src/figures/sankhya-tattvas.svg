@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 374">
+  <title>The twenty-five tattvas of Sāṅkhya</title>
+  <desc>A tree. At the top, unmanifest prakṛti. Beside it, outside the tree and joined to nothing, puruṣa, which only looks on and is neither produced nor producing. From prakṛti an arrow leads down to buddhi, also called mahat, the intellect, and from it to ahaṃkāra, the sense of “I”. Ahaṃkāra branches in two. One branch is a group of manas, the mind, the five senses and the five organs of action. The other is the five subtle elements (tanmātra), from which an arrow leads to the five gross elements. Together with puruṣa and prakṛti these make twenty-five tattvas.</desc>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <!-- root: unmanifest prakṛti -->
+  <rect class="hi" x="62" y="6" width="166" height="52"/>
+  <text x="145" y="29" text-anchor="middle">prakṛti</text>
+  <text class="muted" x="145" y="49" text-anchor="middle">unmanifest</text>
+
+  <!-- puruṣa, outside the tree -->
+  <rect class="box" x="246" y="6" width="106" height="90"/>
+  <text x="299" y="29" text-anchor="middle">puruṣa</text>
+  <text class="muted small" x="299" y="50" text-anchor="middle">only looks on;</text>
+  <text class="muted small" x="299" y="68" text-anchor="middle">not produced,</text>
+  <text class="muted small" x="299" y="85" text-anchor="middle">not producing</text>
+
+  <!-- buddhi and ahaṃkāra -->
+  <path class="line" d="M145 58V78" marker-end="url(#head)"/>
+  <rect class="box" x="62" y="80" width="166" height="50"/>
+  <text x="145" y="102" text-anchor="middle">buddhi · mahat</text>
+  <text class="muted" x="145" y="121" text-anchor="middle">intellect</text>
+
+  <path class="line" d="M145 130V150" marker-end="url(#head)"/>
+  <rect class="box" x="62" y="152" width="166" height="50"/>
+  <text x="145" y="174" text-anchor="middle">ahaṃkāra</text>
+  <text class="muted" x="145" y="193" text-anchor="middle">sense of “I”</text>
+
+  <!-- the branch -->
+  <path class="line" d="M145 202V216M92 216H268"/>
+  <path class="line" d="M92 216V234" marker-end="url(#head)"/>
+  <path class="line" d="M268 216V234" marker-end="url(#head)"/>
+
+  <!-- branch one: manas, senses, organs of action -->
+  <rect class="box" x="8" y="236" width="168" height="108"/>
+  <text x="92" y="259" text-anchor="middle">manas · mind</text>
+  <path class="line" d="M20 271H164"/>
+  <text x="92" y="295" text-anchor="middle">5 senses</text>
+  <path class="line" d="M20 307H164"/>
+  <text x="92" y="331" text-anchor="middle">5 organs of action</text>
+
+  <!-- branch two: subtle elements, then gross elements -->
+  <rect class="box" x="186" y="236" width="166" height="52"/>
+  <text x="269" y="258" text-anchor="middle">5 subtle elements</text>
+  <text class="muted" x="269" y="278" text-anchor="middle">tanmātra</text>
+  <path class="line" d="M269 288V308" marker-end="url(#head)"/>
+  <rect class="box" x="186" y="310" width="166" height="34"/>
+  <text x="269" y="332" text-anchor="middle">5 gross elements</text>
+
+  <text class="sans muted" x="180" y="368" text-anchor="middle">25 tattvas in all</text>
+</svg>
