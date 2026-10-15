@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 232">
+  <title>Brahman as material and efficient cause, school by school</title>
+  <desc>A grid with four rows, Advaita, Rāmānuja, Bhedābheda and Dvaita (Madhva), and two columns, material cause and efficient cause. A filled dot marks each cause a school makes brahman. Advaita, Rāmānuja and Bhedābheda have a dot in both columns; under Advaita a note says brahman appears as the world through māyā, unchanged. Dvaita, highlighted, has a dot only under efficient cause, and an empty dashed circle under material cause.</desc>
+
+  <!-- column heads -->
+  <text class="sans" x="240" y="20" text-anchor="middle">material</text>
+  <text class="sans" x="240" y="38" text-anchor="middle">cause</text>
+  <text class="sans" x="318" y="20" text-anchor="middle">efficient</text>
+  <text class="sans" x="318" y="38" text-anchor="middle">cause</text>
+  <path class="box" d="M4 50H356"/>
+
+  <!-- Advaita: both, brahman unchanged -->
+  <text x="14" y="75">Advaita</text>
+  <text class="sans muted" x="14" y="96">through māyā, unchanged</text>
+  <circle class="ink-fill" cx="240" cy="70" r="7"/>
+  <circle class="ink-fill" cx="318" cy="70" r="7"/>
+  <path class="box" d="M4 110H356"/>
+
+  <!-- Rāmānuja: both -->
+  <text x="14" y="135">Rāmānuja</text>
+  <circle class="ink-fill" cx="240" cy="130" r="7"/>
+  <circle class="ink-fill" cx="318" cy="130" r="7"/>
+  <path class="box" d="M4 150H356"/>
+
+  <!-- Bhedābheda: both -->
+  <text x="14" y="175">Bhedābheda</text>
+  <circle class="ink-fill" cx="240" cy="170" r="7"/>
+  <circle class="ink-fill" cx="318" cy="170" r="7"/>
+
+  <!-- Dvaita: efficient cause alone -->
+  <rect class="hi" x="4" y="190" width="352" height="40"/>
+  <text x="14" y="215">Dvaita (Madhva)</text>
+  <circle class="line dash" cx="240" cy="210" r="7"/>
+  <circle class="ink-fill" cx="318" cy="210" r="7"/>
+</svg>
