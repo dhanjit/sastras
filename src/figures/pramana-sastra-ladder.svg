@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 258">
+  <title>The pramāṇa ladder: which means of knowing each school accepts</title>
+  <desc>Six rows of squares form a staircase, one square for each means of knowing. The top row has one square, perception (pratyakṣa), where Cārvāka stops; a dashed second square beside it stands for the inference some accounts say Cārvāka used while denying it could be certain. Each row below adds one square: inference (anumāna), where Buddhists and Vaiśeṣika stop; testimony (śabda), where Jains, Sāṅkhya and Yoga stop; comparison (upamāna), where Nyāya stops; postulation (arthāpatti), where Prābhākara Mīmāṃsā stops; and non-perception (anupalabdhi), the sixth, which Bhāṭṭa Mīmāṃsā and Advaita Vedānta accept.</desc>
+
+  <!-- one square per pramāṇa; row k holds k squares, so the rows form a staircase -->
+  <rect class="stock" x="6" y="4" width="35" height="38"/>
+  <rect class="box dash" x="44" y="4" width="35" height="38"/>
+
+  <rect class="stock" x="6" y="46" width="35" height="38"/>
+  <rect class="stock" x="44" y="46" width="35" height="38"/>
+
+  <rect class="stock" x="6" y="88" width="35" height="38"/>
+  <rect class="stock" x="44" y="88" width="35" height="38"/>
+  <rect class="stock" x="82" y="88" width="35" height="38"/>
+
+  <rect class="stock" x="6" y="130" width="35" height="38"/>
+  <rect class="stock" x="44" y="130" width="35" height="38"/>
+  <rect class="stock" x="82" y="130" width="35" height="38"/>
+  <rect class="stock" x="120" y="130" width="35" height="38"/>
+
+  <rect class="stock" x="6" y="172" width="35" height="38"/>
+  <rect class="stock" x="44" y="172" width="35" height="38"/>
+  <rect class="stock" x="82" y="172" width="35" height="38"/>
+  <rect class="stock" x="120" y="172" width="35" height="38"/>
+  <rect class="stock" x="158" y="172" width="35" height="38"/>
+
+  <rect class="stock" x="6" y="214" width="35" height="38"/>
+  <rect class="stock" x="44" y="214" width="35" height="38"/>
+  <rect class="stock" x="82" y="214" width="35" height="38"/>
+  <rect class="stock" x="120" y="214" width="35" height="38"/>
+  <rect class="stock" x="158" y="214" width="35" height="38"/>
+  <rect class="stock" x="196" y="214" width="35" height="38"/>
+
+  <!-- the count, in each row's newest square -->
+  <g class="sans muted" text-anchor="middle">
+    <text x="23.5" y="29">1</text>
+    <text x="61.5" y="71">2</text>
+    <text x="99.5" y="113">3</text>
+    <text x="137.5" y="155">4</text>
+    <text x="175.5" y="197">5</text>
+    <text x="213.5" y="239">6</text>
+  </g>
+
+  <!-- what each step adds, and the schools that stop there -->
+  <text class="rubric" x="88" y="20">pratyakṣa</text>
+  <text x="88" y="38">Cārvāka</text>
+  <text class="rubric" x="88" y="62">+ anumāna</text>
+  <text x="88" y="80">Buddhists, Vaiśeṣika</text>
+  <text class="rubric" x="126" y="104">+ śabda</text>
+  <text x="126" y="122">Jains, Sāṅkhya, Yoga</text>
+  <text class="rubric" x="164" y="146">+ upamāna</text>
+  <text x="164" y="164">Nyāya</text>
+  <text class="rubric" x="202" y="188">+ arthāpatti</text>
+  <text x="202" y="206">Prābhākara</text>
+  <text class="rubric" x="240" y="230">+ anupalabdhi</text>
+  <text x="240" y="248">Bhāṭṭa, Advaita</text>
+</svg>

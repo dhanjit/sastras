@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 44 360 268">
+  <title>The delimitor: a monkey on one branch of a tree</title>
+  <desc>A bare tree with a monkey sitting on one long branch, which is highlighted. A label below the branch says the tree is in contact with the monkey here, delimited by the branch. A label above the branch names the branch the avacchedaka. A label beside the trunk says the tree is not in contact with the monkey there.</desc>
+
+  <!-- the tail hangs behind the branch -->
+  <path class="ink-fill" d="M177 160C161 170 155 197 165 213C171 222 183 217 179 207L176 209C178 214 171 216 168 211C159 197 165 174 179 165Z"/>
+
+  <!-- the tree: the other branches, the monkey's branch (the delimitor), then the trunk over their bases -->
+  <polygon class="stock" points="78,114 26,64 21,70 78,130"/>
+  <polygon class="stock" points="82,96 130,52 134,57 82,110"/>
+  <polygon class="stock" points="78,198 22,175 20,182 78,212"/>
+  <polygon class="hi" points="82,186 306,150 307,158 82,204"/>
+  <path class="stock" d="M60 306Q72 298 72 276L76 80L80 56L84 80L88 276Q88 298 100 306Z"/>
+  <path class="line" d="M14 306H170"/>
+
+  <!-- the monkey, sitting on the branch -->
+  <ellipse class="ink-fill" cx="184" cy="152" rx="12" ry="17"/>
+  <circle class="ink-fill" cx="186" cy="121" r="4.5"/>
+  <circle class="ink-fill" cx="194" cy="128" r="10.5"/>
+  <ellipse class="line-fill" cx="199" cy="131" rx="5.5" ry="6.5"/>
+  <circle class="ink-fill" cx="200" cy="129" r="1.5"/>
+  <ellipse class="ink-fill" cx="194" cy="154" rx="3.5" ry="12.5" transform="rotate(-18 194 154)"/>
+  <ellipse class="ink-fill" cx="190" cy="163" rx="9" ry="5"/>
+  <ellipse class="ink-fill" cx="198" cy="170" rx="3" ry="7" transform="rotate(-15 198 170)"/>
+  <ellipse class="ink-fill" cx="201" cy="177" rx="4.5" ry="2.5"/>
+  <text x="212" y="112">monkey</text>
+
+  <!-- where it is in contact, and what delimits that -->
+  <path class="line" d="M207 196L202 181"/>
+  <text x="206" y="210">in contact here,</text>
+  <text x="206" y="229">delimited by the branch</text>
+  <path class="line" d="M300 141L298 151"/>
+  <text class="rubric" x="354" y="116" text-anchor="end">the branch:</text>
+  <text class="rubric" x="354" y="135" text-anchor="end">avacchedaka</text>
+
+  <!-- where it is not -->
+  <path class="line" d="M101 255L90 249"/>
+  <text class="muted" x="104" y="263">not in contact here</text>
+</svg>

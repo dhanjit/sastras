@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 10 360 314">
+  <title>Vedic, then Classical Sanskrit</title>
+  <desc>A vertical time line, read downwards. The Vedic band begins with a shaded span for the Ṛgveda, about 1500 to 1200 BCE. A dashed line around the middle of the first millennium BCE marks where Classical Sanskrit took shape; a highlighted dot on it is labelled: Pāṇini describes the standardised form. Below it the Classical band runs on, open-ended.</desc>
+
+  <!-- Vedic: the band, with the Ṛgveda's span shaded -->
+  <rect class="line-fill" x="125" y="25" width="34" height="65"/>
+  <path class="box" d="M124 244V24H160V244"/>
+  <path class="line" d="M116 24H124M116 90H124"/>
+
+  <!-- Classical: from the middle of the first millennium BCE, open-ended -->
+  <path class="box" d="M124 244V296M160 244V296"/>
+  <path class="box dash" d="M124 296V318M160 296V318"/>
+  <path class="line dash" d="M112 244H172"/>
+  <circle class="hi" cx="142" cy="244" r="7"/>
+
+  <!-- dates -->
+  <g text-anchor="end">
+    <text x="112" y="29">c. 1500 BCE</text>
+    <text x="112" y="95">c. 1200 BCE</text>
+    <text x="108" y="239">c. mid-1st</text>
+    <text x="108" y="258">millennium BCE</text>
+  </g>
+
+  <!-- what happens -->
+  <text x="172" y="62">Ṛgveda</text>
+  <text x="172" y="170" font-weight="700">Vedic Sanskrit</text>
+  <text x="180" y="240">Pāṇini describes the</text>
+  <text x="180" y="259">standardised form</text>
+  <text x="172" y="292" font-weight="700">Classical Sanskrit</text>
+</svg>
