@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 388">
+  <title>Vaiśeṣika's categories (padārtha)</title>
+  <desc>A tree. At the top, padārtha, category. A line runs down the left and branches to six boxes under the heading six in the Vaiśeṣikasūtra: dravya, substance; guṇa, quality; karma, motion or action; sāmānya, universal; viśeṣa, differentiator; samavāya, inherence. Below them, under the heading added later, a dashed line leads to a dashed box: abhāva, absence.</desc>
+
+  <!-- root -->
+  <rect class="hi" x="10" y="4" width="240" height="38" rx="4"/>
+  <text x="24" y="29">padārtha<tspan class="sans muted"> · category</tspan></text>
+
+  <!-- trunk: solid to the six, dashed to absence -->
+  <path class="line" d="M40 42V290"/>
+  <path class="line dash" d="M40 290V362"/>
+
+  <text class="sans muted" x="64" y="66">six in the Vaiśeṣikasūtra</text>
+  <path class="line" d="M40 90H64M40 130H64M40 170H64M40 210H64M40 250H64M40 290H64"/>
+  <rect class="box" x="64" y="74" width="286" height="32" rx="4"/>
+  <text x="76" y="95">dravya<tspan class="sans muted"> · substance</tspan></text>
+  <rect class="box" x="64" y="114" width="286" height="32" rx="4"/>
+  <text x="76" y="135">guṇa<tspan class="sans muted"> · quality</tspan></text>
+  <rect class="box" x="64" y="154" width="286" height="32" rx="4"/>
+  <text x="76" y="175">karma<tspan class="sans muted"> · motion or action</tspan></text>
+  <rect class="box" x="64" y="194" width="286" height="32" rx="4"/>
+  <text x="76" y="215">sāmānya<tspan class="sans muted"> · universal</tspan></text>
+  <rect class="box" x="64" y="234" width="286" height="32" rx="4"/>
+  <text x="76" y="255">viśeṣa<tspan class="sans muted"> · differentiator</tspan></text>
+  <rect class="box" x="64" y="274" width="286" height="32" rx="4"/>
+  <text x="76" y="295">samavāya<tspan class="sans muted"> · inherence</tspan></text>
+
+  <!-- the later seventh -->
+  <text class="sans muted" x="64" y="338">added later</text>
+  <path class="line dash" d="M40 362H64"/>
+  <rect class="box dash" x="64" y="346" width="286" height="32" rx="4"/>
+  <text x="76" y="367">abhāva<tspan class="sans muted"> · absence</tspan></text>
+</svg>
