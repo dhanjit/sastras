@@ -10,7 +10,7 @@ const valid = `<?xml version="1.0" encoding="UTF-8"?>
   <desc>Water flows into a tank and out through a valve.</desc>
   <style>
     #fig-stock-flow .fill { animation: stock-flow--rise 1.2s ease-out 1 both; fill: var(--leaf-2); stroke: currentColor; marker-end: url(#arrow); font: italic 13px/1.2 serif; }
-    #fig-stock-flow > .a, #fig-stock-flow:hover .b, #fig-stock-flow[data-x] .c, #fig-stock-flow.d, #fig-stock-flow .e ~ .f, #fig-stock-flow:is(.g, .h) > .i + .j { opacity: 0.5; }
+    #fig-stock-flow > svg .a, #fig-stock-flow:hover .b, #fig-stock-flow[data-x] .c, #fig-stock-flow.d .k, #fig-stock-flow .e ~ .f, #fig-stock-flow:is(.g, .h) svg > .i + .j { opacity: 0.5; animation-iteration-count: 3; }
     /* comments are dropped */
     @keyframes stock-flow--rise { from { opacity: 0; } }
     @media (prefers-reduced-motion: reduce) { #fig-stock-flow .fill { animation: none; } }
@@ -223,12 +223,20 @@ describe('checkFigure', () => {
       ['an adjacent sibling of the figure', '#fig-stock-flow + * { display: none; }', '#fig-stock-flow + *'],
       ['a sibling after a pseudo-class', '#fig-stock-flow:where(.x) ~ .fig .box { opacity: 0; }', '#fig-stock-flow:where(.x) ~ .fig .box'],
       ['an id inside :is()', '#fig-stock-flow :is(#x) { opacity: 0; }', '#fig-stock-flow :is(#x)'],
-    ])('rejects a selector that is not scoped to the figure: %s', (_, css, selector) => {
-      expect(check(styled(css))).toEqual([msg(`selector "${selector}" must start with #fig-stock-flow, then a space or ">", and target parts by class`)]);
+      ['the figure itself', '#fig-stock-flow { transform: scale(30); }', '#fig-stock-flow'],
+      ['the figure in a state', '#fig-stock-flow:hover { opacity: 0; }', '#fig-stock-flow:hover'],
+      ['a child of the figure that is not the drawing', '#fig-stock-flow > .a { opacity: 0; }', '#fig-stock-flow > .a'],
+      ['the caption', '#fig-stock-flow > figcaption { display: none; }', '#fig-stock-flow > figcaption'],
+      ['the caption, further in', '#fig-stock-flow figcaption { display: none; }', '#fig-stock-flow figcaption'],
+      ['the Replay button', '#fig-stock-flow .x button { display: none; }', '#fig-stock-flow .x button'],
+      ['the drawing itself', '#fig-stock-flow svg { transform: scale(30); }', '#fig-stock-flow svg'],
+      ['the drawing itself, as a child', '#fig-stock-flow > svg { transform: scale(30); }', '#fig-stock-flow > svg'],
+    ])('rejects a selector that does not step into the drawing: %s', (_, css, selector) => {
+      expect(check(styled(css))).toEqual([msg(`selector "${selector}" must step into the drawing: #fig-stock-flow, then a space, then its parts by class`)]);
     });
 
     it('rejects nested rules, which can climb out of the figure with &', () => {
-      expect(check(styled('#fig-stock-flow { & ~ p { display: none; } }'))).toEqual([msg('nested rules are not allowed in <style>')]);
+      expect(check(styled('#fig-stock-flow .x { & ~ p { display: none; } }'))).toEqual([msg('nested rules are not allowed in <style>')]);
       expect(check(styled('#fig-stock-flow .x { @media (prefers-reduced-motion: reduce) { opacity: 1; } }'))).toEqual([
         msg('nested rules are not allowed in <style>'),
       ]);
@@ -249,11 +257,24 @@ describe('checkFigure', () => {
     });
 
     it('rejects properties outside the allowlist, including custom properties', () => {
-      expect(check(styled('#fig-stock-flow { position: fixed; z-index: 9; --c: tomato; }'))).toEqual([
+      expect(check(styled('#fig-stock-flow .x { position: fixed; z-index: 9; --c: tomato; }'))).toEqual([
         msg('property position is not allowed in <style>'),
         msg('property z-index is not allowed in <style>'),
         msg('property --c is not allowed in <style>'),
       ]);
+    });
+
+    it.each([
+      ['infinite in the shorthand', 'animation: stock-flow--rise 1s infinite both', 'animation: stock-flow--rise 1s infinite both'],
+      ['infinite on its own', 'animation-iteration-count: infinite', 'animation-iteration-count: infinite'],
+      ['more than three runs', 'animation: stock-flow--rise 1s ease-out 4 both', 'animation: stock-flow--rise 1s ease-out 4 both'],
+      ['one of several animations', 'animation-iteration-count: 1, infinite', 'animation-iteration-count: 1, infinite'],
+    ])('rejects an animation that does not end: %s', (_, decl, shown) => {
+      expect(check(styled(`#fig-stock-flow .x { ${decl}; }`))).toEqual([msg(`${shown}: run an animation at most 3 times, so it ends on its still frame`)]);
+    });
+
+    it('does not read the numbers in a timing function as an iteration count', () => {
+      expect(check(styled('#fig-stock-flow .x { animation: stock-flow--rise 1s cubic-bezier(0.1, 7, 0.3, 9) 2 both; }'))).toEqual([]);
     });
 
     it('rejects keyframes that are not prefixed with the figure id and --', () => {

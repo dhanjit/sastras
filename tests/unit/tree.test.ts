@@ -191,6 +191,17 @@ describe('validate', () => {
     expect(validate([block('a', {}, 'A :ntoe[typo] here.')])).toEqual(['a: ":ntoe[…]" is not a directive (use :note or :cite)']);
   });
 
+  it('rejects a directive name written without its colon, which would print as text', () => {
+    expect(validate([block('a', {}, 'A claim:cite[w],cite[w].')])).toEqual(['a: "cite[" without a leading colon, write :cite[…]']);
+    expect(validate([block('a', {}, 'A claim. note[more here]')])).toEqual(['a: "note[" without a leading colon, write :note[…]']);
+    expect(validate([block('a', {}, 'Text.\n\nfigure[A caption]{#rope-snake}')])).toEqual(['a: "figure[" without a leading colon, write ::figure[…]{#id}']);
+    expect(validate([block('a', {}, 'A claim:note[as cite[w] says].')])).toEqual(['a: "cite[" without a leading colon, write :cite[…]']);
+  });
+
+  it('allows a bare directive name in code, and inside a longer word', () => {
+    expect(validate([block('a', {}, 'Write `cite[w]` like this:\n\n```\nnote[x]\n```\n\nA footnote[1] and a recite[x].')])).toEqual([]);
+  });
+
   it('leaves ordinary colons alone', () => {
     expect(validate([block('a', {}, 'Gītā 2:47 says.')])).toEqual([]);
   });

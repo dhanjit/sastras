@@ -45,6 +45,7 @@ One block = one file, `src/content/blocks/<id>.md`. The file name is the id and 
 - Both must be inline: not on their own line, not inside a link or a heading. A note can't nest inside another note and needs text.
 - By convention, a note goes at the end of its sentence, after the full stop and any cite. The build doesn't check this.
 - Any other `:word[…]` fails as a typo. Ordinary colons such as `2:47` are fine.
+- A directive name and `[` without the colon (`:cite[a],cite[b]`) fails too, since the page would print it as text: `cite[`, `note[` or `figure[` in running text, outside code and not inside a longer word.
 - `::figure[caption]{#id}`, on its own line and at the top level (not in a list, quote or table), draws `src/figures/<id>.svg`. See Figures.
 - A new directive needs its name in `src/lib/directives.ts` (or the typo check rejects it), a plugin registered in `astro.config.mjs`, and handling in `src/lib/refs.ts`, `src/lib/tree.ts` (its checks) and `src/lib/describe.ts` (which drops notes, cites and figures from descriptions by name).
 
@@ -67,7 +68,8 @@ Hand-drawn SVG diagrams on block pages. **Read [docs/figure-guide.md](docs/figur
   - Elements and attributes come from allowlists: no `style` attributes, and references only to `#ids` inside the figure.
   - The `<style>` element:
     - no `<` or `\`;
-    - every selector starts with `#fig-<id>`, then a space or `>`;
+    - every selector steps into the drawing (`#fig-<id> .part`, anchored as `#fig-<id> svg .part`), never the figure, its `<svg>` box or its caption;
+    - animations run at most 3 times, never `infinite`;
     - no nesting;
     - keyframes are named `<id>--…`;
     - only paint, stroke, text and animation properties.

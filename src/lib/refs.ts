@@ -13,13 +13,16 @@ export interface Cite { id: string | null; inline: boolean; inLink: boolean; inH
 export interface Note { inline: boolean; empty: boolean; inLink: boolean; inHeading: boolean; inNote: boolean }
 /** A `::figure[caption]{#id}` directive: its id (null when missing), whether it is a leaf (on its own line, the only form the renderer draws), whether it has a caption, whether it sits in a note, and whether it is a top-level block (not in a list, quote or table). */
 export interface Figure { id: string | null; leaf: boolean; caption: boolean; inNote: boolean; topLevel: boolean }
-export interface Refs { cites: Cite[]; notes: Note[]; figures: Figure[]; unknown: string[]; links: InternalLink[] }
+/** `bare` lists directive names written without their colon (`cite[`), which the page would print as text. */
+export interface Refs { cites: Cite[]; notes: Note[]; figures: Figure[]; unknown: string[]; bare: string[]; links: InternalLink[] }
 
 /** The Markdown parser the page pipeline starts from; describe() reads the same tree. */
 export const parser = unified().use(remarkParse).use(remarkGfm).use(remarkDirective);
 
 /** The label exactly as remarkCite reads it: the text children only. */
 const citeLabel = (node: any): string => (node.children ?? []).map((c: any) => c.value ?? '').join('').trim();
+/** A directive name and its "[" with no colon before it, as in `:cite[a],cite[b]`; not inside a longer word (footnote[1]). */
+const BARE = new RegExp(`(?<![:\\w])(${[...DIRECTIVES].join('|')})\\[`, 'g');
 const plainText = (node: any): string => node.value ?? (node.children ?? []).map(plainText).join('');
 
 /** A directive that carries a label or attributes: `:ntoe[typo]`, not the `:47` in `2:47`. */
@@ -35,6 +38,7 @@ export function extractRefs(body: string): Refs {
   const notes: Note[] = [];
   const figures: Figure[] = [];
   const unknown: string[] = [];
+  const bare: string[] = [];
   const links: InternalLink[] = [];
   visitParents(parser.parse(body), (node: any, ancestors: any[]) => {
     const inLink = ancestors.some((a) => a.type === 'link' || a.type === 'linkReference');
@@ -50,6 +54,8 @@ export function extractRefs(body: string): Refs {
     } else if (DIRECTIVE_NODES.has(node.type) && !DIRECTIVES.has(node.name) && hasLabelOrAttributes(node)) {
       unknown.push(node.name);
     }
+    // code is inlineCode and code nodes, never text, so a name shown in code is left alone
+    if (node.type === 'text') for (const m of String(node.value).matchAll(BARE)) bare.push(m[1]);
     if (node.type === 'link' || node.type === 'definition') {
       const url: string = node.url;
       if (/^[a-z][a-z0-9+.-]*:/i.test(url) || url.startsWith('#') || url.startsWith('//')) return;
@@ -57,5 +63,5 @@ export function extractRefs(body: string): Refs {
       links.push({ url, path: url.split(/[?#]/)[0].slice(1) });
     }
   });
-  return { cites, notes, figures, unknown, links };
+  return { cites, notes, figures, unknown, bare, links };
 }

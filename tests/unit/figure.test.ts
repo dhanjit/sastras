@@ -57,7 +57,8 @@ describe('remarkFigure', () => {
     expect(html).toMatch(/clip-path="url\(\s*#fig-rope-snake--g\s*\)"/);
     expect(html).toContain('href="#fig-rope-snake--rope"');
     expect(html).toContain('xlink:href="#fig-rope-snake--rope"');
-    expect(html).toMatch(/#fig-rope-snake \.line \{\s*marker-start: url\(#fig-rope-snake--head\);?\s*\}/);
+    // the page gets each selector anchored in the drawing, so it can't reach the caption
+    expect(html).toMatch(/#fig-rope-snake svg \.line \{\s*marker-start: url\(#fig-rope-snake--head\);?\s*\}/);
     expect(html).not.toMatch(/id="(?:head|rope|g)"|#(?:head|rope|g)\b/);
   });
 
@@ -79,7 +80,7 @@ describe('remarkFigure', () => {
 
   it('writes the <style> back from what was checked, without comments', async () => {
     const html = await md('::figure[Moving]{#snake}');
-    expect(html).toMatch(/<style>#fig-snake \.x \{\s*animation: snake--draw 1s 1 both;?\s*\}\s*@keyframes snake--draw/);
+    expect(html).toMatch(/<style>#fig-snake svg \.x \{\s*animation: snake--draw 1s 1 both;?\s*\}\s*@keyframes snake--draw/);
     expect(html).not.toContain('a note');
   });
 

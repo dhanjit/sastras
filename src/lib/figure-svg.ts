@@ -13,6 +13,7 @@ import { SLUG } from './tree';
 const MAX_VIEWBOX_WIDTH = 480;
 const MAX_KB = 30;
 const MIN_FONT_SIZE = 12;
+const MAX_ITERATIONS = 3;
 
 /** The SVG elements a figure may use. Anything else (script, foreignObject, image, a, SMIL, gradients) is refused. */
 const ELEMENTS = new Set(['svg', 'g', 'defs', 'title', 'desc', 'style', 'marker', 'symbol', 'use', 'path', 'line', 'polyline', 'polygon', 'rect', 'circle', 'ellipse', 'text', 'tspan', 'clipPath']);
@@ -82,28 +83,73 @@ function coloursIn(value: string, names = false): string[] {
   ];
 }
 
-/**
- * True when a selector stays inside the figure: it starts with `#fig-<id>` (and not a longer id), has no other id,
- * and the first combinator after that compound is a descendant (space) or child (`>`). A sibling combinator there
- * (`~`, `+`) would reach the page after the figure; one further in stays inside it.
- */
-function scoped(selector: string, fig: string): boolean {
-  const prefix = `#${fig}`;
-  if (!selector.startsWith(prefix)) return false;
-  const rest = selector.slice(prefix.length);
-  if (rest.includes('#') || !/^(?:$|[\s>.[:])/.test(rest)) return false;
+/** A selector's compounds, each with the combinator before it (' ', '>', '+', '~'; '' for the first), or null when it ends on a combinator. */
+function stepsOf(selector: string): { before: string; compound: string }[] | null {
+  const steps: { before: string; compound: string }[] = [];
+  let compound = '';
+  let before = '';
+  let between = '';
   let depth = 0;
   let quote = '';
-  let i = 0;
-  for (; i < rest.length; i++) {
-    const c = rest[i];
+  for (const c of selector.trim()) {
+    if (!quote && depth === 0 && /[\s>+~]/.test(c)) {
+      if (compound) steps.push({ before, compound });
+      compound = '';
+      between += c;
+      continue;
+    }
+    if (!compound) {
+      before = steps.length ? between.trim() || ' ' : '';
+      between = '';
+    }
     if (quote) quote = c === quote ? '' : quote;
     else if (c === '"' || c === "'") quote = c;
     else if (c === '(' || c === '[') depth++;
     else if (c === ')' || c === ']') depth--;
-    else if (depth === 0 && /[\s>+~]/.test(c)) break;
+    compound += c;
   }
-  return !/^[+~]/.test(rest.slice(i).trimStart());
+  if (!compound) return null;
+  steps.push({ before, compound });
+  return steps;
+}
+
+const joinSteps = (steps: { before: string; compound: string }[]) =>
+  steps.map((s, i) => (i === 0 ? '' : s.before === ' ' ? ' ' : ` ${s.before} `) + s.compound).join('');
+
+/**
+ * The selector as the page gets it, anchored inside the drawing, or null when it could reach anything else: the
+ * figure itself, its caption and Replay, the <svg> box, other figures, or the page.
+ * - It starts with the figure's compound, `#fig-<id>` (not a longer id), optionally narrowed by `.`, `[` or `:`.
+ * - Then a descendant step. `#fig-<id> svg …` or `#fig-<id> > svg …` names the drawing and must go on into it, by a
+ *   descendant or child step. Any other `#fig-<id> .part …` is anchored by inserting `svg`, so a class the caption
+ *   happens to carry (.cite, .term, .fig-replay) matches nothing.
+ * - No other id, and no figure, figcaption or button step: those are never parts of a drawing.
+ */
+function anchored(selector: string, fig: string): string | null {
+  const prefix = `#${fig}`;
+  const steps = stepsOf(selector);
+  if (!steps || steps.length < 2 || !steps[0].compound.startsWith(prefix)) return null;
+  const narrowing = steps[0].compound.slice(prefix.length);
+  if (!/^(?:$|[.[:])/.test(narrowing)) return null; // #fig-rope-head is another figure
+  if ([narrowing, ...steps.slice(1).map((s) => s.compound)].some((c) => c.includes('#'))) return null;
+  if (steps.slice(1).some((s) => /^(?:figure|figcaption|button)(?![\w-])/i.test(s.compound))) return null;
+  const [, second, third] = steps;
+  if (/^svg(?![\w-])/i.test(second.compound)) {
+    const into = (s?: { before: string }) => s !== undefined && (s.before === ' ' || s.before === '>');
+    return into(second) && into(third) ? joinSteps(steps) : null;
+  }
+  if (second.before !== ' ') return null; // `>` reaches the caption, `~` and `+` the page
+  return joinSteps([steps[0], { before: ' ', compound: 'svg' }, ...steps.slice(1)]);
+}
+
+/** True when an animation would not end on its still frame: `infinite`, or more than MAX_ITERATIONS runs. */
+function endless(prop: string, value: string): boolean {
+  const counts =
+    prop === 'animation-iteration-count'
+      ? postcss.list.comma(value)
+      : postcss.list.comma(value).flatMap((one) => one.replace(/\([^)]*\)/g, ' ').trim().split(/\s+/)) // a timing function's numbers are not counts
+          .filter((t) => /^(?:infinite|\d+(?:\.\d+)?|\.\d+)$/i.test(t));
+  return counts.some((c) => c.toLowerCase() === 'infinite' || Number(c) > MAX_ITERATIONS);
 }
 
 /** The target of every url(…) in a value, e.g. `#arrow`; null for an unterminated one. */
@@ -241,7 +287,7 @@ export function prepareFigure(id: string, text: string): { errors: string[]; fig
       if (rule.parent?.type === 'rule') return void fail('nested rules are not allowed in <style>'); // & can climb out of the figure
       if (rule.parent?.type === 'atrule' && /keyframes$/i.test((rule.parent as postcss.AtRule).name)) return; // from, to, 50%
       for (const selector of rule.selectors.map((s) => s.trim())) {
-        if (!scoped(selector, fig)) fail(`selector "${selector}" must start with #${fig}, then a space or ">", and target parts by class`);
+        if (!anchored(selector, fig)) fail(`selector "${selector}" must step into the drawing: #${fig}, then a space, then its parts by class`);
       }
     });
     css.walkDecls((decl) => {
@@ -255,6 +301,9 @@ export function prepareFigure(id: string, text: string): { errors: string[]; fig
         else refuse(target ?? value, 'url()');
       }
       if (coloursIn(value, NAME_VALUED.has(prop)).length) colours.push(`${decl.prop}: ${value}`);
+      if ((prop === 'animation' || prop === 'animation-iteration-count') && endless(prop, value)) {
+        fail(`${decl.prop}: ${value}: run an animation at most ${MAX_ITERATIONS} times, so it ends on its still frame`);
+      }
       if (prop === 'font-size') sizes.push(value);
       if (prop === 'font') {
         // the shorthand must carry a plain px size; a system font (font: caption) sets its own
@@ -300,6 +349,10 @@ export function prepareFigure(id: string, text: string): { errors: string[]; fig
     css.walk((node) => {
       node.raws = {};
       if (node.type === 'decl') node.value = relink(node.value);
+    });
+    css.walkRules((rule) => {
+      if (rule.parent?.type === 'atrule' && /keyframes$/i.test((rule.parent as postcss.AtRule).name)) return;
+      rule.selectors = rule.selectors.map((selector) => anchored(selector.trim(), fig)!);
     });
     css.raws = {};
     el.children = [{ type: 'text', value: css.toString() }];
