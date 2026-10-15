@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 338">
   <title>Apūrva: from the rite to its later reward</title>
-  <desc>On the school’s view. A box labelled the rite sends a thick arrow, marked creates, down into a stock: apūrva, a transcendental power, which fills and holds. A second thick arrow leaves the stock and passes a delay mark labelled the wait, which may last until after death, before it reaches a box labelled the reward, such as heaven. In the animation the stock fills first, then the wait appears, then the reward. The still picture shows the whole chain, with the stock full.</desc>
+  <desc>On the school’s view. A box labelled the rite sends a thick arrow, marked creates, down into a stock: apūrva, a transcendental power, which fills and holds. A second thick arrow leaves the stock and passes a delay mark labelled the wait, which may outlast death, before it reaches a box labelled the reward, such as heaven. In the animation the stock fills first, then the wait appears, then the reward. The still picture shows the whole chain, with the stock full.</desc>
   <style>
     #fig-mimamsa-apurva .level { transform-box: fill-box; transform-origin: 50% 100%; animation: mimamsa-apurva--rise 0.8s ease-out 1 both; }
     #fig-mimamsa-apurva .wait { animation: mimamsa-apurva--show 0.4s ease-out 0.8s 1 both; }
@@ -35,7 +35,7 @@
     <path class="flow" d="M180 200V236"/>
     <path class="flow" d="M170 244L190 234M170 254L190 244"/>
     <text class="sans" x="204" y="240">the wait</text>
-    <text x="204" y="260">may be after death</text>
+    <text x="204" y="260">may outlast death</text>
   </g>
 
   <!-- the reward -->
