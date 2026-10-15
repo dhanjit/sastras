@@ -32,13 +32,13 @@
   <rect class="stock" x="196" y="214" width="35" height="38"/>
 
   <!-- the count, in each row's newest square -->
-  <g class="sans muted" text-anchor="middle">
-    <text x="23.5" y="29">1</text>
-    <text x="61.5" y="71">2</text>
-    <text x="99.5" y="113">3</text>
-    <text x="137.5" y="155">4</text>
-    <text x="175.5" y="197">5</text>
-    <text x="213.5" y="239">6</text>
+  <g text-anchor="middle">
+    <text x="23.5" y="29" class="sans muted">1</text>
+    <text x="61.5" y="71" class="sans muted">2</text>
+    <text x="99.5" y="113" class="sans muted">3</text>
+    <text x="137.5" y="155" class="sans muted">4</text>
+    <text x="175.5" y="197" class="sans muted">5</text>
+    <text x="213.5" y="239" class="sans muted">6</text>
   </g>
 
   <!-- what each step adds, and the schools that stop there -->

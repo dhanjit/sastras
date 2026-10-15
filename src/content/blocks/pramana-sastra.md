@@ -22,7 +22,7 @@ Many texts list six pramāṇas:cite[wiki]. Three are the principal ones: percep
 
 The chips on the [map](/) show how many each school accepts. For Cārvāka only perception counts:cite[sep]; some accounts add that it used inference while denying it could ever be certain:cite[wiki-carvaka]. Buddhists accept perception and inference:cite[wiki]. Jains, Sāṅkhya and Yoga add testimony:cite[wiki]. Nyāya adds comparison:cite[wiki]. Prābhākara Mīmāṃsā adds postulation, and Bhāṭṭa Mīmāṃsā and [Advaita Vedānta](/advaita-vedanta) accept all six:cite[wiki]. Where branches of a school differ, the map names the one it follows: Nyāya, not Vaiśeṣika, which keeps only perception and inference; Bhāṭṭa, not Prābhākara; Advaita, not Viśiṣṭādvaita or Dvaita, which accept three:cite[wiki].
 
-::figure[Read down the stairs: each step adds one pramāṇa, and beside it are the schools that stop there; where branches of a school differ, the branch is named:cite[sep]:cite[wiki]. The dashed square is inference, which some accounts say Cārvāka used while denying it could ever be certain:cite[wiki-carvaka].]{#pramana-sastra-ladder}
+::figure[Read down the stairs: each step adds one pramāṇa, and beside it are the schools that stop there; where branches of a school differ, the branch is named, and Viśiṣṭādvaita and Dvaita Vedānta, not shown, also stop at three:cite[sep]:cite[wiki]. The dashed square is inference, which some accounts say Cārvāka used while denying it could ever be certain:cite[wiki-carvaka].]{#pramana-sastra-ladder}
 
 The schools also argue over whether one source reduces to another:cite[wiki]. Nyāya treats postulation as a kind of inference, while Vaiśeṣika and Yogācāra Buddhists treat testimony as an inference from the speaker's reliability:cite[sep].
 

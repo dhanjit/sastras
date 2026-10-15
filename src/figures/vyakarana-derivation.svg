@@ -8,10 +8,10 @@
   </defs>
 
   <!-- the parts of the pipeline -->
-  <g class="sans muted" text-anchor="end">
-    <text x="70" y="27">input</text>
-    <text x="70" y="174">rules</text>
-    <text x="70" y="321">output</text>
+  <g text-anchor="end">
+    <text class="sans muted" x="70" y="27">input</text>
+    <text class="sans muted" x="70" y="174">rules</text>
+    <text class="sans muted" x="70" y="321">output</text>
   </g>
   <path class="line" d="M84 76H78V262H84"/>
 
