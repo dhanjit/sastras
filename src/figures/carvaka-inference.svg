@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 352">
+  <title>Two accounts of what the Cārvākas admitted as knowing</title>
+  <desc>Two lists. The first, headed in Mādhava’s account, has three rows: perception (pratyakṣa) admitted; inference not admitted; testimony not admitted. The second, headed per Bhattacharya, the Cārvākas, has three rows: inference about the perceptible world admitted; inference resting on testimony or authority not admitted; inference to the soul, God, omniscient beings or apūrva not admitted. Admitted rows have solid outlines; the others are dashed.</desc>
+
+  <!-- Mādhava's account -->
+  <text class="sans" x="8" y="18">in Mādhava’s account</text>
+  <rect class="box" x="8" y="28" width="344" height="34"/>
+  <text x="20" y="50">perception (pratyakṣa)</text>
+  <text class="sans" x="340" y="50" text-anchor="end">admitted</text>
+  <rect class="box dash" x="8" y="68" width="344" height="34"/>
+  <text class="muted" x="20" y="90">inference</text>
+  <text class="sans rubric" x="340" y="90" text-anchor="end">not admitted</text>
+  <rect class="box dash" x="8" y="108" width="344" height="34"/>
+  <text class="muted" x="20" y="130">testimony</text>
+  <text class="sans rubric" x="340" y="130" text-anchor="end">not admitted</text>
+
+  <!-- Bhattacharya's reading -->
+  <text class="sans" x="8" y="174">per Bhattacharya, the Cārvākas</text>
+  <rect class="box" x="8" y="184" width="344" height="50"/>
+  <text x="20" y="204">inference about the</text>
+  <text x="20" y="224">perceptible world</text>
+  <text class="sans" x="340" y="214" text-anchor="end">admitted</text>
+  <rect class="box dash" x="8" y="240" width="344" height="50"/>
+  <text class="muted" x="20" y="260">inference resting on</text>
+  <text class="muted" x="20" y="280">testimony or authority</text>
+  <text class="sans rubric" x="340" y="270" text-anchor="end">not admitted</text>
+  <rect class="box dash" x="8" y="296" width="344" height="50"/>
+  <text class="muted" x="20" y="316">inference to the soul, God,</text>
+  <text class="muted" x="20" y="336">omniscient beings, apūrva</text>
+  <text class="sans rubric" x="340" y="326" text-anchor="end">not admitted</text>
+</svg>
