@@ -9,8 +9,8 @@ test('written blocks are links, unwritten ones say "in preparation"', async ({ p
   await page.goto('/');
   const schools = page.locator('#schools');
   await expect(schools.getByRole('link', { name: /Vedānta/ })).toHaveAttribute('href', '/vedanta');
-  // Whichever school is still a stub: naming one breaks the test as soon as it is written.
-  const stub = schools.locator('.row.prep').first();
+  // Needs any stub on the map, not a particular one: naming one breaks the test once it is written.
+  const stub = page.locator('.row.prep').first();
   await expect(stub).toContainText('in preparation');
   await expect(stub.locator('.row-tag')).toHaveCount(0);
   await expect(page.locator('.intro .legend')).toContainText('bold');
