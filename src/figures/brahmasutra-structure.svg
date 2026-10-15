@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 304">
+  <title>The Brahmasūtra: four adhyāyas of four pādas</title>
+  <desc>Four rows, one for each adhyāya or chapter, each holding four small squares, its pādas or parts, numbered 1.1 to 4.4. The chapters’ themes, in order: samanvaya, harmony; avirodha, non-contradiction; sādhana, the means to liberation; phala, its result. A note below gives 555 sūtras in the usual count and 545 in the GRETIL text.</desc>
+
+  <text class="sans muted" x="8" y="17">adhyāya (chapter)</text>
+  <text class="sans muted" x="350" y="17" text-anchor="end">four pādas (parts)</text>
+
+  <!-- 1 -->
+  <rect class="box" x="4" y="28" width="352" height="52"/>
+  <text class="sans rubric" x="16" y="51">1</text>
+  <text x="34" y="51">samanvaya</text>
+  <text class="sans muted" x="34" y="70">harmony</text>
+  <rect class="stock" x="196" y="36" width="36" height="36"/>
+  <rect class="stock" x="236" y="36" width="36" height="36"/>
+  <rect class="stock" x="276" y="36" width="36" height="36"/>
+  <rect class="stock" x="316" y="36" width="36" height="36"/>
+
+  <!-- 2 -->
+  <rect class="box" x="4" y="86" width="352" height="52"/>
+  <text class="sans rubric" x="16" y="109">2</text>
+  <text x="34" y="109">avirodha</text>
+  <text class="sans muted" x="34" y="128">non-contradiction</text>
+  <rect class="stock" x="196" y="94" width="36" height="36"/>
+  <rect class="stock" x="236" y="94" width="36" height="36"/>
+  <rect class="stock" x="276" y="94" width="36" height="36"/>
+  <rect class="stock" x="316" y="94" width="36" height="36"/>
+
+  <!-- 3 -->
+  <rect class="box" x="4" y="144" width="352" height="52"/>
+  <text class="sans rubric" x="16" y="167">3</text>
+  <text x="34" y="167">sādhana</text>
+  <text class="sans muted" x="34" y="186">means to liberation</text>
+  <rect class="stock" x="196" y="152" width="36" height="36"/>
+  <rect class="stock" x="236" y="152" width="36" height="36"/>
+  <rect class="stock" x="276" y="152" width="36" height="36"/>
+  <rect class="stock" x="316" y="152" width="36" height="36"/>
+
+  <!-- 4 -->
+  <rect class="box" x="4" y="202" width="352" height="52"/>
+  <text class="sans rubric" x="16" y="225">4</text>
+  <text x="34" y="225">phala</text>
+  <text class="sans muted" x="34" y="244">its result</text>
+  <rect class="stock" x="196" y="210" width="36" height="36"/>
+  <rect class="stock" x="236" y="210" width="36" height="36"/>
+  <rect class="stock" x="276" y="210" width="36" height="36"/>
+  <rect class="stock" x="316" y="210" width="36" height="36"/>
+
+  <!-- pāda numbers -->
+  <g text-anchor="middle">
+    <text class="sans" x="214" y="59">1.1</text>
+    <text class="sans" x="254" y="59">1.2</text>
+    <text class="sans" x="294" y="59">1.3</text>
+    <text class="sans" x="334" y="59">1.4</text>
+    <text class="sans" x="214" y="117">2.1</text>
+    <text class="sans" x="254" y="117">2.2</text>
+    <text class="sans" x="294" y="117">2.3</text>
+    <text class="sans" x="334" y="117">2.4</text>
+    <text class="sans" x="214" y="175">3.1</text>
+    <text class="sans" x="254" y="175">3.2</text>
+    <text class="sans" x="294" y="175">3.3</text>
+    <text class="sans" x="334" y="175">3.4</text>
+    <text class="sans" x="214" y="233">4.1</text>
+    <text class="sans" x="254" y="233">4.2</text>
+    <text class="sans" x="294" y="233">4.3</text>
+    <text class="sans" x="334" y="233">4.4</text>
+  </g>
+
+  <text class="sans muted" x="8" y="278">555 sūtras in the usual count,</text>
+  <text class="sans muted" x="8" y="297">545 in the GRETIL text</text>
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 236">
+  <title>Advaita’s two standpoints</title>
+  <desc>Two panels, one above the other, show the same space from Advaita’s two standpoints. Above, vyāvahārika, the conventional standpoint, where the everyday world holds good: the space is filled with many separate small shapes. Below, pāramārthika, the ultimate standpoint: the same space holds one undivided shape, brahman, and nothing else.</desc>
+
+  <!-- conventional: many things -->
+  <rect class="box" x="4" y="4" width="352" height="110"/>
+  <text x="18" y="32">vyāvahārika</text>
+  <text class="sans muted" x="18" y="52">conventional</text>
+  <text class="muted" x="18" y="80">the everyday world</text>
+  <text class="muted" x="18" y="98">holds good</text>
+  <circle class="box" cx="212" cy="30" r="10"/>
+  <rect class="box" x="242" y="18" width="18" height="18"/>
+  <polygon class="box" points="286,40 298,18 310,40"/>
+  <circle class="box" cx="332" cy="28" r="7"/>
+  <rect class="box" x="204" y="56" width="22" height="16"/>
+  <circle class="box" cx="262" cy="62" r="11"/>
+  <rect class="box" x="296" y="56" width="16" height="22"/>
+  <polygon class="box" points="226,100 238,82 250,100"/>
+  <circle class="box" cx="284" cy="94" r="8"/>
+  <rect class="box" x="318" y="84" width="20" height="18"/>
+  <circle class="box" cx="336" cy="60" r="6"/>
+
+  <!-- ultimate: only brahman -->
+  <rect class="box" x="4" y="122" width="352" height="110"/>
+  <text x="18" y="150">pāramārthika</text>
+  <text class="sans muted" x="18" y="170">ultimate</text>
+  <text class="muted" x="18" y="198">only brahman</text>
+  <ellipse class="stock" cx="271" cy="177" rx="73" ry="44"/>
+  <text x="271" y="182" text-anchor="middle">brahman</text>
+</svg>

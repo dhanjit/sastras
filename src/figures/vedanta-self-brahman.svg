@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 324">
+  <title>Self and brahman in three schools of Vedānta</title>
+  <desc>Three panels, one above another. Advaita, Śaṅkara’s school: a single circle holds both names, ātman and brahman, because the two are identical. Viśiṣṭādvaita, Rāmānuja’s school: a small shape for the self sits inside the circle of brahman, a mode of brahman, distinct from it but never apart. Dvaita, Madhva’s school: the circle of brahman and the shape for the self stand apart, forever distinct.</desc>
+
+  <!-- Advaita: one circle, two names -->
+  <rect class="box" x="4" y="4" width="352" height="100"/>
+  <circle class="stock" cx="92" cy="54" r="44"/>
+  <text x="92" y="50" text-anchor="middle">ātman</text>
+  <text x="92" y="70" text-anchor="middle">= brahman</text>
+  <text class="rubric" x="192" y="38">Advaita</text>
+  <text x="192" y="58">identical</text>
+  <text class="sans muted" x="192" y="80">Śaṅkara</text>
+
+  <!-- Viśiṣṭādvaita: the self inside brahman, with its own outline -->
+  <rect class="box" x="4" y="112" width="352" height="100"/>
+  <circle class="stock" cx="92" cy="162" r="44"/>
+  <text x="92" y="150" text-anchor="middle">brahman</text>
+  <ellipse class="box" cx="92" cy="178" rx="28" ry="14"/>
+  <text x="92" y="183" text-anchor="middle">ātman</text>
+  <text class="rubric" x="192" y="138">Viśiṣṭādvaita</text>
+  <text x="192" y="158">a mode of brahman,</text>
+  <text x="192" y="176">distinct, never apart</text>
+  <text class="sans muted" x="192" y="198">Rāmānuja</text>
+
+  <!-- Dvaita: two, apart -->
+  <rect class="box" x="4" y="220" width="352" height="100"/>
+  <circle class="stock" cx="58" cy="270" r="44"/>
+  <text x="58" y="275" text-anchor="middle">brahman</text>
+  <ellipse class="box" cx="146" cy="270" rx="28" ry="14"/>
+  <text x="146" y="275" text-anchor="middle">ātman</text>
+  <text class="rubric" x="192" y="254">Dvaita</text>
+  <text x="192" y="274">forever distinct</text>
+  <text class="sans muted" x="192" y="296">Madhva</text>
+</svg>
