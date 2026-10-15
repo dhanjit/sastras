@@ -67,7 +67,8 @@ Hand-drawn SVG diagrams on block pages. **Read [docs/figure-guide.md](docs/figur
   - Elements and attributes come from allowlists: no `style` attributes, and references only to `#ids` inside the figure.
   - The `<style>` element:
     - no `<` or `\`;
-    - every selector starts with `#fig-<id>`, then a space or `>`;
+    - every selector steps into the drawing (`#fig-<id> .part`, anchored as `#fig-<id> svg .part`), never the figure, its `<svg>` box or its caption;
+    - animations run at most 3 times, never `infinite`;
     - no nesting;
     - keyframes are named `<id>--…`;
     - only paint, stroke, text and animation properties.

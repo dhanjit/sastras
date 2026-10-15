@@ -56,7 +56,8 @@ const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and t
     */}
     <script is:inline>
       (function () {
-        if (!('IntersectionObserver' in window)) return;
+        // Edge 15 has IntersectionObserver but no isIntersecting, so a figure would never play there
+        if (!('IntersectionObserver' in window && 'IntersectionObserverEntry' in window && 'isIntersecting' in IntersectionObserverEntry.prototype)) return;
         var root = document.documentElement;
         root.classList.add('figs-armed');
         document.addEventListener('DOMContentLoaded', function () {

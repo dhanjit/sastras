@@ -72,11 +72,17 @@ It parses the file once, the way the page will (an HTML parser, so `<!-->`, `<re
 
 It applies to the whole page, so everything in it must stay inside the figure:
 - **Characters.** No `<`, even as `&lt;`: the page reads an SVG's `<style>` as markup. No `\`: CSS escapes (`\75 rl(…)`) hide what a value says.
-- **Selectors.** Every selector starts with `#fig-<id>`.
-  - It may go on with `.`, `[` or `:` (for example `#fig-<id>.on` or `#fig-<id>:hover`).
-  - The first combinator after that is a space or `>`. A sibling combinator there (`~`, `+`) would reach the page after the figure; further in (`#fig-<id> .a ~ .b`) it stays inside.
-  - So `#fig-rope` can't reach a figure called `rope-head`.
-  - There are no other `#` selectors: target the figure's parts by class.
+- **Selectors.** Every selector steps from the figure into the drawing: `#fig-<id> .part`, styling parts inside the `<svg>` by class.
+  - The figure's compound may be narrowed with `.`, `[` or `:` (for example `#fig-<id>:hover .part`).
+  - Then comes a space. Further in, any combinator is fine (`#fig-<id> .a > .b ~ .c`).
+  - The page gets each selector anchored in the drawing, `#fig-<id> svg .part`, so it can never match the caption, its citations or Replay. You may write the `svg` step yourself: `#fig-<id> svg .part`, or `#fig-<id> > svg > .part`.
+  - Refused:
+    - the figure itself (`#fig-<id>`, `#fig-<id>:hover`);
+    - the drawing's box (`#fig-<id> svg`);
+    - a `>` or sibling combinator straight after the figure, except `> svg`;
+    - `figure`, `figcaption` and `button` steps;
+    - another figure (`#fig-rope` can't reach a figure called `rope-head`);
+    - any other `#` selector: target parts by class.
 - **No nesting.** No nested rules: `&` can climb out of the figure.
 - **Keyframes.** Every `@keyframes` name starts with `<id>--`. The `--` is there for the reason it is in ids: figure `a` can't take `a-b-spin`, which might be figure `a-b`'s.
 - **Other at-rules.** None, except `@media (prefers-reduced-motion: …)`. Never `@import`.
@@ -162,7 +168,7 @@ Animate only when movement explains something a still can't: a stock filling, a 
 
 - **What moves.** Put the class `anim` on each animated element.
 - **How.** Write the animation as CSS `@keyframes` in the SVG's own `<style>`. Never use SMIL.
-- **Length.** Use a finite iteration count (`1`) and keep the whole thing under about two seconds.
+- **Length.** Run each animation once (an iteration count of `1`) and keep the whole thing under about two seconds. The build refuses `infinite` and any count above 3, in `animation` or `animation-iteration-count`: an animation that never ends never reaches its still frame.
 - **The still frame.** The element's own styles are the final, meaningful still frame. The keyframes only say where it starts (`from { … }`), and `both` fill mode holds the first frame during any delay. Readers without JavaScript, readers who ask for reduced motion, and print all see that still frame.
 - **Scope your CSS.** The build enforces the `<style>` rules above. For example:
 
@@ -172,7 +178,7 @@ Animate only when movement explains something a still can't: a stock filling, a 
 ```
 
 How it plays:
-- **Before first paint.** One classic script in `<head>` (in `Base.astro`) arms the page (`html.figs-armed`) when the browser has IntersectionObserver. Animated figures then hold their first frame and show Replay from the first paint, so nothing jumps.
+- **Before first paint.** One classic script in `<head>` (in `Base.astro`) arms the page (`html.figs-armed`) when the browser has IntersectionObserver with `isIntersecting` (Edge 15 has the first without the second, and would never play). Animated figures then hold their first frame and show Replay from the first paint, so nothing jumps.
 - **On screen.** The same script plays a figure when it first reaches the upper three quarters of the window, however tall it is. If the observer won't start, the script disarms the page.
 - **Replay.** Replay drops the animation for one style pass, so it starts over (pausing alone would not rewind a finished animation).
 - **No early play.** The page CSS controls the play state with `!important`, so your `animation` shorthand can't make it play early.

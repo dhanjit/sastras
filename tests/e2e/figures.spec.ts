@@ -44,6 +44,17 @@ test('without IntersectionObserver the page is never armed: final frame, no Repl
   await expect(fig.locator('.fig-replay')).toBeHidden();
 });
 
+test('an observer without isIntersecting (Edge 15) never arms the page: final frame, no Replay', async ({ page }) => {
+  await page.addInitScript(() => {
+    delete (IntersectionObserverEntry.prototype as { isIntersecting?: boolean }).isIntersecting;
+  });
+  await page.goto(PAGE);
+  const fig = page.locator('figure.fig[data-animated]');
+  await expect(page.locator('html')).not.toHaveClass(/\bfigs-armed\b/);
+  expect(new Set(await animationNames(fig))).toEqual(new Set(['none']));
+  await expect(fig.locator('.fig-replay')).toBeHidden();
+});
+
 test('if the observer fails to start, the page disarms: final frame, no Replay', async ({ page }) => {
   await page.addInitScript(() => {
     (window as { IntersectionObserver?: unknown }).IntersectionObserver = function () {
