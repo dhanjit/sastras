@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 228">
   <title>The Bhagavad Gītā inside the Mahābhārata</title>
-  <desc>Three nested boxes. The outer box is the Mahābhārata. Inside it is its sixth book, the Bhīṣma-parvan. Inside that, highlighted, is the Bhagavad Gītā, 18 chapters and 700 verses, labelled with its place in book 6: chapters 23 to 40 in the critical edition, or 25 to 42 in other recensions.</desc>
+  <desc>Three nested boxes. The outer box is the Mahābhārata. Inside it is its sixth book, the Bhīṣma-parvan. Inside that, highlighted, is the Bhagavad Gītā, 18 chapters and 700 verses. A note above it gives the Gītā’s place in book 6: it is chapters 23 to 40 in the critical edition, or 25 to 42 in other recensions.</desc>
 
   <rect class="box" x="4" y="4" width="352" height="220"/>
   <text x="18" y="28" font-weight="700">Mahābhārata</text>
 
   <rect class="box" x="18" y="42" width="324" height="168"/>
   <text x="32" y="66">book 6: Bhīṣma-parvan</text>
-  <text class="sans muted" x="32" y="92">chapters 23–40 (critical edition)</text>
+  <text class="sans muted" x="32" y="92">the Gītā is chapters 23–40 (critical edition)</text>
   <text class="sans muted" x="32" y="111">or 25–42 (other recensions)</text>
 
   <rect class="hi" x="32" y="122" width="296" height="74"/>

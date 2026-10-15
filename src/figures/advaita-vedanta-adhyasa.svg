@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 394">
   <title>Ignorance, superimposition and the knowledge that removes them</title>
-  <desc>A chain, read downwards, in Śaṅkara’s account. A box, avidyā, beginningless ignorance, sends a thick arrow down into a second box, adhyāsa, mutual superimposition, where two arrows run opposite ways between the self and body and mind. A second thick arrow runs from there to a third box: each of us seems a separate, limited person. On the first arrow sits a valve, jñāna, knowledge, which removes the mistake. In the animation the chain stands whole, then the valve shuts, and the arrows and the three boxes fade to dashed outlines one after another, and a line appears beneath: mokṣa, the self already is brahman. The still picture shows that end state.</desc>
+  <desc>A chain, read downwards, in Śaṅkara’s account. A box, avidyā, beginningless ignorance, sends a thick arrow down into a second box, adhyāsa, mutual superimposition, where two arrows run opposite ways between the self and body and mind. A second thick arrow runs from there to a third box: each of us seems a separate, limited person. On the first arrow sits a valve, jñāna, knowledge, which removes the mistake. In the animation the chain stands whole, then the valve shuts, and the arrows, the three boxes and the two-way arrows between self and body and mind fade to dashed lines one after another, and a line appears beneath: mokṣa, the self already is brahman. The still picture shows that end state.</desc>
   <style>
     #fig-advaita-vedanta-adhyasa .closed { animation: advaita-vedanta-adhyasa--show 0.3s ease-in 0.5s 1 both; }
     #fig-advaita-vedanta-adhyasa .shut { opacity: 0.35; animation: advaita-vedanta-adhyasa--shut 0.3s ease-in 0.7s 1 both; }
@@ -44,8 +44,8 @@
   <text class="sans muted" x="180" y="196" text-anchor="middle">mutual superimposition</text>
   <text class="muted gone-text anim s2" x="40" y="229">self</text>
   <text class="muted gone-text anim s2" x="212" y="229">body and mind</text>
-  <path class="line" d="M80 217H200" marker-end="url(#line-head)"/>
-  <path class="line" d="M200 229H80" marker-end="url(#line-head)"/>
+  <path class="line dash gone-box anim s2" d="M80 217H200" marker-end="url(#line-head)"/>
+  <path class="line dash gone-box anim s2" d="M200 229H80" marker-end="url(#line-head)"/>
 
   <!-- the seeming separate person -->
   <path class="flow shut anim s2" d="M180 246V298" marker-end="url(#head)"/>
