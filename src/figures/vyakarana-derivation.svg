@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 340">
+  <title>How the Aṣṭādhyāyī derives a word</title>
+  <desc>A schematic, not a real derivation. At the top, two boxes, verb roots and nominal stems, feed one arrow into a rule (sūtra). From it the arrow splits towards two rules that conflict. A valve labelled metarule cuts the branch to one of them, drawn dashed, so only the other applies. A further rule follows, and the arrow ends in a highlighted box: a well-formed word.</desc>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <!-- the parts of the pipeline -->
+  <g text-anchor="end">
+    <text class="sans muted" x="70" y="27">input</text>
+    <text class="sans muted" x="70" y="174">rules</text>
+    <text class="sans muted" x="70" y="321">output</text>
+  </g>
+  <path class="line" d="M84 76H78V262H84"/>
+
+  <!-- input: lists of verb roots and nominal stems -->
+  <rect class="box" x="92" y="4" width="120" height="36"/>
+  <text x="152" y="27" text-anchor="middle">verb roots</text>
+  <rect class="box" x="232" y="4" width="124" height="36"/>
+  <text x="294" y="27" text-anchor="middle">nominal stems</text>
+  <path class="flow" d="M294 40V56H152"/>
+  <path class="flow" d="M152 40V75" marker-end="url(#head)"/>
+
+  <!-- rules, one after another -->
+  <rect class="box" x="92" y="76" width="120" height="34"/>
+  <text x="152" y="98" text-anchor="middle">sūtra</text>
+  <path class="flow" d="M152 110V157" marker-end="url(#head)"/>
+
+  <!-- two rules conflict; a metarule cuts the branch to one of them -->
+  <path class="flow" d="M152 126H252"/>
+  <polygon class="valve" points="252,114 272,138 272,114 252,138"/>
+  <text x="262" y="106" text-anchor="middle">metarule</text>
+  <path class="line dash" d="M272 126H294V157"/>
+  <rect class="box" x="92" y="158" width="120" height="34"/>
+  <text x="152" y="180" text-anchor="middle">sūtra</text>
+  <rect class="box dash" x="232" y="158" width="124" height="34"/>
+  <text class="muted" x="294" y="180" text-anchor="middle">sūtra</text>
+
+  <path class="flow" d="M152 192V227" marker-end="url(#head)"/>
+  <rect class="box" x="92" y="228" width="120" height="34"/>
+  <text x="152" y="250" text-anchor="middle">sūtra</text>
+
+  <!-- output -->
+  <path class="flow" d="M152 262V297" marker-end="url(#head)"/>
+  <rect class="hi" x="80" y="298" width="144" height="36"/>
+  <text x="152" y="321" text-anchor="middle">well-formed word</text>
+</svg>
