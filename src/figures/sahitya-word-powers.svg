@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 318">
+  <title>Three powers of a word, on Ānandavardhana’s analysis</title>
+  <desc>Three stacked layers of meaning for the sentence “the village is on the Ganges”, read from top to bottom, as Ānandavardhana analyses it. First abhidhā, denotation: a village in the river, which cannot fit. An arrow leads down to lakṣaṇā, indication: “on the bank”. A second arrow leads down to the highlighted layer, vyañjanā, suggestion: the purity the holy river lends the village. Suggestion follows indication but draws on the river, not the bank.</desc>
+  <defs>
+    <marker id="line-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="muted" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <text class="sans muted" x="8" y="18">on Ānandavardhana’s analysis</text>
+  <text x="180" y="48" text-anchor="middle">“the village is on the Ganges”</text>
+
+  <!-- denotation -->
+  <rect class="box" x="8" y="62" width="344" height="58"/>
+  <text x="20" y="86">abhidhā</text>
+  <text class="muted" x="20" y="106">denotation</text>
+  <text x="340" y="86" text-anchor="end">a village in the river:</text>
+  <text x="340" y="106" text-anchor="end">it cannot fit</text>
+
+  <path class="line" d="M180 122V150" marker-end="url(#line-head)"/>
+
+  <!-- indication -->
+  <rect class="box" x="8" y="152" width="344" height="58"/>
+  <text x="20" y="176">lakṣaṇā</text>
+  <text class="muted" x="20" y="196">indication</text>
+  <text x="340" y="186" text-anchor="end">“on the bank”</text>
+
+  <path class="line" d="M180 212V240" marker-end="url(#line-head)"/>
+
+  <!-- suggestion -->
+  <rect class="hi" x="8" y="242" width="344" height="68"/>
+  <text x="20" y="270">vyañjanā</text>
+  <text class="muted" x="20" y="290">suggestion</text>
+  <text x="340" y="270" text-anchor="end">the purity the holy</text>
+  <text x="340" y="290" text-anchor="end">river lends the village</text>
+</svg>

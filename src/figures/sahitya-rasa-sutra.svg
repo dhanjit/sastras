@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 330">
+  <title>The terms of the rasa-sūtra</title>
+  <desc>The terms of Bharata’s rasa-sūtra, in its own order. Three boxes on the left, vibhāva (determinants), anubhāva (consequents) and vyabhicāribhāva (transitory states), each send a thick arrow into one box on the right, saṃyoga, their combination. From it a thick arrow labelled niṣpatti, arising, runs down into a highlighted box: rasa, the taste of the work. How the commentators read the links is disputed.</desc>
+  <style>
+    #fig-sahitya-rasa-sutra .in1 { animation: sahitya-rasa-sutra--show 0.4s ease-out 0s 1 both; }
+    #fig-sahitya-rasa-sutra .in2 { animation: sahitya-rasa-sutra--show 0.4s ease-out 0.25s 1 both; }
+    #fig-sahitya-rasa-sutra .in3 { animation: sahitya-rasa-sutra--show 0.4s ease-out 0.5s 1 both; }
+    #fig-sahitya-rasa-sutra .out { animation: sahitya-rasa-sutra--show 0.5s ease-out 1s 1 both; }
+    @keyframes sahitya-rasa-sutra--show { from { opacity: 0; } }
+  </style>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <!-- the three inputs -->
+  <rect class="box" x="8" y="10" width="176" height="52"/>
+  <text x="20" y="32">vibhāva</text>
+  <text class="muted" x="20" y="52">determinants</text>
+
+  <rect class="box" x="8" y="72" width="176" height="52"/>
+  <text x="20" y="94">anubhāva</text>
+  <text class="muted" x="20" y="114">consequents</text>
+
+  <rect class="box" x="8" y="134" width="176" height="52"/>
+  <text x="20" y="156">vyabhicāribhāva</text>
+  <text class="muted" x="20" y="176">transitory states</text>
+
+  <!-- each flows into the combination -->
+  <path class="flow in1 anim" d="M186 36H230" marker-end="url(#head)"/>
+  <path class="flow in2 anim" d="M186 98H230" marker-end="url(#head)"/>
+  <path class="flow in3 anim" d="M186 160H230" marker-end="url(#head)"/>
+
+  <rect class="stock" x="234" y="10" width="118" height="176"/>
+  <text x="293" y="92" text-anchor="middle">saṃyoga</text>
+  <text class="muted" x="293" y="112" text-anchor="middle">combination</text>
+
+  <!-- and rasa arises -->
+  <g class="out anim">
+    <path class="flow" d="M293 188V258" marker-end="url(#head)"/>
+    <text x="280" y="218" text-anchor="end">niṣpatti</text>
+    <text class="muted" x="280" y="238" text-anchor="end">arising</text>
+    <rect class="hi" x="234" y="262" width="118" height="60"/>
+    <text x="293" y="288" text-anchor="middle">rasa</text>
+    <text class="muted" x="293" y="309" text-anchor="middle">taste</text>
+  </g>
+</svg>
