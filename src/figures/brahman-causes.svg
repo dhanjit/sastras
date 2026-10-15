@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 232">
   <title>Brahman as material and efficient cause, school by school</title>
-  <desc>A grid with four rows, Advaita, Rāmānuja, Bhedābheda and Dvaita (Madhva), and two columns, material cause and efficient cause. A filled dot marks each cause a school makes brahman. Advaita, Rāmānuja and Bhedābheda have a dot in both columns; under Advaita a note says it is the material cause through māyā, unchanged. Dvaita, highlighted, has a dot only under efficient cause, and an empty dashed circle under material cause.</desc>
+  <desc>A grid with four rows, Advaita, Rāmānuja, Bhedābheda and Dvaita (Madhva), and two columns, material cause and efficient cause. A filled dot marks each cause a school makes brahman. Advaita, Rāmānuja and Bhedābheda have a dot in both columns; under Advaita a note says brahman appears as the world through māyā, unchanged. Dvaita, highlighted, has a dot only under efficient cause, and an empty dashed circle under material cause.</desc>
 
   <!-- column heads -->
   <text class="sans" x="240" y="20" text-anchor="middle">material</text>
