@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 394">
+  <title>Ignorance, superimposition and the knowledge that removes them</title>
+  <desc>A chain, read downwards, in Śaṅkara’s account. A box, avidyā, beginningless ignorance, sends a thick arrow down into a second box, adhyāsa, mutual superimposition, where two arrows run opposite ways between the self and body and mind. A second thick arrow runs from there to a third box: each of us seems a separate, limited person. On the first arrow sits a valve, jñāna, knowledge, which removes the mistake. In the animation the chain stands whole, then the valve shuts, and the arrows and the three boxes fade to dashed outlines one after another, and a line appears beneath: mokṣa, the self already is brahman. The still picture shows that end state.</desc>
+  <style>
+    #fig-advaita-vedanta-adhyasa .closed { animation: advaita-vedanta-adhyasa--show 0.3s ease-in 0.5s 1 both; }
+    #fig-advaita-vedanta-adhyasa .shut { opacity: 0.35; animation: advaita-vedanta-adhyasa--shut 0.3s ease-in 0.7s 1 both; }
+    #fig-advaita-vedanta-adhyasa .gone-box { animation: advaita-vedanta-adhyasa--box 0.4s ease-out 0.7s 1 both; }
+    #fig-advaita-vedanta-adhyasa .gone-text { animation: advaita-vedanta-adhyasa--text 0.4s ease-out 0.7s 1 both; }
+    #fig-advaita-vedanta-adhyasa .s2 { animation-delay: 0.95s; }
+    #fig-advaita-vedanta-adhyasa .s3 { animation-delay: 1.2s; }
+    #fig-advaita-vedanta-adhyasa .free { animation: advaita-vedanta-adhyasa--show 0.4s ease-out 1.5s 1 both; }
+    @keyframes advaita-vedanta-adhyasa--show { from { opacity: 0; } }
+    @keyframes advaita-vedanta-adhyasa--shut { from { opacity: 1; stroke-dasharray: none; } }
+    @keyframes advaita-vedanta-adhyasa--box { from { stroke-dasharray: none; } }
+    @keyframes advaita-vedanta-adhyasa--text { from { fill: var(--ink); } }
+  </style>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+    <marker id="line-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path class="muted" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <!-- ignorance -->
+  <rect class="stock dash gone-box anim" x="70" y="6" width="220" height="54"/>
+  <text class="muted gone-text anim" x="180" y="29" text-anchor="middle">avidyā</text>
+  <text class="sans muted" x="180" y="49" text-anchor="middle">beginningless ignorance</text>
+
+  <!-- it shows itself as superimposition; knowledge is the valve on that flow -->
+  <path class="flow shut anim" d="M180 60V88"/>
+  <path class="flow shut anim" d="M180 112V150" marker-end="url(#head)"/>
+  <polygon class="valve" points="168,88 192,112 168,112 192,88"/>
+  <polygon class="rubric-fill closed anim" points="168,88 192,112 168,112 192,88"/>
+  <text x="160" y="97" text-anchor="end">jñāna</text>
+  <text class="sans" x="160" y="115" text-anchor="end">knowledge</text>
+  <text class="sans" x="200" y="97">removes</text>
+  <text class="sans" x="200" y="115">the mistake</text>
+
+  <!-- mutual superimposition: each side credited with the other's features -->
+  <rect class="box dash gone-box anim s2" x="20" y="152" width="320" height="94"/>
+  <text class="muted gone-text anim s2" x="180" y="176" text-anchor="middle">adhyāsa</text>
+  <text class="sans muted" x="180" y="196" text-anchor="middle">mutual superimposition</text>
+  <text class="muted gone-text anim s2" x="40" y="229">self</text>
+  <text class="muted gone-text anim s2" x="212" y="229">body and mind</text>
+  <path class="line" d="M80 217H200" marker-end="url(#line-head)"/>
+  <path class="line" d="M200 229H80" marker-end="url(#line-head)"/>
+
+  <!-- the seeming separate person -->
+  <path class="flow shut anim s2" d="M180 246V298" marker-end="url(#head)"/>
+  <rect class="box dash gone-box anim s3" x="50" y="300" width="260" height="56"/>
+  <text class="sans muted" x="180" y="322" text-anchor="middle">each of us seems</text>
+  <text class="muted gone-text anim s3" x="180" y="343" text-anchor="middle">a separate, limited person</text>
+
+  <!-- what is left -->
+  <text class="rubric free anim" x="180" y="384" text-anchor="middle">mokṣa: the self already is brahman</text>
+</svg>

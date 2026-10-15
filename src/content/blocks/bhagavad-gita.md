@@ -17,6 +17,8 @@ related: [upanisads, brahmasutra, sankara]
 ---
 The Bhagavad Gītā's 700 verses, in eighteen chapters, sit inside the Mahābhārata, in its sixth book, the Bhīṣma-parvan:cite[wiki]. They make up chapters 23–40 of book 6 in the critical edition:cite[gretil], 25–42 in other recensions:cite[wiki]. The Gītā's manuscripts vary far less than those of the rest of the epic:cite[wiki].:note[Śaṅkara’s commentary gives the count as 700, and that has been the benchmark ever since:cite[wiki]. Swami Gambhirananda thought older manuscripts may have had 745, a view a few versions of the epic are cited as supporting, but no such manuscript has been found:cite[wiki].]
 
+::figure[The Gītā's 700 verses and eighteen chapters sit inside the sixth book of the Mahābhārata, the Bhīṣma-parvan:cite[wiki], as its chapters 23–40 in the critical edition:cite[gretil] and 25–42 in other recensions:cite[wiki].]{#bhagavad-gita-nesting}
+
 It is set at the start of the Kurukṣetra war:cite[wiki]. Arjuna recoils from a battle in which he must kill relatives and friends; his charioteer Kṛṣṇa, whom the epic presents as an incarnation (avatāra) of Viṣṇu, answers him and persuades him to do his duty as a warrior:cite[brit].
 
 Dating the Gītā means dating the Mahābhārata, itself compiled over centuries, so estimates vary:cite[wiki]. It is usually dated to the 2nd or 1st century BCE:cite[wiki]; Wendy Doniger, in Britannica, suggests the 1st or 2nd century CE:cite[brit], and Kashi Nath Upadhyaya argues for the 5th or 4th century BCE:cite[wiki]. Tradition names Vyāsa as its author:cite[wiki]. Arthur Basham saw three or more authors or compilers at work:cite[wiki], while J. A. B. van Buitenen stressed how tightly it is woven into the epic:cite[wiki].

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 8 360 330">
+  <title>Three datings of Śaṅkara</title>
+  <desc>A vertical time line, read downwards, broken in the middle so that one scale serves both ends. Above the break, from 600 to 400 BCE, a bar spans the 6th or 5th century BCE: the date several Advaita monasteries keep. Below the break, from about 680 to 840 CE, two shorter bars: about 700 to 750 CE, argued for by Hajime Nakamura, and 788 to 820 CE, the date of earlier scholars.</desc>
+
+  <!-- the axis, broken between the two ends -->
+  <path class="line" d="M100 16V180M100 202V332"/>
+  <path class="line" d="M92 188L108 182M92 198L108 192"/>
+  <path class="line" d="M94 24H100M94 99H100M94 174H100M94 219H100M94 294H100"/>
+  <g text-anchor="end">
+    <text class="sans muted" x="88" y="29">600 BCE</text>
+    <text class="sans muted" x="88" y="104">500 BCE</text>
+    <text class="sans muted" x="88" y="179">400 BCE</text>
+    <text class="sans muted" x="88" y="224">700 CE</text>
+    <text class="sans muted" x="88" y="299">800 CE</text>
+  </g>
+
+  <!-- the monasteries: 6th or 5th century BCE -->
+  <rect class="stock" x="108" y="24" width="22" height="150"/>
+  <text x="142" y="94">several Advaita monasteries</text>
+  <text class="sans muted" x="142" y="113">6th or 5th century BCE</text>
+
+  <!-- Nakamura: about 700–750 CE -->
+  <rect class="stock" x="108" y="219" width="22" height="37.5"/>
+  <text x="142" y="234">Hajime Nakamura</text>
+  <text class="sans muted" x="142" y="253">about 700–750 CE</text>
+
+  <!-- earlier scholars: 788–820 CE -->
+  <rect class="stock" x="108" y="285" width="22" height="24"/>
+  <text x="142" y="294">earlier scholars</text>
+  <text class="sans muted" x="142" y="313">788–820 CE</text>
+</svg>

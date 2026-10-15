@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 262">
+  <title>The four genres of each Veda, the Upaniṣads last</title>
+  <desc>A stack of four layers, read downwards, making up each Veda: the saṃhitā, hymns; the brāhmaṇa, ritual prose; the āraṇyaka; and, highlighted at the bottom, the upaniṣad, which closes the Veda and so is also called vedānta, “the conclusion of the Vedas”.</desc>
+
+  <text class="sans muted" x="8" y="17">each Veda, in four genres</text>
+
+  <rect class="box" x="8" y="28" width="344" height="52"/>
+  <text x="24" y="50">saṃhitā</text>
+  <text class="sans muted" x="24" y="70">hymns</text>
+
+  <rect class="box" x="8" y="80" width="344" height="52"/>
+  <text x="24" y="102">brāhmaṇa</text>
+  <text class="sans muted" x="24" y="122">ritual prose</text>
+
+  <rect class="box" x="8" y="132" width="344" height="52"/>
+  <text x="24" y="163">āraṇyaka</text>
+
+  <rect class="hi" x="8" y="184" width="344" height="72"/>
+  <text x="24" y="207">upaniṣad</text>
+  <text class="rubric" x="338" y="207" text-anchor="end">closes the Veda</text>
+  <text class="sans muted" x="24" y="227">also called vedānta,</text>
+  <text class="sans muted" x="24" y="246">“the conclusion of the Vedas”</text>
+</svg>
