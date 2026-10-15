@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 360 372">
   <title>The treatises and authors on this page, in order</title>
-  <desc>A vertical time line, read downwards, with events evenly spaced rather than to scale. 499 CE, or about 510: the Āryabhaṭīya of Āryabhaṭa. 628: Brahmagupta's Brāhmasphuṭasiddhānta. About 830: Mahāvīra, on division by zero. 1150: Bhāskara II's Siddhāntaśiromaṇi. The late 1300s: Mādhava, where the Kerala line of teachers and pupils begins; from here the time line is drawn thick. 1501: Nīlakaṇṭha's Tantrasaṅgraha. About 1530, or about 1550: Jyeṣṭhadeva's Yuktibhāṣā. The early 1600s: the Kerala line still unbroken at least to here.</desc>
+  <desc>A vertical time line, read downwards, with events evenly spaced rather than to scale. 499 CE, or about 510: the Āryabhaṭīya of Āryabhaṭa. 628: Brahmagupta's Brāhmasphuṭasiddhānta. About 830: the mathematician Mahāvīra, on division by zero. 1150: Bhāskara II's Siddhāntaśiromaṇi. The late 1300s: Mādhava, where the Kerala line of teachers and pupils begins; from here the time line is drawn thick. 1501: Nīlakaṇṭha's Tantrasaṅgraha. About 1530, or about 1550: Jyeṣṭhadeva's Yuktibhāṣā. The early 1600s: the Kerala line still unbroken at least to here.</desc>
 
   <text class="sans muted" x="10" y="18">evenly spaced, not to scale</text>
 
@@ -24,7 +24,7 @@
   <!-- c. 830 -->
   <circle class="stock" cx="142" cy="123" r="5"/>
   <text x="130" y="128" text-anchor="end">c. 830</text>
-  <text x="156" y="128">Mahāvīra</text>
+  <text x="156" y="128">Mahāvīra (mathematician)</text>
   <text class="sans muted" x="156" y="146">on division by zero</text>
 
   <!-- 1150 -->
