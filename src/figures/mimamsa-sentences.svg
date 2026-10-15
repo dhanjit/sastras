@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 262">
+  <title>Āpadeva’s five divisions of the Veda</title>
+  <desc>The Veda as Āpadeva’s primer sorts it. An outlined box at the top, the heart, holds the injunctions: vidhi, injunction, and niṣedha, an injunction to refrain. Below it a second box holds the other three kinds: mantra, formula; nāmadheya, name of a rite; and arthavāda, explanatory passage. An arrow runs up from the lower box to the heart, labelled aids to one or the other.</desc>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <text class="sans muted" x="180" y="16" text-anchor="middle">the Veda in Āpadeva’s primer</text>
+
+  <!-- the heart: injunctions -->
+  <rect class="hi" x="20" y="28" width="320" height="88"/>
+  <text class="sans rubric" x="180" y="50" text-anchor="middle">injunctions: the heart</text>
+  <text x="36" y="78">vidhi</text>
+  <text x="140" y="78">injunction</text>
+  <text x="36" y="104">niṣedha</text>
+  <text x="140" y="104">injunction to refrain</text>
+
+  <!-- the other three serve them -->
+  <path class="line" d="M60 156V122" marker-end="url(#head)"/>
+  <text class="sans" x="74" y="143">aids to one or the other</text>
+
+  <rect class="box" x="20" y="158" width="320" height="96"/>
+  <path class="box" d="M20 190H340M20 222H340"/>
+  <text x="36" y="179">mantra</text>
+  <text x="140" y="179">formula</text>
+  <text x="36" y="211">nāmadheya</text>
+  <text x="140" y="211">name of a rite</text>
+  <text x="36" y="243">arthavāda</text>
+  <text x="140" y="243">explanatory passage</text>
+</svg>
