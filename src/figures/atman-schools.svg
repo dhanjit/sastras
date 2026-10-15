@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 364">
+  <title>The self across the schools</title>
+  <desc>Five rows, each with a small sign and a few words. Nyāya-Vaiśeṣika: three separate circles, each with a dot inside; many selves, each a substance with consciousness among its qualities. Advaita: one large circle holding small dashed circles; the self is consciousness itself, one with brahman. Rāmānuja's Viśiṣṭādvaita: one large circle holding small solid circles; selves real and plural, with matter brahman's body. Madhva's Dvaita: small circles outside a large one, each with an arrow pointing to it; each self depends on brahman, so is permanently other than it. Below a dashed line, the Buddhists: dots joined in a stream by an arrow, with no circle; no lasting self, a stream of causally linked states.</desc>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <!-- Nyāya-Vaiśeṣika: many selves, each a substance with qualities -->
+  <circle class="box" cx="24" cy="26" r="10"/>
+  <circle class="box" cx="56" cy="26" r="10"/>
+  <circle class="box" cx="40" cy="50" r="10"/>
+  <circle class="ink-fill" cx="24" cy="26" r="2.5"/>
+  <circle class="ink-fill" cx="56" cy="26" r="2.5"/>
+  <circle class="ink-fill" cx="40" cy="50" r="2.5"/>
+  <text x="88" y="22">Nyāya-Vaiśeṣika</text>
+  <text class="sans muted" x="88" y="41">many selves, each a substance with</text>
+  <text class="sans muted" x="88" y="59">consciousness among its qualities</text>
+
+  <!-- Advaita: one with brahman; the many only apparent -->
+  <circle class="box" cx="40" cy="110" r="24"/>
+  <circle class="box dash" cx="31" cy="102" r="7"/>
+  <circle class="box dash" cx="50" cy="106" r="7"/>
+  <circle class="box dash" cx="37" cy="121" r="7"/>
+  <text x="88" y="95">Advaita</text>
+  <text class="sans muted" x="88" y="114">the self is consciousness itself,</text>
+  <text class="sans muted" x="88" y="132">one with brahman</text>
+
+  <!-- Viśiṣṭādvaita: real, plural, brahman's body -->
+  <circle class="box" cx="40" cy="183" r="24"/>
+  <circle class="stock" cx="31" cy="175" r="7"/>
+  <circle class="stock" cx="50" cy="179" r="7"/>
+  <circle class="stock" cx="37" cy="194" r="7"/>
+  <text x="88" y="168">Rāmānuja’s Viśiṣṭādvaita</text>
+  <text class="sans muted" x="88" y="187">selves real and plural,</text>
+  <text class="sans muted" x="88" y="205">with matter, brahman’s body</text>
+
+  <!-- Dvaita: dependent, and permanently other -->
+  <circle class="box" cx="24" cy="256" r="17"/>
+  <circle class="stock" cx="66" cy="240" r="6"/>
+  <circle class="stock" cx="68" cy="256" r="6"/>
+  <circle class="stock" cx="64" cy="272" r="6"/>
+  <path class="line" d="M59.9 242.3L41.3 249.4" marker-end="url(#head)"/>
+  <path class="line" d="M61.5 256H42.5" marker-end="url(#head)"/>
+  <path class="line" d="M58 269.6L41.2 262.9" marker-end="url(#head)"/>
+  <text x="88" y="241">Madhva’s Dvaita</text>
+  <text class="sans muted" x="88" y="260">each self depends on brahman,</text>
+  <text class="sans muted" x="88" y="278">so is permanently other than it</text>
+
+  <!-- the Buddhists deny a lasting self -->
+  <path class="box dash" d="M4 296H356"/>
+  <path class="line" d="M4 340H8C14 340 18 330 26 330C34 330 36 340 44 340C52 340 54 330 62 330C68 330 72 335 80 335" marker-end="url(#head)"/>
+  <circle class="ink-fill" cx="8" cy="340" r="3.5"/>
+  <circle class="ink-fill" cx="26" cy="330" r="3.5"/>
+  <circle class="ink-fill" cx="44" cy="340" r="3.5"/>
+  <circle class="ink-fill" cx="62" cy="330" r="3.5"/>
+  <text x="88" y="320">Buddhists</text>
+  <text class="sans muted" x="88" y="339">no lasting self: a stream</text>
+  <text class="sans muted" x="88" y="357">of causally linked states</text>
+</svg>
