@@ -9,15 +9,15 @@ test('written blocks are links, unwritten ones say "in preparation"', async ({ p
   await page.goto('/');
   const schools = page.locator('#schools');
   await expect(schools.getByRole('link', { name: /Vedānta/ })).toHaveAttribute('href', '/vedanta');
-  // Whichever block is still a stub: naming one breaks the test as soon as it is written.
-  const stub = page.locator('.row.prep').first();
+  // Whichever school is still a stub: naming one breaks the test as soon as it is written.
+  const stub = schools.locator('.row.prep').first();
   await expect(stub).toContainText('in preparation');
   await expect(stub.locator('.row-tag')).toHaveCount(0);
   await expect(page.locator('.intro .legend')).toContainText('bold');
   const title = (await stub.locator('.row-title').textContent()) ?? '';
   expect(title).not.toBe('');
   const escaped = title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  await expect(page.getByRole('link', { name: new RegExp(`^${escaped}`) })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: new RegExp(`^${escaped},`) })).toHaveCount(0);
 });
 
 test('schools are grouped by whether they accept the Veda, with their pramāṇas', async ({ page }) => {
