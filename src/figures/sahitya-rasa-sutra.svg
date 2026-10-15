@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 330">
-  <title>The rasa-sūtra as a process</title>
-  <desc>A systems diagram of Bharata’s rasa-sūtra. Three boxes on the left, vibhāva (determinants), anubhāva (consequents) and vyabhicāribhāva (transitory states), each send a thick arrow into one box on the right, saṃyoga, their combination. From the combination a thick arrow labelled niṣpatti, arising, runs down into a highlighted box: rasa, the taste of the work.</desc>
+  <title>The terms of the rasa-sūtra</title>
+  <desc>The terms of Bharata’s rasa-sūtra, in its own order. Three boxes on the left, vibhāva (determinants), anubhāva (consequents) and vyabhicāribhāva (transitory states), each send a thick arrow into one box on the right, saṃyoga, their combination. From it a thick arrow labelled niṣpatti, arising, runs down into a highlighted box: rasa, the taste of the work. How the commentators read the links is disputed.</desc>
   <style>
     #fig-sahitya-rasa-sutra .in1 { animation: sahitya-rasa-sutra--show 0.4s ease-out 0s 1 both; }
     #fig-sahitya-rasa-sutra .in2 { animation: sahitya-rasa-sutra--show 0.4s ease-out 0.25s 1 both; }

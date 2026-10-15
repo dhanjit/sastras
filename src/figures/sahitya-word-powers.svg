@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 318">
   <title>Three powers of a word, on Ānandavardhana’s analysis</title>
-  <desc>Three stacked layers of meaning for the sentence “the village is on the Ganges”, read from top to bottom, as Ānandavardhana analyses it. First abhidhā, denotation: the literal sense fails. An arrow leads down to lakṣaṇā, indication: “on the bank”. A second arrow leads down to the highlighted layer, vyañjanā, suggestion: the purity the holy river lends the village.</desc>
+  <desc>Three stacked layers of meaning for the sentence “the village is on the Ganges”, read from top to bottom, as Ānandavardhana analyses it. First abhidhā, denotation: a village in the river, which cannot fit. An arrow leads down to lakṣaṇā, indication: “on the bank”. A second arrow leads down to the highlighted layer, vyañjanā, suggestion: the purity the holy river lends the village. Suggestion follows indication but draws on the river, not the bank.</desc>
   <defs>
     <marker id="line-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
       <path class="muted" d="M0 0L10 5L0 10z"/>
@@ -14,8 +14,8 @@
   <rect class="box" x="8" y="62" width="344" height="58"/>
   <text x="20" y="86">abhidhā</text>
   <text class="muted" x="20" y="106">denotation</text>
-  <text x="340" y="86" text-anchor="end">the literal</text>
-  <text x="340" y="106" text-anchor="end">sense fails</text>
+  <text x="340" y="86" text-anchor="end">a village in the river:</text>
+  <text x="340" y="106" text-anchor="end">it cannot fit</text>
 
   <path class="line" d="M180 122V150" marker-end="url(#line-head)"/>
 
