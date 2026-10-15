@@ -102,7 +102,7 @@ export function validate(blocks: Block[]): string[] {
     }
     const ids = sources.map((s) => s.id);
     for (const id of new Set(ids.filter((x, i) => ids.indexOf(x) !== i))) errors.push(`${b.id}: source id "${id}" is used twice`);
-    const { cites, notes, figures, unknown, links } = extractRefs(b.body ?? '');
+    const { cites, notes, figures, unknown, bare, links } = extractRefs(b.body ?? '');
     for (const n of notes) {
       if (!n.inline) errors.push(`${b.id}: write :note[…] inline, not on its own line`);
       if (n.empty) errors.push(`${b.id}: :note needs text, like :note[…]`);
@@ -134,6 +134,7 @@ export function validate(blocks: Block[]): string[] {
       if (figureIds.has(f.id)) errors.push(`${b.id}: ::figure{#${f.id}} is used twice`);
       figureIds.add(f.id);
     }
+    for (const name of bare) errors.push(`${b.id}: "${name}[" without a leading colon, write ${name === 'figure' ? '::figure[…]{#id}' : `:${name}[…]`}`);
     for (const name of unknown) errors.push(`${b.id}: ":${name}[…]" is not a directive (use :note or :cite)`);
     for (const { url, path } of links) {
       if (path === null) {
