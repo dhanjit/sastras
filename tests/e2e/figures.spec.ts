@@ -22,11 +22,39 @@ test('a figure is drawn inline, named by its title and desc, with a caption', as
   await expect(fig.locator('figcaption')).not.toBeEmpty();
 });
 
-test('the page is armed before first paint, so Replay never pops in and the figure never jumps', async ({ request }) => {
+test('one classic script in <head> arms the page before first paint and also plays the figures', async ({ request }) => {
   const html = await (await request.get(PAGE)).text();
   const head = html.slice(0, html.indexOf('</head>'));
-  // a classic inline script runs before the body is parsed; the layout's module script runs only after it
-  expect(head).toMatch(/<script>(?:(?!<\/script>)[\s\S])*figs-armed/);
+  // a classic inline script runs before the body is parsed, so Replay never pops in and the figure never jumps; arming
+  // and observing in the same script means a failure elsewhere can't leave a figure armed with nothing to play it
+  const script = head.match(/<script>((?:(?!<\/script>)[\s\S])*figs-armed(?:(?!<\/script>)[\s\S])*)<\/script>/)?.[1] ?? '';
+  expect(script).toContain('new IntersectionObserver');
+  expect(script).toContain('fig-replay');
+  expect(script).not.toMatch(/\?\.|\?\?/); // ES2017: Safari 12.1–13.0 have IntersectionObserver but not ?. or ??
+});
+
+test('without IntersectionObserver the page is never armed: final frame, no Replay', async ({ page }) => {
+  await page.addInitScript(() => {
+    delete (window as { IntersectionObserver?: unknown }).IntersectionObserver;
+  });
+  await page.goto(PAGE);
+  const fig = page.locator('figure.fig[data-animated]');
+  await expect(page.locator('html')).not.toHaveClass(/\bfigs-armed\b/);
+  expect(new Set(await animationNames(fig))).toEqual(new Set(['none']));
+  await expect(fig.locator('.fig-replay')).toBeHidden();
+});
+
+test('if the observer fails to start, the page disarms: final frame, no Replay', async ({ page }) => {
+  await page.addInitScript(() => {
+    (window as { IntersectionObserver?: unknown }).IntersectionObserver = function () {
+      throw new Error('observer unavailable');
+    };
+  });
+  await page.goto(PAGE);
+  const fig = page.locator('figure.fig[data-animated]');
+  await expect(page.locator('html')).not.toHaveClass(/\bfigs-armed\b/);
+  expect(new Set(await animationNames(fig))).toEqual(new Set(['none']));
+  await expect(fig.locator('.fig-replay')).toBeHidden();
 });
 
 test('an animated figure holds its first frame until it is on screen, then plays', async ({ page }) => {

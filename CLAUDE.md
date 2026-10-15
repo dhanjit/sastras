@@ -45,7 +45,7 @@ One block = one file, `src/content/blocks/<id>.md`. The file name is the id and 
 - Both must be inline: not on their own line, not inside a link or a heading. A note can't nest inside another note and needs text.
 - By convention, a note goes at the end of its sentence, after the full stop and any cite. The build doesn't check this.
 - Any other `:word[…]` fails as a typo. Ordinary colons such as `2:47` are fine.
-- `::figure[caption]{#id}`, on its own line, draws `src/figures/<id>.svg`. See Figures.
+- `::figure[caption]{#id}`, on its own line and at the top level (not in a list, quote or table), draws `src/figures/<id>.svg`. See Figures.
 - A new directive needs its name in `src/lib/directives.ts` (or the typo check rejects it), a plugin registered in `astro.config.mjs`, and handling in `src/lib/refs.ts`, `src/lib/tree.ts` (its checks) and `src/lib/describe.ts` (which drops notes, cites and figures from descriptions by name).
 
 **Glossary** (`src/data/glossary.yaml`)
@@ -62,9 +62,18 @@ One block = one file, `src/content/blocks/<id>.md`. The file name is the id and 
 ## Figures
 Hand-drawn SVG diagrams on block pages. **Read [docs/figure-guide.md](docs/figure-guide.md) before drawing one**: the syntax, the rules the build checks, the class vocabulary, phone-first layout, animation and the writing rules. `src/figures/example-system.svg` is the worked example.
 - One file per figure, `src/figures/<id>.svg`, placed with `::figure[caption]{#id}`. The caption is required and can cite.
-- `validate` checks the directive (own line, id, caption, used once per page). The `figures` integration (`src/integrations/figures.ts`) checks each file with `checkFigure` and that every referenced file exists. Either failure fails `astro build` and `astro dev`.
-- `src/lib/figure-svg.ts` parses each SVG once, as the page will. It then checks that tree against allowlists of elements and attributes (no `style` attributes, references only to `#ids` inside the figure) and against the `<style>` rules (every selector starts with `#fig-<id>`, keyframes are named `<id>-…`). The same tree is then rewritten for the page: inner ids become `fig-<id>--<inner>`.
-- Colour comes only from the figure classes in `manuscript.css`, so figures follow dark mode. Animations are CSS `@keyframes` on `.anim` elements; a `<head>` script and `Base.astro` play them on view.
+- `validate` checks the directive (own line, top level, id, caption, used once per page). The `figures` integration (`src/integrations/figures.ts`) checks each file with `checkFigure` and that every referenced file exists. Either failure fails `astro build` and `astro dev`.
+- `src/lib/figure-svg.ts` parses each SVG once, as the page will, checks that tree and rewrites it for the page.
+  - Elements and attributes come from allowlists: no `style` attributes, and references only to `#ids` inside the figure.
+  - The `<style>` element:
+    - no `<` or `\`;
+    - every selector starts with `#fig-<id>`, then a space or `>`;
+    - no nesting;
+    - keyframes are named `<id>--…`;
+    - only paint, stroke, text and animation properties.
+  - The CSS is re-written from what was checked.
+  - Inner ids become `fig-<id>--<inner>`.
+- Colour comes only from the figure classes in `manuscript.css`, so figures follow dark mode. Animations are CSS `@keyframes` on `.anim` elements. One classic script in `Base.astro`'s `<head>` arms the page before first paint and plays them on view.
 - `/figure-test/<id>` draws each figure the way a block page does, below a spacer. It is built only with `E2E_FIGURES=1` (e2e sets it), and a production build that contains it fails.
 
 ## Code map

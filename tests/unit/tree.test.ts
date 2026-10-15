@@ -266,6 +266,15 @@ describe('validate', () => {
     ]);
   });
 
+  it('rejects a figure inside a list, quote or table, where it would not fit a phone', () => {
+    expect(validate([block('a', {}, '- item\n\n  ::figure[A caption]{#rope-snake}')])).toEqual([
+      'a: ::figure{#rope-snake} must be a top-level paragraph, not inside a list, quote or table',
+    ]);
+    expect(validate([block('a', {}, '> ::figure[A caption]{#rope-snake}')])).toEqual([
+      'a: ::figure{#rope-snake} must be a top-level paragraph, not inside a list, quote or table',
+    ]);
+  });
+
   it('checks a citation inside a figure caption', () => {
     expect(validate([block('a', {}, '::figure[A caption:cite[sep]]{#rope-snake}')])).toEqual(['a: :cite[sep] has no matching source']);
   });

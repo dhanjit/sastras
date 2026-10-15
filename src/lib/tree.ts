@@ -129,6 +129,7 @@ export function validate(blocks: Block[]): string[] {
       }
       if (!SLUG.test(f.id)) errors.push(`${b.id}: ::figure{#${f.id}} id must be lower-case ASCII words joined by hyphens`);
       if (!f.caption) errors.push(`${b.id}: ::figure{#${f.id}} needs a caption`);
+      if (f.leaf && !f.topLevel) errors.push(`${b.id}: ::figure{#${f.id}} must be a top-level paragraph, not inside a list, quote or table`);
       // the figure's element ids come from its id, so a second copy on the page would repeat them
       if (figureIds.has(f.id)) errors.push(`${b.id}: ::figure{#${f.id}} is used twice`);
       figureIds.add(f.id);

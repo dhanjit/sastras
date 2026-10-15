@@ -25,10 +25,11 @@ const still = `<?xml version="1.0"?>
   <text x="5" y="20">user id="42"</text>
   <!-- <g class="anim"/> -->
 </svg>`;
-const moving = `<svg viewBox="0 0 400 200"><title>Snake</title><desc>The rope seen as a snake.</desc><style>#fig-snake .x { animation: snake-draw 1s 1 both; } @keyframes snake-draw { from { opacity: 0; } }</style><path id="body" class="flow anim x" d="M0 0H9"/></svg>`;
+const moving = `<svg viewBox="0 0 400 200"><title>Snake</title><desc>The rope seen as a snake.</desc><style>#fig-snake .x { animation: snake--draw 1s 1 both; } /* a note */ @keyframes snake--draw { from { opacity: 0; } }</style><path id="body" class="flow anim x" d="M0 0H9"/></svg>`;
 const broken = '<svg viewBox="0 0 400 200"><title>T</title><desc>D</desc><script>alert(1)</script></svg>';
+const glossed = '<svg viewBox="0 0 400 200"><title>T</title><desc>The ātman as a lamp.</desc><text x="5" y="20">ātman</text><rect class="box" width="9" height="9"/></svg>';
 const tiny = '<svg viewBox="0 0 400 200"><title>T</title><desc>D</desc><defs><marker id="head"><path d="M0 0"/></marker></defs><path d="M0 0H9" marker-end="url(#head)"/></svg>';
-const figures = { 'rope-snake': still, snake: moving, broken, rope: tiny, 'rope-head': tiny };
+const figures = { 'rope-snake': still, snake: moving, broken, rope: tiny, 'rope-head': tiny, glossed };
 
 // Astro's own pipeline with the site's plugins in the site's order, so rehype-raw handles the SVG as on the page.
 const proc = await createMarkdownProcessor({
@@ -56,7 +57,7 @@ describe('remarkFigure', () => {
     expect(html).toMatch(/clip-path="url\(\s*#fig-rope-snake--g\s*\)"/);
     expect(html).toContain('href="#fig-rope-snake--rope"');
     expect(html).toContain('xlink:href="#fig-rope-snake--rope"');
-    expect(html).toContain('#fig-rope-snake .line { marker-start: url(#fig-rope-snake--head); }');
+    expect(html).toMatch(/#fig-rope-snake \.line \{\s*marker-start: url\(#fig-rope-snake--head\);?\s*\}/);
     expect(html).not.toMatch(/id="(?:head|rope|g)"|#(?:head|rope|g)\b/);
   });
 
@@ -74,6 +75,20 @@ describe('remarkFigure', () => {
     expect(html).toContain('<title id="fig-rope-snake--title">Rope</title>');
     expect(html).toContain('<desc id="fig-rope-snake--desc">A coiled rope in dim light.</desc>');
     expect(html).not.toContain('old');
+  });
+
+  it('writes the <style> back from what was checked, without comments', async () => {
+    const html = await md('::figure[Moving]{#snake}');
+    expect(html).toMatch(/<style>#fig-snake \.x \{\s*animation: snake--draw 1s 1 both;?\s*\}\s*@keyframes snake--draw/);
+    expect(html).not.toContain('a note');
+  });
+
+  it('never glosses inside the drawing, even where a caption container would reach it', async () => {
+    const html = await md('- item\n\n  ::figure[The ātman]{#glossed}');
+    const svg = html.match(/<svg[\s\S]*?<\/svg>/)![0];
+    expect(svg).not.toContain('term');
+    expect(svg).toContain('<text x="5" y="20">ātman</text><rect class="box" width="9" height="9"></rect></svg>');
+    expect(html).toMatch(/<figcaption>The <a class="term"/);
   });
 
   it('leaves text that looks like an attribute alone', async () => {

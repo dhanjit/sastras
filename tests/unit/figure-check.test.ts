@@ -9,9 +9,10 @@ const valid = `<?xml version="1.0" encoding="UTF-8"?>
   <title>A stock and its flows</title>
   <desc>Water flows into a tank and out through a valve.</desc>
   <style>
-    #fig-stock-flow .fill { animation: stock-flow-rise 1.2s ease-out 1 both; fill: var(--leaf-2); stroke: currentColor; marker-end: url(#arrow); font: italic 13px/1.2 serif; }
-    #fig-stock-flow > .a, #fig-stock-flow:hover .b, #fig-stock-flow[data-x] .c, #fig-stock-flow.d { opacity: 0.5; }
-    @keyframes stock-flow-rise { from { opacity: 0; } }
+    #fig-stock-flow .fill { animation: stock-flow--rise 1.2s ease-out 1 both; fill: var(--leaf-2); stroke: currentColor; marker-end: url(#arrow); font: italic 13px/1.2 serif; }
+    #fig-stock-flow > .a, #fig-stock-flow:hover .b, #fig-stock-flow[data-x] .c, #fig-stock-flow.d, #fig-stock-flow .e ~ .f, #fig-stock-flow:is(.g, .h) > .i + .j { opacity: 0.5; }
+    /* comments are dropped */
+    @keyframes stock-flow--rise { from { opacity: 0; } }
     @media (prefers-reduced-motion: reduce) { #fig-stock-flow .fill { animation: none; } }
   </style>
   <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path class="ink-fill" d="M0 0L10 5L0 10z"/></marker></defs>
@@ -180,6 +181,7 @@ describe('checkFigure', () => {
       ['light-dark()', 'fill="none"', 'fill="light-dark(black, white)"', 'light-dark('],
       ['a named colour', 'fill="none"', 'fill="red"', 'red'],
       ['a named colour in another case', 'stroke="currentColor"', 'stroke="Black"', 'Black'],
+      ['a system colour', 'fill="none"', 'fill="Canvas"', 'Canvas'],
     ])('rejects a literal colour in an attribute: %s', (_, from, to, shown) => {
       const errors = check(with_(from, to));
       expect(errors).toHaveLength(1);
@@ -190,8 +192,7 @@ describe('checkFigure', () => {
     it.each([
       ['a hex', '#fig-stock-flow .x { fill: #ddd3b6; }', '#ddd3b6'],
       ['a named colour', '#fig-stock-flow .x { stroke: navy; }', 'navy'],
-      ['a colour in any property', '#fig-stock-flow .x { outline: 1px solid teal; }', 'teal'],
-      ['a colour in a custom property', '#fig-stock-flow .x { --c: tomato; }', 'tomato'],
+      ['a system colour', '#fig-stock-flow .x { fill: CanvasText; }', 'CanvasText'],
       ['a colour function', '#fig-stock-flow .x { fill: hwb(10 10% 10%); }', 'hwb('],
       ['a colour() function', '#fig-stock-flow .x { fill: color(display-p3 1 0 0); }', 'color('],
     ])('rejects a literal colour in <style>: %s', (_, css, shown) => {
@@ -199,6 +200,10 @@ describe('checkFigure', () => {
       expect(errors).toHaveLength(1);
       expect(errors[0]).toMatch(/^figure stock-flow: literal colour /);
       expect(errors[0]).toContain(shown);
+    });
+
+    it('does not read a font name or a quoted string as a colour', () => {
+      expect(check(styled('#fig-stock-flow .x { font-family: "Gold Serif", Tan, serif; }'))).toEqual([]);
     });
 
     it('allows none, currentColor, transparent, inherit, context paint, a local paint server and a CSS variable', () => {
@@ -214,12 +219,47 @@ describe('checkFigure', () => {
       ['another figure, by a longer id', '#fig-stock-flow-head .x { opacity: 0; }', '#fig-stock-flow-head .x'],
       ['an inner id, renamed at build', '#fig-stock-flow #arrow { opacity: 0; }', '#fig-stock-flow #arrow'],
       ['one bad selector in a list', '#fig-stock-flow .a, .b { opacity: 0; }', '.b'],
+      ['a general sibling of the figure', '#fig-stock-flow ~ p { display: none; }', '#fig-stock-flow ~ p'],
+      ['an adjacent sibling of the figure', '#fig-stock-flow + * { display: none; }', '#fig-stock-flow + *'],
+      ['a sibling after a pseudo-class', '#fig-stock-flow:where(.x) ~ .fig .box { opacity: 0; }', '#fig-stock-flow:where(.x) ~ .fig .box'],
+      ['an id inside :is()', '#fig-stock-flow :is(#x) { opacity: 0; }', '#fig-stock-flow :is(#x)'],
     ])('rejects a selector that is not scoped to the figure: %s', (_, css, selector) => {
-      expect(check(styled(css))).toEqual([msg(`selector "${selector}" must start with #fig-stock-flow and target parts by class`)]);
+      expect(check(styled(css))).toEqual([msg(`selector "${selector}" must start with #fig-stock-flow, then a space or ">", and target parts by class`)]);
     });
 
-    it('rejects keyframes that are not prefixed with the figure id', () => {
-      expect(check(styled('@keyframes rise { from { opacity: 0; } }'))).toEqual([msg('@keyframes rise must be named stock-flow-…')]);
+    it('rejects nested rules, which can climb out of the figure with &', () => {
+      expect(check(styled('#fig-stock-flow { & ~ p { display: none; } }'))).toEqual([msg('nested rules are not allowed in <style>')]);
+      expect(check(styled('#fig-stock-flow .x { @media (prefers-reduced-motion: reduce) { opacity: 1; } }'))).toEqual([
+        msg('nested rules are not allowed in <style>'),
+      ]);
+    });
+
+    it.each([
+      ['a script behind entities in a comment', '#fig-stock-flow .x { opacity: 1; } /* &lt;/style&gt;&lt;script&gt;alert(1)&lt;/script&gt; */'],
+      ['a script behind entities in a string', '#fig-stock-flow .x { font-family: "&lt;script&gt;alert(1)&lt;/script&gt;"; }'],
+    ])('rejects "<" in <style>, which the page would read as markup: %s', (_, css) => {
+      expect(check(styled(css))).toContain(msg('<style> may not contain "<"'));
+    });
+
+    it.each([
+      ['an escaped url()', '#fig-stock-flow .x { fill: \\75 rl(https://example.org/p.gif); }'],
+      ['an escape inside url', '#fig-stock-flow .x { fill: u\\rl(https://example.org/p.gif); }'],
+    ])('rejects CSS escapes, which hide what a value says: %s', (_, css) => {
+      expect(check(styled(css))).toContain(msg('<style> may not contain "\\" (no CSS escapes)'));
+    });
+
+    it('rejects properties outside the allowlist, including custom properties', () => {
+      expect(check(styled('#fig-stock-flow { position: fixed; z-index: 9; --c: tomato; }'))).toEqual([
+        msg('property position is not allowed in <style>'),
+        msg('property z-index is not allowed in <style>'),
+        msg('property --c is not allowed in <style>'),
+      ]);
+    });
+
+    it('rejects keyframes that are not prefixed with the figure id and --', () => {
+      expect(check(styled('@keyframes rise { from { opacity: 0; } }'))).toEqual([msg('@keyframes rise must be named stock-flow--…')]);
+      // stock-flow-spin could be figure stock-flow's, or figure stock's "flow-spin"
+      expect(check(styled('@keyframes stock-flow-spin { from { opacity: 0; } }'))).toEqual([msg('@keyframes stock-flow-spin must be named stock-flow--…')]);
     });
 
     it.each([
@@ -233,7 +273,7 @@ describe('checkFigure', () => {
     });
 
     it('rejects image functions, which load files without url()', () => {
-      expect(check(styled('#fig-stock-flow .x { mask: image-set("https://example.org/m.png" 1x); }'))).toEqual([
+      expect(check(styled('#fig-stock-flow .x { fill: image-set("https://example.org/m.png" 1x); }'))).toEqual([
         msg('image-set() is not allowed in <style>'),
       ]);
     });
@@ -253,8 +293,15 @@ describe('checkFigure', () => {
 
     it('reads the size out of the font shorthand', () => {
       expect(check(styled('#fig-stock-flow .x { font: 700 11px/1.2 serif; }'))).toEqual([msg('font-size 11px is below 12')]);
-      expect(check(styled('#fig-stock-flow .x { font: bold 1.2em serif; }'))).toEqual([msg('font-size 1.2em: write it in px, at least 12')]);
       expect(check(styled('#fig-stock-flow .x { font: small-caps 700 14px serif; }'))).toEqual([]);
+    });
+
+    it.each([['bold 1.2em serif'], ['calc(8px) serif'], ['1e1px serif']])('requires the font shorthand to carry a plain px size: %s', (font) => {
+      expect(check(styled(`#fig-stock-flow .x { font: ${font}; }`))).toEqual([msg(`font: ${font}: give the size in px, at least 12`)]);
+    });
+
+    it('rejects system fonts in the font shorthand', () => {
+      expect(check(styled('#fig-stock-flow .x { font: caption; }'))).toEqual([msg('font: caption: system fonts are not allowed; give the size in px, at least 12')]);
     });
   });
 

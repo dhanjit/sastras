@@ -19,6 +19,7 @@ Put the figure in the block body, on its own line:
 
 The build fails on:
 - a figure written inline;
+- a figure inside a list, quote or table (it must be a top-level paragraph);
 - a figure without an id or caption;
 - an id that breaks the pattern;
 - the same figure twice on one page;
@@ -58,21 +59,36 @@ It parses the file once, the way the page will (an HTML parser, so `<!-->`, `<re
 - Ids are unique within the figure. `title` and `desc` are reserved (the build gives those ids to the `<title>` and `<desc>`).
 
 **Colour**
-- No literal colour in any attribute or `<style>` declaration: no hex, no named colour (`red`), no colour function (`rgb`, `rgba`, `hsl`, `hsla`, `hwb`, `lab`, `lch`, `oklab`, `oklch`, `color`, `color-mix`, `light-dark`).
+- No literal colour in any attribute or `<style>` declaration: no hex, no named colour (`red`), no system colour (`Canvas`, `CanvasText`, …), no colour function (`rgb`, `rgba`, `hsl`, `hsla`, `hwb`, `lab`, `lch`, `oklab`, `oklch`, `color`, `color-mix`, `light-dark`).
+- Quoted strings, and the words in `font`, `font-family`, `animation` and `animation-name`, are names, not colours: `font-family: "Gold Serif"` is fine. Hex and colour functions are refused there too.
 - `none`, `currentColor`, `transparent`, `inherit`, `context-fill`, `context-stroke`, `url(#…)` and, in `<style>`, `var(--…)` are fine.
 - Colour comes from the classes below, so the figure follows light and dark mode.
 
 **Font size**
-- Every font size, as a `font-size` attribute, a `font-size` declaration or the size in a `font` shorthand, is in px and at least 12.
+- Every font size, as a `font-size` attribute or a `font-size` declaration, is in px and at least 12.
+- A `font` shorthand must carry a plain size such as `14px`, at least 12. So no `calc()`, no `em`, no `1e1px`, and no system font (`font: caption`).
 
 **The `<style>` element**
 
 It applies to the whole page, so everything in it must stay inside the figure:
-- **Selectors.** Every selector starts with `#fig-<id>`, followed by a space, a combinator, `.`, `[`, `:` or nothing. So `#fig-rope` can't reach a figure called `rope-head`. There are no other `#` selectors: target the figure's parts by class.
-- **Keyframes.** Every `@keyframes` name starts with `<id>-`.
+- **Characters.** No `<`, even as `&lt;`: the page reads an SVG's `<style>` as markup. No `\`: CSS escapes (`\75 rl(…)`) hide what a value says.
+- **Selectors.** Every selector starts with `#fig-<id>`.
+  - It may go on with `.`, `[` or `:` (for example `#fig-<id>.on` or `#fig-<id>:hover`).
+  - The first combinator after that is a space or `>`. A sibling combinator there (`~`, `+`) would reach the page after the figure; further in (`#fig-<id> .a ~ .b`) it stays inside.
+  - So `#fig-rope` can't reach a figure called `rope-head`.
+  - There are no other `#` selectors: target the figure's parts by class.
+- **No nesting.** No nested rules: `&` can climb out of the figure.
+- **Keyframes.** Every `@keyframes` name starts with `<id>--`. The `--` is there for the reason it is in ids: figure `a` can't take `a-b-spin`, which might be figure `a-b`'s.
 - **Other at-rules.** None, except `@media (prefers-reduced-motion: …)`. Never `@import`.
+- **Properties.** Only paint, stroke, markers, text and animation:
+  - `fill*`, `stroke*`, `opacity`, `paint-order`, `vector-effect`, `clip-path`;
+  - `marker*`;
+  - `font*`, `letter-spacing`, `text-anchor`, `dominant-baseline`;
+  - `animation*`, `transform`, `transform-origin`, `transform-box`;
+  - `display`, `visibility`.
+  - No layout (`position`, `z-index`, sizes), no `content`, no custom properties.
 - **Images.** No `image-set()` and the like.
-- The CSS must parse.
+- **Parsing.** The CSS must parse. The page gets it re-written from what was checked, without comments.
 
 The build can't check that a drawing is clear, that it matches the text, or that its labels fit. Look at it at 375 px and 1280 px, in light and dark mode: the figure test page (Animation, below) is the quickest way.
 
@@ -151,13 +167,13 @@ Animate only when movement explains something a still can't: a stock filling, a 
 - **Scope your CSS.** The build enforces the `<style>` rules above. For example:
 
 ```css
-#fig-example-system .level { transform-box: fill-box; transform-origin: 50% 100%; animation: example-system-rise 1.4s ease-out 1 both; }
-@keyframes example-system-rise { from { transform: scaleY(0.15); } }
+#fig-example-system .level { transform-box: fill-box; transform-origin: 50% 100%; animation: example-system--rise 1.4s ease-out 1 both; }
+@keyframes example-system--rise { from { transform: scaleY(0.15); } }
 ```
 
 How it plays:
-- **Before first paint.** A script in `<head>` arms the page (`html.figs-armed`) when the browser has IntersectionObserver. Animated figures then hold their first frame and show Replay from the first paint, so nothing jumps.
-- **On screen.** The layout script plays a figure when it first reaches the upper three quarters of the window, however tall it is.
+- **Before first paint.** One classic script in `<head>` (in `Base.astro`) arms the page (`html.figs-armed`) when the browser has IntersectionObserver. Animated figures then hold their first frame and show Replay from the first paint, so nothing jumps.
+- **On screen.** The same script plays a figure when it first reaches the upper three quarters of the window, however tall it is. If the observer won't start, the script disarms the page.
 - **Replay.** Replay drops the animation for one style pass, so it starts over (pausing alone would not rewind a finished animation).
 - **No early play.** The page CSS controls the play state with `!important`, so your `animation` shorthand can't make it play early.
 - **The still frame.** Without JavaScript or IntersectionObserver, with reduced motion and in print there is no animation and no Replay, only the still frame.

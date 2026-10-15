@@ -34,12 +34,27 @@ const TEXT_PARENTS = new Set(['text', 'tspan', 'title', 'desc', 'style']);
 const PAINT = new Set(['fill', 'stroke']);
 /** At-rules a figure's <style> may hold, besides its own @keyframes. */
 const REDUCED_MOTION = /prefers-reduced-motion/i;
+/** The properties a figure's <style> may set: paint, stroke, markers, text and animation. No layout, no content. */
+const CSS_PROPERTIES = new Set([
+  'animation', 'animation-name', 'animation-duration', 'animation-timing-function', 'animation-delay',
+  'animation-iteration-count', 'animation-direction', 'animation-fill-mode', 'animation-play-state',
+  'transform', 'transform-origin', 'transform-box', 'opacity', 'display', 'visibility',
+  'fill', 'fill-opacity', 'fill-rule', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap',
+  'stroke-linejoin', 'stroke-miterlimit', 'stroke-opacity', 'paint-order', 'vector-effect', 'clip-path',
+  'marker', 'marker-start', 'marker-mid', 'marker-end',
+  'font', 'font-family', 'font-size', 'font-style', 'font-weight', 'font-variant', 'letter-spacing', 'text-anchor', 'dominant-baseline',
+]);
+/** Properties whose words are names (fonts, keyframes), not colours: only hex and colour functions are looked for there. */
+const NAME_VALUED = new Set(['font', 'font-family', 'animation', 'animation-name']);
+const SYSTEM_FONTS = new Set(['caption', 'icon', 'menu', 'message-box', 'small-caption', 'status-bar']);
 
 // prettier-ignore
 const NAMED_COLOURS = new Set('aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue blueviolet brown burlywood cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan darkblue darkcyan darkgoldenrod darkgray darkgreen darkgrey darkkhaki darkmagenta darkolivegreen darkorange darkorchid darkred darksalmon darkseagreen darkslateblue darkslategray darkslategrey darkturquoise darkviolet deeppink deepskyblue dimgray dimgrey dodgerblue firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite gold goldenrod gray green greenyellow grey honeydew hotpink indianred indigo ivory khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral lightcyan lightgoldenrodyellow lightgray lightgreen lightgrey lightpink lightsalmon lightseagreen lightskyblue lightslategray lightslategrey lightsteelblue lightyellow lime limegreen linen magenta maroon mediumaquamarine mediumblue mediumorchid mediumpurple mediumseagreen mediumslateblue mediumspringgreen mediumturquoise mediumvioletred midnightblue mintcream mistyrose moccasin navajowhite navy oldlace olive olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise palevioletred papayawhip peachpuff peru pink plum powderblue purple rebeccapurple red rosybrown royalblue saddlebrown salmon sandybrown seagreen seashell sienna silver skyblue slateblue slategray slategrey snow springgreen steelblue tan teal thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen'.split(' '));
+// CSS system colours, which follow the OS theme rather than the page's
+// prettier-ignore
+const SYSTEM_COLOURS = new Set('accentcolor accentcolortext activetext buttonborder buttonface buttontext canvas canvastext field fieldtext graytext highlight highlighttext linktext mark marktext selecteditem selecteditemtext visitedtext activeborder activecaption appworkspace background buttonhighlight buttonshadow captiontext inactiveborder inactivecaption inactivecaptiontext infobackground infotext menu menutext scrollbar threeddarkshadow threedface threedhighlight threedlightshadow threedshadow window windowframe windowtext'.split(' '));
 const COLOUR_FUNCTION = /(?<![\w-])(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color-mix|color|light-dark)\(/gi;
 const IMAGE_FUNCTION = /(?<![\w-])(?:-webkit-)?(?:image-set|image|cross-fade|element|src)\(/i;
-const FONT_SIZE_KEYWORDS = new Set(['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xxx-large', 'smaller', 'larger']);
 
 export interface InlineFigure {
   /** The rewritten <svg>: ids prefixed, references followed, comments dropped, named by its title and desc. */
@@ -54,27 +69,45 @@ const textOf = (node: ElementContent | Element): string =>
   node.type === 'text' ? node.value : 'children' in node ? node.children.map((c) => textOf(c as ElementContent)).join('') : '';
 const unique = <T>(xs: T[]) => [...new Set(xs)];
 
-/** Every literal colour in a CSS or attribute value: hex, colour functions and named colours. */
-function coloursIn(value: string): string[] {
-  const v = value.replace(/url\([^)]*\)?/gi, ' '); // a reference is not a colour
+const withoutStrings = (value: string) => value.replace(/"[^"]*"|'[^']*'/g, ' ');
+
+/** Every literal colour in a CSS or attribute value: hex, colour functions, and named and system colours (unless `names` says the words are names). */
+function coloursIn(value: string, names = false): string[] {
+  const v = withoutStrings(value).replace(/url\([^)]*\)?/gi, ' '); // a reference or a string is not a colour
+  const word = (w: string) => NAMED_COLOURS.has(w.toLowerCase()) || SYSTEM_COLOURS.has(w.toLowerCase());
   return [
     ...(v.match(/#[\w-]*/g) ?? []),
     ...[...v.matchAll(COLOUR_FUNCTION)].map((m) => m[0]),
-    ...(v.match(/(?<![\w-])[a-z]+(?![\w-])/gi) ?? []).filter((w) => NAMED_COLOURS.has(w.toLowerCase())),
+    ...(names ? [] : (v.match(/(?<![\w-])[a-z]+(?![\w-])/gi) ?? []).filter(word)),
   ];
+}
+
+/**
+ * True when a selector stays inside the figure: it starts with `#fig-<id>` (and not a longer id), has no other id,
+ * and the first combinator after that compound is a descendant (space) or child (`>`). A sibling combinator there
+ * (`~`, `+`) would reach the page after the figure; one further in stays inside it.
+ */
+function scoped(selector: string, fig: string): boolean {
+  const prefix = `#${fig}`;
+  if (!selector.startsWith(prefix)) return false;
+  const rest = selector.slice(prefix.length);
+  if (rest.includes('#') || !/^(?:$|[\s>.[:])/.test(rest)) return false;
+  let depth = 0;
+  let quote = '';
+  let i = 0;
+  for (; i < rest.length; i++) {
+    const c = rest[i];
+    if (quote) quote = c === quote ? '' : quote;
+    else if (c === '"' || c === "'") quote = c;
+    else if (c === '(' || c === '[') depth++;
+    else if (c === ')' || c === ']') depth--;
+    else if (depth === 0 && /[\s>+~]/.test(c)) break;
+  }
+  return !/^[+~]/.test(rest.slice(i).trimStart());
 }
 
 /** The target of every url(…) in a value, e.g. `#arrow`; null for an unterminated one. */
 const urlsIn = (value: string) => [...value.matchAll(/url\(\s*(["']?)([^"')]*)\1\s*(\))?/gi)].map((m) => (m[3] ? m[2].trim() : null));
-
-/** The size token of a `font` shorthand (the first token with a unit, or a size keyword), or undefined when it has none. */
-function shorthandSize(value: string): string | undefined {
-  for (const token of value.trim().split(/\s+/)) {
-    const t = token.split('/')[0];
-    if (/^(?:\d+(?:\.\d+)?|\.\d+)(?:[a-z]+|%)$/i.test(t) || FONT_SIZE_KEYWORDS.has(t.toLowerCase())) return t;
-  }
-  return undefined;
-}
 
 /** "13", "13px" → 13; anything else (em, %, keywords, var()) → null. */
 const px = (value: string): number | null => {
@@ -177,9 +210,19 @@ export function prepareFigure(id: string, text: string): { errors: string[]; fig
   // the <style> element applies to the whole page, so everything in it is scoped to this figure
   const sheets: { el: Element; css: CssRoot }[] = [];
   for (const el of styles) {
+    const text = textOf(el);
+    // the page reads <style> in an SVG as markup, so a decoded "<" could open a tag; "\\" escapes hide what CSS says
+    if (text.includes('<')) {
+      fail('<style> may not contain "<"');
+      continue;
+    }
+    if (text.includes('\\')) {
+      fail('<style> may not contain "\\" (no CSS escapes)');
+      continue;
+    }
     let css: CssRoot;
     try {
-      css = postcss.parse(textOf(el));
+      css = postcss.parse(text);
     } catch (e) {
       fail(`<style> is not valid CSS: ${(e as { reason?: string }).reason ?? String(e)}`);
       continue;
@@ -187,21 +230,23 @@ export function prepareFigure(id: string, text: string): { errors: string[]; fig
     sheets.push({ el, css });
     css.walkAtRules((at) => {
       const name = at.name.toLowerCase();
-      if (name === 'keyframes') {
+      if (at.parent?.type === 'rule') fail('nested rules are not allowed in <style>');
+      else if (name === 'keyframes') {
         const keyframes = at.params.trim().replace(/^["']|["']$/g, '');
-        if (!keyframes.startsWith(`${id}-`)) fail(`@keyframes ${keyframes} must be named ${id}-…`);
+        // `--` as for ids: figure "a" can't take "a-b-spin", which might be figure "a-b"'s
+        if (!keyframes.startsWith(`${id}--`)) fail(`@keyframes ${keyframes} must be named ${id}--…`);
       } else if (!(name === 'media' && REDUCED_MOTION.test(at.params))) fail(`@${at.name} is not allowed in <style>`);
     });
     css.walkRules((rule) => {
+      if (rule.parent?.type === 'rule') return void fail('nested rules are not allowed in <style>'); // & can climb out of the figure
       if (rule.parent?.type === 'atrule' && /keyframes$/i.test((rule.parent as postcss.AtRule).name)) return; // from, to, 50%
       for (const selector of rule.selectors.map((s) => s.trim())) {
-        const rest = selector.slice(`#${fig}`.length);
-        if (!selector.startsWith(`#${fig}`) || !/^(?:$|[\s>+~.[:])/.test(rest) || rest.includes('#')) {
-          fail(`selector "${selector}" must start with #${fig} and target parts by class`);
-        }
+        if (!scoped(selector, fig)) fail(`selector "${selector}" must start with #${fig}, then a space or ">", and target parts by class`);
       }
     });
     css.walkDecls((decl) => {
+      const prop = decl.prop.toLowerCase();
+      if (!CSS_PROPERTIES.has(prop)) return void fail(`property ${decl.prop} is not allowed in <style>`);
       const value = decl.value;
       const image = value.match(IMAGE_FUNCTION);
       if (image) fail(`${image[0].replace(/^-webkit-/, '').toLowerCase()}) is not allowed in <style>`);
@@ -209,10 +254,16 @@ export function prepareFigure(id: string, text: string): { errors: string[]; fig
         if (target?.startsWith('#')) refs.push(target.slice(1));
         else refuse(target ?? value, 'url()');
       }
-      if (coloursIn(value).length) colours.push(`${decl.prop}: ${value}`);
-      const prop = decl.prop.toLowerCase();
-      const size = prop === 'font-size' ? value : prop === 'font' ? shorthandSize(value) : undefined;
-      if (size !== undefined) sizes.push(size);
+      if (coloursIn(value, NAME_VALUED.has(prop)).length) colours.push(`${decl.prop}: ${value}`);
+      if (prop === 'font-size') sizes.push(value);
+      if (prop === 'font') {
+        // the shorthand must carry a plain px size; a system font (font: caption) sets its own
+        const tokens = withoutStrings(value).trim().split(/\s+/);
+        const size = tokens.map((t) => t.split('/')[0]).find((t) => /^\d+(?:\.\d+)?px$/i.test(t));
+        if (size) sizes.push(size);
+        else if (tokens.length === 1 && SYSTEM_FONTS.has(tokens[0].toLowerCase())) fail(`font: ${value}: system fonts are not allowed; give the size in px, at least ${MIN_FONT_SIZE}`);
+        else fail(`font: ${value}: give the size in px, at least ${MIN_FONT_SIZE}`);
+      }
     });
   }
 
@@ -242,9 +293,15 @@ export function prepareFigure(id: string, text: string): { errors: string[]; fig
   };
   rewrite(svg);
   for (const { el, css } of sheets) {
-    css.walkDecls((decl) => {
-      decl.value = relink(decl.value);
+    // write the CSS back from the checked AST, not the source: no comments, and no raw text (which can hold them)
+    css.walkComments((comment) => {
+      comment.remove();
     });
+    css.walk((node) => {
+      node.raws = {};
+      if (node.type === 'decl') node.value = relink(node.value);
+    });
+    css.raws = {};
     el.children = [{ type: 'text', value: css.toString() }];
   }
   svg.properties = { role: 'img', ariaLabelledBy: [inner('title'), inner('desc')], ...svg.properties };

@@ -11,8 +11,8 @@ export interface InternalLink { url: string; path: string | null }
 export interface Cite { id: string | null; inline: boolean; inLink: boolean; inHeading: boolean }
 /** A `:note` directive: whether it sits inline (the only form the renderer turns into a margin note), whether it has text, and where it sits. */
 export interface Note { inline: boolean; empty: boolean; inLink: boolean; inHeading: boolean; inNote: boolean }
-/** A `::figure[caption]{#id}` directive: its id (null when missing), whether it is a leaf (on its own line, the only form the renderer draws), whether it has a caption, and whether it sits in a note. */
-export interface Figure { id: string | null; leaf: boolean; caption: boolean; inNote: boolean }
+/** A `::figure[caption]{#id}` directive: its id (null when missing), whether it is a leaf (on its own line, the only form the renderer draws), whether it has a caption, whether it sits in a note, and whether it is a top-level block (not in a list, quote or table). */
+export interface Figure { id: string | null; leaf: boolean; caption: boolean; inNote: boolean; topLevel: boolean }
 export interface Refs { cites: Cite[]; notes: Note[]; figures: Figure[]; unknown: string[]; links: InternalLink[] }
 
 /** The Markdown parser the page pipeline starts from; describe() reads the same tree. */
@@ -46,7 +46,7 @@ export function extractRefs(body: string): Refs {
       notes.push({ inline: node.type === 'textDirective', empty: plainText(node).trim() === '', inLink, inHeading, inNote });
     } else if (DIRECTIVE_NODES.has(node.type) && node.name === 'figure') {
       const id = node.attributes?.id;
-      figures.push({ id: id ? String(id) : null, leaf: node.type === 'leafDirective', caption: plainText(node).trim() !== '', inNote });
+      figures.push({ id: id ? String(id) : null, leaf: node.type === 'leafDirective', caption: plainText(node).trim() !== '', inNote, topLevel: ancestors.length === 1 });
     } else if (DIRECTIVE_NODES.has(node.type) && !DIRECTIVES.has(node.name) && hasLabelOrAttributes(node)) {
       unknown.push(node.name);
     }

@@ -3,7 +3,8 @@ import { SKIP, visit } from 'unist-util-visit';
 import { termAnchor } from './glossary';
 
 const CONTAINERS = new Set(['p', 'li', 'blockquote', 'td', 'figcaption']);
-const LEAVE_ALONE = new Set(['a', 'sup', 'code', 'pre', 'label', 'button', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
+// svg: a figure's drawing is checked as drawn; a term link inside it would break the SVG
+const LEAVE_ALONE = new Set(['a', 'sup', 'code', 'pre', 'label', 'button', 'svg', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /**

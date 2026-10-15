@@ -47,8 +47,50 @@ const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and t
     <meta name="twitter:image:alt" content={ogAlt} />
     <meta name="theme-color" content="#e4dcc4" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#1c1914" media="(prefers-color-scheme: dark)" />
-    {/* Before first paint: the page can play figures on view, so animated figures wait on their first frame and show Replay (manuscript.css). */}
-    <script is:inline>if ('IntersectionObserver' in window) document.documentElement.classList.add('figs-armed');</script>
+    {/*
+      Animated figures. Runs before first paint, so an armed page (html.figs-armed) shows each animated figure on its
+      first frame with Replay from the start (manuscript.css). Arming and playing live in this one classic script, in
+      ES2017 syntax, so nothing else can fail between them; if the observer won't start, the page disarms and figures
+      show their final still frame. A figure plays when it first reaches the upper three quarters of the window,
+      however tall it is; Replay drops its animation for one style pass (.restart), so it starts over.
+    */}
+    <script is:inline>
+      (function () {
+        if (!('IntersectionObserver' in window)) return;
+        var root = document.documentElement;
+        root.classList.add('figs-armed');
+        document.addEventListener('DOMContentLoaded', function () {
+          try {
+            var seen = new IntersectionObserver(
+              function (entries) {
+                entries.forEach(function (e) {
+                  if (!e.isIntersecting) return;
+                  e.target.classList.add('in-view');
+                  seen.unobserve(e.target);
+                });
+              },
+              { rootMargin: '0px 0px -25% 0px', threshold: 0 }
+            );
+            Array.prototype.forEach.call(document.querySelectorAll('.fig[data-animated]'), function (fig) {
+              seen.observe(fig);
+            });
+          } catch (err) {
+            root.classList.remove('figs-armed');
+            return;
+          }
+          document.addEventListener('click', function (e) {
+            var button = e.target instanceof Element ? e.target.closest('.fig-replay') : null;
+            var fig = button ? button.closest('.fig') : null;
+            if (!fig) return;
+            fig.classList.add('restart');
+            void fig.offsetWidth;
+            fig.classList.remove('restart');
+            seen.unobserve(fig);
+            fig.classList.add('in-view');
+          });
+        });
+      })();
+    </script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -126,33 +168,6 @@ const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and t
         if (e.key === 'Escape') hide();
       });
       addEventListener('resize', () => current && place(current));
-
-      // Animated figures play the first time they reach the upper three quarters of the window, however tall they are;
-      // Replay starts one over. The head script has already armed the page (html.figs-armed). No observer, no
-      // animation: the figure shows its final still frame (manuscript.css).
-      if ('IntersectionObserver' in window) {
-        const seen = new IntersectionObserver(
-          (entries) => {
-            for (const e of entries) {
-              if (!e.isIntersecting) continue;
-              e.target.classList.add('in-view');
-              seen.unobserve(e.target);
-            }
-          },
-          { rootMargin: '0px 0px -25% 0px', threshold: 0 },
-        );
-        for (const fig of document.querySelectorAll('.fig[data-animated]')) seen.observe(fig);
-        document.addEventListener('click', (e) => {
-          const fig = e.target instanceof Element ? e.target.closest('.fig-replay')?.closest<HTMLElement>('.fig') : null;
-          if (!fig) return;
-          // pausing does not rewind a finished animation; dropping it for one style pass does
-          fig.classList.add('restart');
-          void fig.offsetWidth;
-          fig.classList.remove('restart');
-          seen.unobserve(fig);
-          fig.classList.add('in-view');
-        });
-      }
     </script>
   </body>
 </html>
