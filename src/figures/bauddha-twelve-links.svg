@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 716">
+  <title>The twelve links of dependent origination, ceasing in order</title>
+  <desc>A vertical chain of twelve boxes joined by downward arrows: avidyā (ignorance), saṃskāra (volitional formations), vijñāna (consciousness), nāmarūpa (name-and-form), ṣaḍāyatana (six sense bases), sparśa (contact), vedanā (feeling), tṛṣṇā (craving), upādāna (clinging), bhava (becoming), jāti (birth) and jarāmaraṇa (ageing-and-death). Tṛṣṇā is highlighted, with a note that it is the cause the second truth names. When animated, the boxes dim one after another from avidyā down to jarāmaraṇa. The still frame shows all twelve dashed and dimmed, that is, ceased; notes say avidyā ceases first and jarāmaraṇa last.</desc>
+  <style>
+    #fig-bauddha-twelve-links .anim { animation: bauddha-twelve-links--text 0.3s ease-out 1 both; }
+    #fig-bauddha-twelve-links .box.anim { animation-name: bauddha-twelve-links--box; }
+    #fig-bauddha-twelve-links .hi.anim { animation-name: bauddha-twelve-links--hi; }
+    #fig-bauddha-twelve-links .s1 { animation-delay: 0.14s; }
+    #fig-bauddha-twelve-links .s2 { animation-delay: 0.28s; }
+    #fig-bauddha-twelve-links .s3 { animation-delay: 0.42s; }
+    #fig-bauddha-twelve-links .s4 { animation-delay: 0.56s; }
+    #fig-bauddha-twelve-links .s5 { animation-delay: 0.70s; }
+    #fig-bauddha-twelve-links .s6 { animation-delay: 0.84s; }
+    #fig-bauddha-twelve-links .s7 { animation-delay: 0.98s; }
+    #fig-bauddha-twelve-links .s8 { animation-delay: 1.12s; }
+    #fig-bauddha-twelve-links .s9 { animation-delay: 1.26s; }
+    #fig-bauddha-twelve-links .s10 { animation-delay: 1.40s; }
+    #fig-bauddha-twelve-links .s11 { animation-delay: 1.54s; }
+    @keyframes bauddha-twelve-links--box { from { fill: var(--leaf-2); stroke: var(--ink); stroke-dasharray: none; } }
+    @keyframes bauddha-twelve-links--hi { from { stroke-dasharray: none; } }
+    @keyframes bauddha-twelve-links--text { from { fill: var(--ink); } }
+  </style>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <!-- 1. ignorance -->
+  <rect class="box dash anim" x="8" y="6" width="196" height="44"/>
+  <text class="muted anim" x="20" y="25">avidyā</text>
+  <text class="sans muted" x="20" y="43">ignorance</text>
+  <path class="line" d="M106 51V64" marker-end="url(#head)"/>
+
+  <!-- 2. volitional formations -->
+  <rect class="box dash anim s1" x="8" y="66" width="196" height="44"/>
+  <text class="muted anim s1" x="20" y="85">saṃskāra</text>
+  <text class="sans muted" x="20" y="103">volitional formations</text>
+  <path class="line" d="M106 111V124" marker-end="url(#head)"/>
+
+  <!-- 3. consciousness -->
+  <rect class="box dash anim s2" x="8" y="126" width="196" height="44"/>
+  <text class="muted anim s2" x="20" y="145">vijñāna</text>
+  <text class="sans muted" x="20" y="163">consciousness</text>
+  <path class="line" d="M106 171V184" marker-end="url(#head)"/>
+
+  <!-- 4. name-and-form -->
+  <rect class="box dash anim s3" x="8" y="186" width="196" height="44"/>
+  <text class="muted anim s3" x="20" y="205">nāmarūpa</text>
+  <text class="sans muted" x="20" y="223">name-and-form</text>
+  <path class="line" d="M106 231V244" marker-end="url(#head)"/>
+
+  <!-- 5. six sense bases -->
+  <rect class="box dash anim s4" x="8" y="246" width="196" height="44"/>
+  <text class="muted anim s4" x="20" y="265">ṣaḍāyatana</text>
+  <text class="sans muted" x="20" y="283">six sense bases</text>
+  <path class="line" d="M106 291V304" marker-end="url(#head)"/>
+
+  <!-- 6. contact -->
+  <rect class="box dash anim s5" x="8" y="306" width="196" height="44"/>
+  <text class="muted anim s5" x="20" y="325">sparśa</text>
+  <text class="sans muted" x="20" y="343">contact</text>
+  <path class="line" d="M106 351V364" marker-end="url(#head)"/>
+
+  <!-- 7. feeling -->
+  <rect class="box dash anim s6" x="8" y="366" width="196" height="44"/>
+  <text class="muted anim s6" x="20" y="385">vedanā</text>
+  <text class="sans muted" x="20" y="403">feeling</text>
+  <path class="line" d="M106 411V424" marker-end="url(#head)"/>
+
+  <!-- 8. craving -->
+  <rect class="hi dash anim s7" x="8" y="426" width="196" height="44"/>
+  <text class="muted anim s7" x="20" y="445">tṛṣṇā</text>
+  <text class="sans muted" x="20" y="463">craving</text>
+  <path class="line" d="M106 471V484" marker-end="url(#head)"/>
+
+  <!-- 9. clinging -->
+  <rect class="box dash anim s8" x="8" y="486" width="196" height="44"/>
+  <text class="muted anim s8" x="20" y="505">upādāna</text>
+  <text class="sans muted" x="20" y="523">clinging</text>
+  <path class="line" d="M106 531V544" marker-end="url(#head)"/>
+
+  <!-- 10. becoming -->
+  <rect class="box dash anim s9" x="8" y="546" width="196" height="44"/>
+  <text class="muted anim s9" x="20" y="565">bhava</text>
+  <text class="sans muted" x="20" y="583">becoming</text>
+  <path class="line" d="M106 591V604" marker-end="url(#head)"/>
+
+  <!-- 11. birth -->
+  <rect class="box dash anim s10" x="8" y="606" width="196" height="44"/>
+  <text class="muted anim s10" x="20" y="625">jāti</text>
+  <text class="sans muted" x="20" y="643">birth</text>
+  <path class="line" d="M106 651V664" marker-end="url(#head)"/>
+
+  <!-- 12. ageing-and-death -->
+  <rect class="box dash anim s11" x="8" y="666" width="196" height="44"/>
+  <text class="muted anim s11" x="20" y="685">jarāmaraṇa</text>
+  <text class="sans muted" x="20" y="703">ageing-and-death</text>
+
+  <!-- notes beside the chain -->
+  <text class="sans rubric" x="216" y="33">ceases first</text>
+  <text class="sans rubric" x="216" y="445">cause named by</text>
+  <text class="sans rubric" x="216" y="463">the second truth</text>
+  <text class="sans rubric" x="216" y="693">ceases last</text>
+</svg>
