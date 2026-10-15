@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 338">
+  <title>Yoga: the fluctuations of the mind and their stilling</title>
+  <desc>A systems diagram, in Yoga’s account. A thick arrow, the fluctuations of the mind (vṛtti), runs down through a valve labelled nirodha, stilling, into a box: saṃskāra, the imprints in the mind (citta). A red curved arrow marked R runs from the imprints back up to the flow above the valve: imprints stir up fresh fluctuations, a reinforcing loop. A box labelled eight limbs, yama to samādhi, points at the valve.</desc>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+    <marker id="loop-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="rubric-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+    <marker id="line-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="muted" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <text class="sans muted" x="8" y="20">in Yoga’s account</text>
+
+  <!-- the flow of fluctuations, through the valve, into the imprints -->
+  <path class="flow" d="M200 34V248" marker-end="url(#head)"/>
+  <polygon class="valve" points="188,118 212,142 188,142 212,118"/>
+  <text x="180" y="127" text-anchor="end">nirodha</text>
+  <text class="muted" x="180" y="146" text-anchor="end">stilling</text>
+  <text x="212" y="200">vṛtti</text>
+  <text class="muted" x="212" y="219">fluctuations</text>
+
+  <!-- the eight limbs work the valve -->
+  <rect class="box" x="244" y="102" width="108" height="56"/>
+  <text x="298" y="126" text-anchor="middle">eight limbs</text>
+  <text class="muted small" x="298" y="146" text-anchor="middle">yama … samādhi</text>
+  <path class="line" d="M244 130H216" marker-end="url(#line-head)"/>
+
+  <!-- the imprints -->
+  <rect class="stock" x="120" y="250" width="160" height="80"/>
+  <text x="200" y="274" text-anchor="middle">saṃskāra</text>
+  <text class="muted" x="200" y="296" text-anchor="middle">imprints in</text>
+  <text class="muted" x="200" y="317" text-anchor="middle">the mind (citta)</text>
+
+  <!-- reinforcing loop: imprints stir up fresh fluctuations -->
+  <path class="loop" d="M118 290C26 290 26 66 194 66" marker-end="url(#loop-head)"/>
+  <circle class="hi" cx="88" cy="178" r="11"/>
+  <text class="sans rubric" x="88" y="183" text-anchor="middle">R</text>
+</svg>
