@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 338">
+  <title>Apūrva: from the rite to its later reward</title>
+  <desc>On the school’s view. A box labelled the rite sends a thick arrow, marked creates, down into a stock: apūrva, a transcendental power, which fills and holds. A second thick arrow leaves the stock and passes a delay mark labelled the wait, which may last until after death, before it reaches a box labelled the reward, such as heaven. In the animation the stock fills first, then the wait appears, then the reward. The still picture shows the whole chain, with the stock full.</desc>
+  <style>
+    #fig-mimamsa-apurva .level { transform-box: fill-box; transform-origin: 50% 100%; animation: mimamsa-apurva--rise 0.8s ease-out 1 both; }
+    #fig-mimamsa-apurva .wait { animation: mimamsa-apurva--show 0.4s ease-out 0.8s 1 both; }
+    #fig-mimamsa-apurva .reward { animation: mimamsa-apurva--show 0.5s ease-out 1.4s 1 both; }
+    @keyframes mimamsa-apurva--rise { from { transform: scaleY(0); } }
+    @keyframes mimamsa-apurva--show { from { opacity: 0; } }
+  </style>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <text class="sans muted" x="180" y="16" text-anchor="middle">on the school’s view</text>
+
+  <!-- the rite -->
+  <rect class="box" x="110" y="28" width="140" height="36"/>
+  <text x="180" y="51" text-anchor="middle">the rite</text>
+
+  <!-- the rite creates apūrva -->
+  <path class="flow" d="M180 64V112" marker-end="url(#head)"/>
+  <text class="sans" x="192" y="93">creates</text>
+
+  <!-- the stock: apūrva, held -->
+  <rect class="stock hi" x="60" y="116" width="240" height="84"/>
+  <rect class="line-fill level anim" x="61" y="170" width="238" height="29"/>
+  <text x="180" y="140" text-anchor="middle">apūrva</text>
+  <text x="180" y="162" text-anchor="middle">“transcendental power”</text>
+
+  <!-- the wait: a delay on the outflow -->
+  <g class="wait anim">
+    <path class="flow" d="M180 200V236"/>
+    <path class="flow" d="M170 244L190 234M170 254L190 244"/>
+    <text class="sans" x="204" y="240">the wait</text>
+    <text x="204" y="260">may be after death</text>
+  </g>
+
+  <!-- the reward -->
+  <g class="reward anim">
+    <path class="flow" d="M180 252V292" marker-end="url(#head)"/>
+    <rect class="box" x="60" y="296" width="240" height="36"/>
+    <text x="180" y="319" text-anchor="middle">the reward, such as heaven</text>
+  </g>
+</svg>
