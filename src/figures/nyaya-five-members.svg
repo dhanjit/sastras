@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 456">
+  <title>Nyāya's five-membered argument</title>
+  <desc>Five boxes stacked from top to bottom and joined by arrows. First, pratijñā, the thesis: the hill has fire. Second, hetu, the reason: it has smoke. Third, udāharaṇa, the example: wherever there is smoke there is fire, as in a kitchen hearth, while a lake has neither. Fourth, upanaya, the application: this hill has such smoke. Fifth, highlighted, nigamana, the conclusion: the hill therefore has fire.</desc>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <!-- 1 pratijñā -->
+  <rect class="box" x="10" y="4" width="340" height="56" rx="4"/>
+  <text x="24" y="26"><tspan class="rubric">pratijñā</tspan><tspan class="sans muted"> · thesis</tspan></text>
+  <text x="24" y="48">The hill has fire.</text>
+  <path class="flow" d="M180 62V86" marker-end="url(#head)"/>
+
+  <!-- 2 hetu -->
+  <rect class="box" x="10" y="90" width="340" height="56" rx="4"/>
+  <text x="24" y="112"><tspan class="rubric">hetu</tspan><tspan class="sans muted"> · reason</tspan></text>
+  <text x="24" y="134">It has smoke.</text>
+  <path class="flow" d="M180 148V172" marker-end="url(#head)"/>
+
+  <!-- 3 udāharaṇa -->
+  <rect class="box" x="10" y="176" width="340" height="96" rx="4"/>
+  <text x="24" y="198"><tspan class="rubric">udāharaṇa</tspan><tspan class="sans muted"> · example</tspan></text>
+  <text x="24" y="220">Wherever there is smoke, there is fire,</text>
+  <text x="24" y="241">as in a kitchen hearth,</text>
+  <text x="24" y="262">while a lake has neither.</text>
+  <path class="flow" d="M180 274V298" marker-end="url(#head)"/>
+
+  <!-- 4 upanaya -->
+  <rect class="box" x="10" y="302" width="340" height="56" rx="4"/>
+  <text x="24" y="324"><tspan class="rubric">upanaya</tspan><tspan class="sans muted"> · application</tspan></text>
+  <text x="24" y="346">This hill has such smoke.</text>
+  <path class="flow" d="M180 360V384" marker-end="url(#head)"/>
+
+  <!-- 5 nigamana -->
+  <rect class="hi" x="10" y="388" width="340" height="56" rx="4"/>
+  <text x="24" y="410"><tspan class="rubric">nigamana</tspan><tspan class="sans muted"> · conclusion</tspan></text>
+  <text x="24" y="432">The hill therefore has fire.</text>
+</svg>

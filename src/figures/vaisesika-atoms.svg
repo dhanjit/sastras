@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 342">
+  <title>Atoms combining, in the Vaiśeṣika account</title>
+  <desc>In the Vaiśeṣika account. At the top, two separate atoms, paramāṇu. An arrow leads down to a dyad, dvyaṇuka: the two atoms joined. A second arrow, marked three dyads, leads down to a highlighted triad, tryaṇuka: three dyads side by side, the smallest visible thing, like a mote in a sunbeam.</desc>
+  <style>
+    #fig-vaisesika-atoms .join-l { animation: vaisesika-atoms--in-left 0.6s ease-out 0.2s 1 both; }
+    #fig-vaisesika-atoms .join-r { animation: vaisesika-atoms--in-right 0.6s ease-out 0.2s 1 both; }
+    #fig-vaisesika-atoms .dyad-box { animation: vaisesika-atoms--show 0.3s ease-out 0.7s 1 both; }
+    #fig-vaisesika-atoms .tri-l { animation: vaisesika-atoms--in-far-left 0.6s ease-out 0.9s 1 both; }
+    #fig-vaisesika-atoms .tri-r { animation: vaisesika-atoms--in-far-right 0.6s ease-out 0.9s 1 both; }
+    #fig-vaisesika-atoms .tri-box { animation: vaisesika-atoms--show 0.4s ease-out 1.4s 1 both; }
+    @keyframes vaisesika-atoms--in-left { from { transform: translateX(-24px); } }
+    @keyframes vaisesika-atoms--in-right { from { transform: translateX(24px); } }
+    @keyframes vaisesika-atoms--in-far-left { from { transform: translateX(-36px); } }
+    @keyframes vaisesika-atoms--in-far-right { from { transform: translateX(36px); } }
+    @keyframes vaisesika-atoms--show { from { opacity: 0; } }
+  </style>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <text class="sans muted" x="180" y="18" text-anchor="middle">in the Vaiśeṣika account</text>
+
+  <!-- two atoms -->
+  <circle class="stock" cx="150" cy="50" r="11"/>
+  <circle class="stock" cx="210" cy="50" r="11"/>
+  <text x="180" y="88" text-anchor="middle">two atoms<tspan class="sans muted"> · paramāṇu</tspan></text>
+  <path class="flow" d="M180 100V124" marker-end="url(#head)"/>
+
+  <!-- the dyad: the two atoms joined -->
+  <rect class="box dyad-box anim" x="144" y="128" width="72" height="32" rx="16"/>
+  <circle class="stock join-l anim" cx="169" cy="144" r="11"/>
+  <circle class="stock join-r anim" cx="191" cy="144" r="11"/>
+  <text x="180" y="184" text-anchor="middle">a dyad<tspan class="sans muted"> · dvyaṇuka</tspan></text>
+  <path class="flow" d="M180 196V220" marker-end="url(#head)"/>
+  <text class="sans muted" x="192" y="213">three dyads</text>
+
+  <!-- the triad: three dyads together -->
+  <rect class="hi tri-box anim" x="60" y="224" width="240" height="40" rx="20"/>
+  <g class="tri-l anim">
+    <rect class="box" x="74" y="230" width="64" height="28" rx="14"/>
+    <circle class="stock" cx="96" cy="244" r="10"/>
+    <circle class="stock" cx="116" cy="244" r="10"/>
+  </g>
+  <g>
+    <rect class="box" x="148" y="230" width="64" height="28" rx="14"/>
+    <circle class="stock" cx="170" cy="244" r="10"/>
+    <circle class="stock" cx="190" cy="244" r="10"/>
+  </g>
+  <g class="tri-r anim">
+    <rect class="box" x="222" y="230" width="64" height="28" rx="14"/>
+    <circle class="stock" cx="244" cy="244" r="10"/>
+    <circle class="stock" cx="264" cy="244" r="10"/>
+  </g>
+  <text x="180" y="290" text-anchor="middle">a triad<tspan class="sans muted"> · tryaṇuka</tspan></text>
+  <text x="180" y="312" text-anchor="middle">the smallest visible thing,</text>
+  <text x="180" y="332" text-anchor="middle">like a mote in a sunbeam</text>
+</svg>
