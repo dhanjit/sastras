@@ -30,30 +30,57 @@ In dev, figures are read at startup: restart `npm run dev` after adding or editi
 
 ## What the build checks
 
-`src/lib/figure-check.ts` checks every file in `src/figures/`. Each failure is one message, prefixed `figure <id>:`.
+`src/lib/figure-svg.ts` checks every file in `src/figures/`. Each failure is one message, prefixed `figure <id>:`.
 
-| Rule | Why |
-|---|---|
-| The file name is lower-case ASCII words joined by hyphens. | It is the figure's id. |
-| The file starts with `<svg` (an XML declaration may come first). | It is inlined into the page. |
-| The root has a `viewBox` of four numbers. | The page scales the figure from it. |
-| The root has no `width` or `height`. | The page sizes the figure. |
-| The `viewBox` is at most 480 wide. | Phone first; see Layout. |
-| Exactly one non-empty `<title>` and one non-empty `<desc>`. | They are the figure's accessible name and description. |
-| No `<script>`, no `on…=` event attributes, no `<foreignObject>`. | A figure is a drawing, not code. |
-| No `href` or `xlink:href` with a scheme (`http:`, `data:`, …) or starting `//`. | Nothing outside the figure: no requests, no tracking. Reference your own elements (`#arrow`). |
-| No SMIL animation (`<animate>`, `<animateTransform>`, `<animateMotion>`, `<set>`). | Only CSS animation can respect reduced motion. |
-| No literal colour: no `#rgb`/`#rrggbb` (or 4/8-digit) hex, `rgb()`, `hsl()` and the like, in attributes, `style` attributes or the `<style>` element. `fill`, `stroke` and the other colour properties take only `none`, `currentColor`, `inherit`, a paint server `url(#…)` or, in CSS, a variable such as `var(--rubric)`. | Colour comes from the classes below, so the figure follows light and dark mode. |
-| Every `font-size` (attribute or CSS) is in px and at least 12. | Legibility. |
-| The file is at most 30 KB. | It is inlined into the page's HTML. |
+It parses the file once, the way the page will (an HTML parser, so `<!-->`, `<rect/onclick=…>` and `&#106;avascript:` mean what they mean in a browser), then checks that tree. Comments are dropped.
 
-The build can't check that a drawing is clear, that it matches the text, or that its labels fit. Look at it at 375 px and 1280 px, in light and dark mode.
+**The file and the root**
+- The file name is lower-case ASCII words joined by hyphens. It is the figure's id.
+- The file starts with `<svg` (an XML declaration may come first) and is a single `<svg>` element with nothing after it.
+- The root has a `viewBox` of four numbers, at most 480 wide (phone first; see Layout), and no `width` or `height`, since the page sizes the figure.
+- There is exactly one non-empty `<title>` and one non-empty `<desc>`. They are the figure's accessible name.
+- The file is at most 30 KB, because it is inlined into the page's HTML.
+
+**Elements and attributes** (allowlists: anything not listed is refused)
+- **Elements:** `svg`, `g`, `defs`, `title`, `desc`, `style`, `marker`, `symbol`, `use`, `path`, `line`, `polyline`, `polygon`, `rect`, `circle`, `ellipse`, `text`, `tspan`, `clipPath`. So no `script`, `foreignObject`, `image`, `a`, gradients or SMIL (`animate`, `set`, …): CSS is the only animation that can respect reduced motion.
+- **Attributes:**
+  - geometry (`x`, `y`, `d`, `points`, `r`, `width`, …);
+  - presentation (`fill`, `stroke`, `stroke-width`, `stroke-dasharray`, `opacity`, `marker-start`/`-mid`/`-end`, `clip-path`, `text-anchor`, `font-size`, `font-weight`, …);
+  - marker settings (`refX`, `markerWidth`, `orient`, …);
+  - `id`, `class`, `transform`, `aria-hidden`, `href`/`xlink:href`, and the root's `viewBox`, `xmlns` and `preserveAspectRatio`.
+  - No event handlers.
+- **No `style` attribute.** Style with the classes below. Figure-specific CSS goes in the `<style>` element.
+- **No stray text.** Text goes inside `<text>`.
+
+**References and ids**
+- Every `href`/`xlink:href` starts with `#`, and every `url(…)`, in an attribute or in `<style>`, is `url(#…)`. Nothing leaves the figure: no requests, no tracking.
+- Every reference names an element the figure has.
+- Ids are unique within the figure. `title` and `desc` are reserved (the build gives those ids to the `<title>` and `<desc>`).
+
+**Colour**
+- No literal colour in any attribute or `<style>` declaration: no hex, no named colour (`red`), no colour function (`rgb`, `rgba`, `hsl`, `hsla`, `hwb`, `lab`, `lch`, `oklab`, `oklch`, `color`, `color-mix`, `light-dark`).
+- `none`, `currentColor`, `transparent`, `inherit`, `context-fill`, `context-stroke`, `url(#…)` and, in `<style>`, `var(--…)` are fine.
+- Colour comes from the classes below, so the figure follows light and dark mode.
+
+**Font size**
+- Every font size, as a `font-size` attribute, a `font-size` declaration or the size in a `font` shorthand, is in px and at least 12.
+
+**The `<style>` element**
+
+It applies to the whole page, so everything in it must stay inside the figure:
+- **Selectors.** Every selector starts with `#fig-<id>`, followed by a space, a combinator, `.`, `[`, `:` or nothing. So `#fig-rope` can't reach a figure called `rope-head`. There are no other `#` selectors: target the figure's parts by class.
+- **Keyframes.** Every `@keyframes` name starts with `<id>-`.
+- **Other at-rules.** None, except `@media (prefers-reduced-motion: …)`. Never `@import`.
+- **Images.** No `image-set()` and the like.
+- The CSS must parse.
+
+The build can't check that a drawing is clear, that it matches the text, or that its labels fit. Look at it at 375 px and 1280 px, in light and dark mode: the figure test page (Animation, below) is the quickest way.
 
 ## How it renders
 
-`remark-figure` inlines the SVG in `<figure class="fig" id="fig-<id>">` with the caption in a `<figcaption>`. On the way it:
-- **Renames ids.** It prefixes every `id`, `url(#…)` and `href="#…"` with `fig-<id>-`, so two figures never clash. Your `id="arrow"` becomes `fig-<id>-arrow`.
-- **Names the drawing.** It adds `role="img"` and `aria-labelledby` pointing at the `<title>` and `<desc>`.
+`remark-figure` inlines the drawing in `<figure class="fig" id="fig-<id>">` with the caption in a `<figcaption>`. It hands the checked tree to the page directly, never as an HTML string, and never inlines a figure that fails its checks. On the way it:
+- **Renames ids.** Every inner id becomes `fig-<id>--<inner>`, and every `url(#…)` and `href="#…"` follows. Your `id="arrow"` becomes `fig-<id>--arrow`. Ids can't contain `--`, so an inner id never meets another figure's.
+- **Names the drawing.** It gives the `<title>` and `<desc>` the ids `fig-<id>--title` and `fig-<id>--desc`, and adds `role="img"` and `aria-labelledby` pointing at both.
 - **Marks animation.** A figure with any `anim` element gets `data-animated` and a Replay button in the caption.
 
 ## The class vocabulary
@@ -121,7 +148,7 @@ Animate only when movement explains something a still can't: a stock filling, a 
 - **How.** Write the animation as CSS `@keyframes` in the SVG's own `<style>`. Never use SMIL.
 - **Length.** Use a finite iteration count (`1`) and keep the whole thing under about two seconds.
 - **The still frame.** The element's own styles are the final, meaningful still frame. The keyframes only say where it starts (`from { … }`), and `both` fill mode holds the first frame during any delay. Readers without JavaScript, readers who ask for reduced motion, and print all see that still frame.
-- **Scope your CSS.** An inline SVG's `<style>` applies to the whole page. Start every selector with the figure's element id, `#fig-<id>`; prefix every keyframe name with `<id>-`; and select by class, not by id (ids are renamed). For example:
+- **Scope your CSS.** The build enforces the `<style>` rules above. For example:
 
 ```css
 #fig-example-system .level { transform-box: fill-box; transform-origin: 50% 100%; animation: example-system-rise 1.4s ease-out 1 both; }
@@ -129,11 +156,18 @@ Animate only when movement explains something a still can't: a stock filling, a 
 ```
 
 How it plays:
-- The page script arms each animated figure and holds it on its first frame.
-- It plays the first time the figure is half on screen.
-- Replay drops the animation for one style pass, so it starts over (pausing alone would not rewind a finished animation).
-- The page CSS controls the play state with `!important`, so your `animation` shorthand can't make it play early.
-- With no IntersectionObserver there is no animation, only the still frame.
+- **Before first paint.** A script in `<head>` arms the page (`html.figs-armed`) when the browser has IntersectionObserver. Animated figures then hold their first frame and show Replay from the first paint, so nothing jumps.
+- **On screen.** The layout script plays a figure when it first reaches the upper three quarters of the window, however tall it is.
+- **Replay.** Replay drops the animation for one style pass, so it starts over (pausing alone would not rewind a finished animation).
+- **No early play.** The page CSS controls the play state with `!important`, so your `animation` shorthand can't make it play early.
+- **The still frame.** Without JavaScript or IntersectionObserver, with reduced motion and in print there is no animation and no Replay, only the still frame.
+
+**Test page.** `src/pages/figure-test/[id].astro` draws each figure through the same code as a block page, below a spacer, at `/figure-test/<id>`.
+- It is built only when `E2E_FIGURES=1`, which `npm run e2e` sets.
+- `tests/e2e/figures.spec.ts` tests play, Replay, reduced motion, print and no-JS on `/figure-test/example-system`.
+- `quality.spec.ts` runs axe and the sideways-scroll check on every figure's test page.
+- A production build that contains `dist/figure-test/` fails.
+- To look at a new figure, run `E2E_FIGURES=1 npm run build && npm run preview` and open `/figure-test/<id>`.
 
 ## Writing rules
 

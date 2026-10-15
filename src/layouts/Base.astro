@@ -47,6 +47,8 @@ const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and t
     <meta name="twitter:image:alt" content={ogAlt} />
     <meta name="theme-color" content="#e4dcc4" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#1c1914" media="(prefers-color-scheme: dark)" />
+    {/* Before first paint: the page can play figures on view, so animated figures wait on their first frame and show Replay (manuscript.css). */}
+    <script is:inline>if ('IntersectionObserver' in window) document.documentElement.classList.add('figs-armed');</script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -125,23 +127,21 @@ const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and t
       });
       addEventListener('resize', () => current && place(current));
 
-      // Animated figures play the first time they are half on screen; Replay starts one over. No observer, no
-      // animation: an unarmed figure shows its final still frame (manuscript.css).
+      // Animated figures play the first time they reach the upper three quarters of the window, however tall they are;
+      // Replay starts one over. The head script has already armed the page (html.figs-armed). No observer, no
+      // animation: the figure shows its final still frame (manuscript.css).
       if ('IntersectionObserver' in window) {
         const seen = new IntersectionObserver(
           (entries) => {
             for (const e of entries) {
-              if (e.intersectionRatio < 0.5) continue;
+              if (!e.isIntersecting) continue;
               e.target.classList.add('in-view');
               seen.unobserve(e.target);
             }
           },
-          { threshold: 0.5 },
+          { rootMargin: '0px 0px -25% 0px', threshold: 0 },
         );
-        for (const fig of document.querySelectorAll('.fig[data-animated]')) {
-          fig.classList.add('armed');
-          seen.observe(fig);
-        }
+        for (const fig of document.querySelectorAll('.fig[data-animated]')) seen.observe(fig);
         document.addEventListener('click', (e) => {
           const fig = e.target instanceof Element ? e.target.closest('.fig-replay')?.closest<HTMLElement>('.fig') : null;
           if (!fig) return;

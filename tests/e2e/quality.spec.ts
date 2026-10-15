@@ -10,8 +10,13 @@ const blockPages = readdirSync(blocksDir)
   .filter((f) => parse(readFileSync(new URL(f, blocksDir), 'utf8').split(/^---\s*$/m)[1]).status !== 'stub')
   .map((f) => `/${f.slice(0, -'.md'.length)}`)
   .sort();
+// The figure test pages (built for e2e only, E2E_FIGURES=1): one per figure, so every drawing is audited.
+const figurePages = readdirSync(new URL('../../src/figures/', import.meta.url))
+  .filter((f) => f.endsWith('.svg'))
+  .map((f) => `/figure-test/${f.slice(0, -'.svg'.length)}`)
+  .sort();
 // '/no-such-page' is served the 404 page by `astro preview`.
-const pages = ['/', ...blockPages, '/about', '/glossary', '/no-such-page'];
+const pages = ['/', ...blockPages, ...figurePages, '/about', '/glossary', '/no-such-page'];
 const schemes = ['light', 'dark'] as const;
 
 // A failure names the elements that stick out, not just a pixel count. The skip link is off-screen on purpose.

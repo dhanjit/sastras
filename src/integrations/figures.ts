@@ -1,8 +1,8 @@
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { AstroIntegration } from 'astro';
-import { checkFigure } from '../lib/figure-check';
+import { checkFigure } from '../lib/figure-svg';
 import { loadFigures } from '../lib/figures';
 import { extractRefs } from '../lib/refs';
 
@@ -30,7 +30,8 @@ export function findFigureProblems({ figuresDir, blocksDir }: { figuresDir: stri
 }
 
 /**
- * Fails `astro build` and `astro dev` on a broken figure or a reference to a missing one. This lives here, not in
+ * Fails `astro build` and `astro dev` on a broken figure or a reference to a missing one, and a production build
+ * that contains the figure test pages. This lives here, not in
  * validate(), because it needs the file system, which the bundled page code does not have.
  */
 export function figures(): AstroIntegration {
@@ -44,6 +45,12 @@ export function figures(): AstroIntegration {
         });
         if (errors.length) throw new Error(`Figure errors:\n- ${errors.join('\n- ')}`);
         for (const id of unused) logger.warn(`figure ${id} is not used on any page`);
+      },
+      // the figure test pages (src/pages/figure-test/) are for e2e only; a production build must never ship them
+      'astro:build:done': ({ dir }) => {
+        if (process.env.E2E_FIGURES !== '1' && existsSync(new URL('figure-test/', dir))) {
+          throw new Error('dist/figure-test/ exists, but figure test pages are built only for e2e (E2E_FIGURES=1)');
+        }
       },
     },
   };

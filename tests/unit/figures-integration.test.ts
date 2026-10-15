@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -60,5 +60,34 @@ describe('the figures integration', () => {
     const { run, warnings } = setup(site({ 'figures/spare.svg': good }));
     expect(run).not.toThrow();
     expect(warnings).toEqual(['figure spare is not used on any page']);
+  });
+});
+
+describe('the figure test pages', () => {
+  const env = process.env.E2E_FIGURES;
+  afterEach(() => {
+    if (env === undefined) delete process.env.E2E_FIGURES;
+    else process.env.E2E_FIGURES = env;
+  });
+  /** Runs the build-done hook over a throwaway dist/, optionally holding a built figure test page. */
+  const finish = (withTestPage: boolean) => {
+    const dist = mkdtempSync(join(tmpdir(), 'figdist-'));
+    if (withTestPage) {
+      mkdirSync(join(dist, 'figure-test'));
+      writeFileSync(join(dist, 'figure-test', 'example-system.html'), '<!doctype html>');
+    }
+    const hook = figures().hooks['astro:build:done'] as (o: unknown) => void;
+    return () => hook({ dir: pathToFileURL(`${dist}/`), logger: { warn() {} } });
+  };
+
+  it('fails a production build that contains them', () => {
+    delete process.env.E2E_FIGURES;
+    expect(finish(true)).toThrow('dist/figure-test/ exists, but figure test pages are built only for e2e (E2E_FIGURES=1)');
+    expect(finish(false)).not.toThrow();
+  });
+
+  it('allows them in the e2e build', () => {
+    process.env.E2E_FIGURES = '1';
+    expect(finish(true)).not.toThrow();
   });
 });

@@ -87,15 +87,20 @@ a.term { text-decoration: underline dotted var(--rubric); text-underline-offset:
 .fig .dash { stroke-dasharray: 4 3; }
 .fig .ink-fill { fill: var(--ink); } .fig .rubric-fill { fill: var(--rubric); } .fig .line-fill { fill: var(--line); }
 /*
- * Animation. The page script arms each animated figure (.armed), holds it on its first frame, and plays it the
- * first time it is half on screen (.in-view); Replay drops the animation for one frame (.restart) so it starts over.
- * Without the script, or with reduced motion, there is no animation and the figure shows its final still frame.
+ * Animation. A script in <head> arms the page before first paint (html.figs-armed): animated figures then hold their
+ * first frame and show Replay. The layout script plays each one when it comes on screen (.in-view); Replay drops the
+ * animation for one style pass (.restart) so it starts over. Without the script, with reduced motion and in print
+ * there is no animation: the figure shows its final still frame, and no Replay.
  * !important because a figure's own <style> may set the animation shorthand, which resets the play state.
  */
-.fig:not(.armed) .anim, .fig.restart .anim { animation-name: none !important; }
-.fig.armed:not(.in-view) .anim { animation-play-state: paused !important; }
-.fig:not(.armed) .fig-replay { display: none; }
+html:not(.figs-armed) .fig .anim, .fig.restart .anim { animation-name: none !important; }
+html.figs-armed .fig:not(.in-view) .anim { animation-play-state: paused !important; }
+html:not(.figs-armed) .fig-replay { display: none; }
 @media (prefers-reduced-motion: reduce) {
+  .fig .anim { animation: none !important; }
+  .fig-replay { display: none; }
+}
+@media print {
   .fig .anim { animation: none !important; }
   .fig-replay { display: none; }
 }

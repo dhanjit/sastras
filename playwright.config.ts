@@ -13,7 +13,8 @@ export default defineConfig({
     reuseExistingServer: false,
     timeout: 180_000,
     // Astro 7's preview backgrounds itself when it detects an AI agent, which Playwright reads as a crash.
-    env: { ASTRO_PREVIEW_BACKGROUND: '1' },
+    // E2E_FIGURES=1 builds the figure test pages (src/pages/figure-test/); a production build never has them.
+    env: { ASTRO_PREVIEW_BACKGROUND: '1', E2E_FIGURES: '1' },
   },
   projects: [
     {
