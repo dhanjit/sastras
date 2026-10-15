@@ -34,7 +34,7 @@ Write 150–350 words of running text (notes don't count): English sentences tha
   - Inside notes, type curly quotes (“ ” ‘ ’) directly. Straight quotes after punctuation get turned the wrong way.
 - **Links.** Link other blocks with `[text](/slug)`, always starting with `/`, and only to blocks that are written. The build rejects relative links, links to stubs and links to missing pages, in any link form.
 - **Contested points.** Say when dates, authorship or interpretation are contested, and cite both views. When a source itself flags a dispute (Cardona on Saussure, Cārvāka and conditional inference), show it and give the minority view its weight. Don't write "some scholars" when it is several leading specialists.
-- **Directives.** Only `:note[…]` and `:cite[…]` are directives. Anything else written like `:word[…]` fails the build as a typo. Colons in ordinary text, such as the verse reference `2:47`, are fine.
+- **Directives.** Only `:note[…]`, `:cite[…]` and `::figure[…]{#id}` are directives. Anything else written like `:word[…]` fails the build as a typo. Figures follow [figure-guide.md](figure-guide.md). Colons in ordinary text, such as the verse reference `2:47`, are fine.
 - **Quotation.** Write in your own words. Quote at most a short phrase, in quotation marks, with its source.
 - **Framing.** No "ancient India discovered X" claims and no dismissive framing.
 

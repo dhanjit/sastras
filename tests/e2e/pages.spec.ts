@@ -1,4 +1,15 @@
+import { readdirSync, readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
+import { parse } from 'yaml';
+
+// The first written page that draws a figure, read from the content files. The figures engine shipped before any
+// page used one, so until then the figure tests skip; they need no change when the first figure lands.
+const blocksDir = new URL('../../src/content/blocks/', import.meta.url);
+const figurePage = readdirSync(blocksDir)
+  .filter((f) => f.endsWith('.md'))
+  .sort()
+  .map((f) => ({ path: `/${f.slice(0, -'.md'.length)}`, src: readFileSync(new URL(f, blocksDir), 'utf8') }))
+  .find(({ src }) => parse(src.split(/^---\s*$/m)[1]).status !== 'stub' && /^::figure\[/m.test(src))?.path;
 
 test('a block page shows its Sanskrit title and English gloss', async ({ page }) => {
   await page.goto('/advaita-vedanta');
@@ -94,4 +105,37 @@ test('Enter on a focused term follows the link to its glossary entry', async ({ 
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/glossary#g-aatman$/);
   await expect(page.locator('#g-aatman')).toBeVisible();
+});
+
+test('a figure is drawn inline, named by its title and desc, with a caption', async ({ page }) => {
+  test.skip(!figurePage, 'no written page draws a figure yet');
+  await page.goto(figurePage!);
+  const fig = page.locator('figure.fig').first();
+  const svg = fig.locator('svg');
+  await expect(svg).toHaveAttribute('role', 'img');
+  // aria-labelledby names it by its <title> and then its <desc>: the pattern screen readers support best
+  const text = async (tag: string) => ((await svg.locator(tag).textContent()) ?? '').replace(/\s+/g, ' ').trim();
+  const [title, desc] = [await text('title'), await text('desc')];
+  expect(title && desc).toBeTruthy();
+  await expect(svg).toHaveAccessibleName(`${title} ${desc}`);
+  await expect(fig.locator('figcaption')).not.toBeEmpty();
+});
+
+test('an animated figure plays once it is on screen, and Replay starts it over', async ({ page }) => {
+  test.skip(!figurePage, 'no written page draws a figure yet');
+  await page.goto(figurePage!);
+  const fig = page.locator('figure.fig[data-animated]').first();
+  test.skip((await fig.count()) === 0, 'the figure page has no animated figure');
+  await fig.scrollIntoViewIfNeeded();
+  await expect(fig).toHaveClass(/\bin-view\b/);
+  const finished = () => fig.evaluate((f) => f.getAnimations({ subtree: true }).every((a) => a.playState === 'finished'));
+  await expect.poll(finished, { timeout: 10_000 }).toBe(true);
+  // click and read in one task, so a short animation can't finish in between
+  const times = await fig.evaluate((f) => {
+    f.querySelector<HTMLButtonElement>('.fig-replay')!.click();
+    return f.getAnimations({ subtree: true }).map((a) => Number(a.currentTime ?? 0));
+  });
+  expect(times.length).toBeGreaterThan(0);
+  expect(Math.max(...times)).toBeLessThan(100);
+  await expect.poll(finished, { timeout: 10_000 }).toBe(true);
 });

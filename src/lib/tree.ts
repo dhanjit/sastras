@@ -3,7 +3,8 @@ import { extractRefs } from './refs';
 
 export const ROOT = 'map';
 export const PAGES = ['about', 'glossary'] as const;
-const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+/** Block ids, source ids and figure ids: lower-case ASCII words joined by hyphens. */
+export const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const RESERVED = new Set<string>([ROOT, 'index', '404', 'og', 'home', ...PAGES]);
 
 export interface Block {
@@ -101,7 +102,7 @@ export function validate(blocks: Block[]): string[] {
     }
     const ids = sources.map((s) => s.id);
     for (const id of new Set(ids.filter((x, i) => ids.indexOf(x) !== i))) errors.push(`${b.id}: source id "${id}" is used twice`);
-    const { cites, notes, unknown, links } = extractRefs(b.body ?? '');
+    const { cites, notes, figures, unknown, links } = extractRefs(b.body ?? '');
     for (const n of notes) {
       if (!n.inline) errors.push(`${b.id}: write :note[…] inline, not on its own line`);
       if (n.empty) errors.push(`${b.id}: :note needs text, like :note[…]`);
@@ -118,6 +119,19 @@ export function validate(blocks: Block[]): string[] {
         if (c.inLink) errors.push(`${b.id}: :cite[${id}] cannot sit inside a link`);
         if (c.inHeading) errors.push(`${b.id}: :cite[${id}] cannot sit inside a heading`);
       }
+    }
+    const figureIds = new Set<string>();
+    for (const f of figures) {
+      if (!f.leaf) errors.push(`${b.id}: write ::figure[…]{#id} on its own line`);
+      if (f.id === null) {
+        errors.push(`${b.id}: ::figure needs an id, like {#rope-snake}`);
+        continue;
+      }
+      if (!SLUG.test(f.id)) errors.push(`${b.id}: ::figure{#${f.id}} id must be lower-case ASCII words joined by hyphens`);
+      if (!f.caption) errors.push(`${b.id}: ::figure{#${f.id}} needs a caption`);
+      // the figure's element ids come from its id, so a second copy on the page would repeat them
+      if (figureIds.has(f.id)) errors.push(`${b.id}: ::figure{#${f.id}} is used twice`);
+      figureIds.add(f.id);
     }
     for (const name of unknown) errors.push(`${b.id}: ":${name}[…]" is not a directive (use :note or :cite)`);
     for (const { url, path } of links) {

@@ -2,13 +2,13 @@ import { DIRECTIVE_NODES } from './directives';
 import { parser } from './refs';
 import { remarkRestoreDirectives } from './remark-restore-directives';
 
-/** Subtrees that are not running prose: citations and notes, link definitions, footnotes, raw HTML, code, images. */
+/** Subtrees that are not running prose: citations, notes and figures, link definitions, footnotes, raw HTML, code, images. */
 const SKIP = new Set(['definition', 'footnoteDefinition', 'footnoteReference', 'html', 'code', 'image', 'imageReference', 'yaml', 'toml']);
 /** Inline nodes: their text runs straight on. Everything else is a block and is set off by a space. */
 const PHRASING = new Set(['text', 'inlineCode', 'emphasis', 'strong', 'delete', 'link', 'linkReference', 'textDirective']);
 
 function textOf(node: any): string {
-  if (SKIP.has(node.type) || (DIRECTIVE_NODES.has(node.type) && (node.name === 'note' || node.name === 'cite'))) return '';
+  if (SKIP.has(node.type) || (DIRECTIVE_NODES.has(node.type) && (node.name === 'note' || node.name === 'cite' || node.name === 'figure'))) return '';
   if (node.type === 'break') return ' ';
   if (node.type === 'text' || node.type === 'inlineCode') return node.value; // the parser has already decoded `&amp;` and the like
   const inner = (node.children ?? []).map(textOf).join('');

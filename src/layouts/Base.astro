@@ -124,6 +124,35 @@ const fullTitle = path === '/' ? 'Śāstras — a map of Indian philosophy and t
         if (e.key === 'Escape') hide();
       });
       addEventListener('resize', () => current && place(current));
+
+      // Animated figures play the first time they are half on screen; Replay starts one over. No observer, no
+      // animation: an unarmed figure shows its final still frame (manuscript.css).
+      if ('IntersectionObserver' in window) {
+        const seen = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.intersectionRatio < 0.5) continue;
+              e.target.classList.add('in-view');
+              seen.unobserve(e.target);
+            }
+          },
+          { threshold: 0.5 },
+        );
+        for (const fig of document.querySelectorAll('.fig[data-animated]')) {
+          fig.classList.add('armed');
+          seen.observe(fig);
+        }
+        document.addEventListener('click', (e) => {
+          const fig = e.target instanceof Element ? e.target.closest('.fig-replay')?.closest<HTMLElement>('.fig') : null;
+          if (!fig) return;
+          // pausing does not rewind a finished animation; dropping it for one style pass does
+          fig.classList.add('restart');
+          void fig.offsetWidth;
+          fig.classList.remove('restart');
+          seen.unobserve(fig);
+          fig.classList.add('in-view');
+        });
+      }
     </script>
   </body>
 </html>

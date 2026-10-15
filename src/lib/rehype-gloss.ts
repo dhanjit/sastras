@@ -2,7 +2,7 @@ import type { Element, ElementContent, Root, Text } from 'hast';
 import { SKIP, visit } from 'unist-util-visit';
 import { termAnchor } from './glossary';
 
-const CONTAINERS = new Set(['p', 'li', 'blockquote', 'td']);
+const CONTAINERS = new Set(['p', 'li', 'blockquote', 'td', 'figcaption']);
 const LEAVE_ALONE = new Set(['a', 'sup', 'code', 'pre', 'label', 'button', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -50,7 +50,7 @@ export function rehypeGloss({ terms }: { terms: Record<string, string> }) {
       return out;
     }
 
-    // each paragraph, list item, table cell and note body counts its terms separately
+    // each paragraph, list item, table cell, figure caption and note body counts its terms separately
     function wrap(el: Element, used: Set<string>) {
       el.children = el.children.flatMap((child): ElementContent[] => {
         if (child.type === 'text') return split(child, used);

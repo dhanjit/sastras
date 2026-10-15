@@ -237,6 +237,39 @@ describe('validate', () => {
     expect(validate([block('a', { related: ['a'] })])).toEqual(['a: lists itself as related']);
   });
 
+  it('accepts a figure on its own line with an id and a caption that cites', () => {
+    expect(validate([block('a', {}, 'Text.\n\n::figure[The cycle, as the sūtra states:cite[w]]{#rope-snake}\n\nMore.')])).toEqual([]);
+  });
+
+  it('rejects a figure written inline', () => {
+    expect(validate([block('a', {}, 'Text :figure[A caption]{#rope-snake} here.')])).toEqual(['a: write ::figure[…]{#id} on its own line']);
+  });
+
+  it('rejects a figure without an id', () => {
+    expect(validate([block('a', {}, '::figure[A caption]')])).toEqual(['a: ::figure needs an id, like {#rope-snake}']);
+  });
+
+  it('rejects a figure without a caption', () => {
+    expect(validate([block('a', {}, '::figure[]{#rope-snake}')])).toEqual(['a: ::figure{#rope-snake} needs a caption']);
+    expect(validate([block('a', {}, '::figure{#rope-snake}')])).toEqual(['a: ::figure{#rope-snake} needs a caption']);
+  });
+
+  it('rejects a figure id that is not lower-case ASCII words joined by hyphens', () => {
+    expect(validate([block('a', {}, '::figure[A caption]{#Rope_Snake}')])).toEqual([
+      'a: ::figure{#Rope_Snake} id must be lower-case ASCII words joined by hyphens',
+    ]);
+  });
+
+  it('rejects the same figure twice on one page, which would repeat its ids', () => {
+    expect(validate([block('a', {}, '::figure[One]{#rope-snake}\n\n::figure[Two]{#rope-snake}')])).toEqual([
+      'a: ::figure{#rope-snake} is used twice',
+    ]);
+  });
+
+  it('checks a citation inside a figure caption', () => {
+    expect(validate([block('a', {}, '::figure[A caption:cite[sep]]{#rope-snake}')])).toEqual(['a: :cite[sep] has no matching source']);
+  });
+
   it('reports a self-parent and a chain that runs into a loop', () => {
     expect(validate([block('s', { parent: 's', layer: undefined })])).toContain('s: parent chain loops through "s"');
     const errors = validate([

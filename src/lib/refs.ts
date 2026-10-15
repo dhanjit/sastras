@@ -11,7 +11,9 @@ export interface InternalLink { url: string; path: string | null }
 export interface Cite { id: string | null; inline: boolean; inLink: boolean; inHeading: boolean }
 /** A `:note` directive: whether it sits inline (the only form the renderer turns into a margin note), whether it has text, and where it sits. */
 export interface Note { inline: boolean; empty: boolean; inLink: boolean; inHeading: boolean; inNote: boolean }
-export interface Refs { cites: Cite[]; notes: Note[]; unknown: string[]; links: InternalLink[] }
+/** A `::figure[caption]{#id}` directive: its id (null when missing), whether it is a leaf (on its own line, the only form the renderer draws), whether it has a caption, and whether it sits in a note. */
+export interface Figure { id: string | null; leaf: boolean; caption: boolean; inNote: boolean }
+export interface Refs { cites: Cite[]; notes: Note[]; figures: Figure[]; unknown: string[]; links: InternalLink[] }
 
 /** The Markdown parser the page pipeline starts from; describe() reads the same tree. */
 export const parser = unified().use(remarkParse).use(remarkGfm).use(remarkDirective);
@@ -27,20 +29,24 @@ function hasLabelOrAttributes(node: any): boolean {
   return (node.children ?? []).length > 0;
 }
 
-/** Citations, notes, stray directives and internal links exactly as the Markdown pipeline will see them. */
+/** Citations, notes, figures, stray directives and internal links exactly as the Markdown pipeline will see them. */
 export function extractRefs(body: string): Refs {
   const cites: Cite[] = [];
   const notes: Note[] = [];
+  const figures: Figure[] = [];
   const unknown: string[] = [];
   const links: InternalLink[] = [];
   visitParents(parser.parse(body), (node: any, ancestors: any[]) => {
     const inLink = ancestors.some((a) => a.type === 'link' || a.type === 'linkReference');
     const inHeading = ancestors.some((a) => a.type === 'heading');
+    const inNote = ancestors.some((a) => a.type === 'textDirective' && a.name === 'note');
     if (DIRECTIVE_NODES.has(node.type) && node.name === 'cite') {
       cites.push({ id: citeLabel(node) || null, inline: node.type === 'textDirective', inLink, inHeading });
     } else if (DIRECTIVE_NODES.has(node.type) && node.name === 'note') {
-      const inNote = ancestors.some((a) => a.type === 'textDirective' && a.name === 'note');
       notes.push({ inline: node.type === 'textDirective', empty: plainText(node).trim() === '', inLink, inHeading, inNote });
+    } else if (DIRECTIVE_NODES.has(node.type) && node.name === 'figure') {
+      const id = node.attributes?.id;
+      figures.push({ id: id ? String(id) : null, leaf: node.type === 'leafDirective', caption: plainText(node).trim() !== '', inNote });
     } else if (DIRECTIVE_NODES.has(node.type) && !DIRECTIVES.has(node.name) && hasLabelOrAttributes(node)) {
       unknown.push(node.name);
     }
@@ -51,5 +57,5 @@ export function extractRefs(body: string): Refs {
       links.push({ url, path: url.split(/[?#]/)[0].slice(1) });
     }
   });
-  return { cites, notes, unknown, links };
+  return { cites, notes, figures, unknown, links };
 }

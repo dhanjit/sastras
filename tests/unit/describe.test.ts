@@ -13,6 +13,10 @@ it('drops notes with their content, and cites', () => {
   expect(out).not.toMatch(/:note|:cite|witness|wiki/);
 });
 
+it('drops a figure with its caption', () => {
+  expect(describePage('x', 'Before.\n\n::figure[The rope seen as a snake:cite[w]]{#rope-snake}\n\nAfter.')).toBe('X. Before. After.');
+});
+
 it('drops a note that contains a link or brackets', () => {
   expect(describePage('x', 'Before.:note[see [the gloss](/glossary) [sic]] After.')).toBe('X. Before. After.');
 });
