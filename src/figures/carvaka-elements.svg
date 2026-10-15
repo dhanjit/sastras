@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 404">
+  <title>The Cārvāka elements: a conscious body forms, and separates at death</title>
+  <desc>The Cārvāka view as reported. At the top are four boxes: earth, water, fire and air. A dashed box beside them notes that space (ākāśa) and atoms are ruled out as unperceived. Thick arrows from the four elements join and pass through a valve labelled combined in the right proportion into a highlighted box: a living, conscious body, in which consciousness emerges; the self is this body. From the body a thick arrow passes through a second valve labelled death: elements separate, and splits back into earth, water, fire and air. A line at the bottom reads: the person ends, no rebirth.</desc>
+  <style>
+    #fig-carvaka-elements .in { animation: carvaka-elements--show 0.5s ease-out 1 both; }
+    #fig-carvaka-elements .body { transform-box: fill-box; transform-origin: 50% 50%; animation: carvaka-elements--form 0.6s ease-out 0.4s 1 both; }
+    #fig-carvaka-elements .mind { animation: carvaka-elements--show 0.4s ease-out 0.9s 1 both; }
+    #fig-carvaka-elements .out { animation: carvaka-elements--show 0.5s ease-out 1.3s 1 both; }
+    @keyframes carvaka-elements--show { from { opacity: 0; } }
+    @keyframes carvaka-elements--form { from { opacity: 0; transform: scale(0.85); } }
+  </style>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <text class="sans muted" x="180" y="16" text-anchor="middle">as reported of the Cārvākas</text>
+
+  <!-- the four elements -->
+  <rect class="box" x="12" y="28" width="78" height="34"/>
+  <rect class="box" x="98" y="28" width="78" height="34"/>
+  <rect class="box" x="184" y="28" width="78" height="34"/>
+  <rect class="box" x="270" y="28" width="78" height="34"/>
+  <text x="51" y="50" text-anchor="middle">earth</text>
+  <text x="137" y="50" text-anchor="middle">water</text>
+  <text x="223" y="50" text-anchor="middle">fire</text>
+  <text x="309" y="50" text-anchor="middle">air</text>
+
+  <!-- ruled out -->
+  <rect class="box dash" x="12" y="96" width="132" height="60"/>
+  <text class="muted" x="78" y="116" text-anchor="middle">space (ākāśa)</text>
+  <text class="muted" x="78" y="133" text-anchor="middle">and atoms:</text>
+  <text class="muted" x="78" y="150" text-anchor="middle">ruled out</text>
+
+  <!-- combining: the elements flow together into a body -->
+  <g class="in anim">
+    <path class="flow" d="M51 62C51 80 180 70 180 90"/>
+    <path class="flow" d="M137 62C137 76 180 74 180 90"/>
+    <path class="flow" d="M223 62C223 76 180 74 180 90"/>
+    <path class="flow" d="M309 62C309 80 180 70 180 90"/>
+    <path class="flow" d="M180 88V168" marker-end="url(#head)"/>
+    <polygon class="valve" points="168,112 192,112 168,136 192,136"/>
+    <text class="sans" x="204" y="120">combined in the</text>
+    <text class="sans" x="204" y="138">right proportion</text>
+  </g>
+
+  <!-- the living, conscious body -->
+  <g class="body anim">
+    <rect class="hi" x="60" y="172" width="240" height="84"/>
+    <text x="180" y="198" text-anchor="middle">living, conscious body</text>
+    <text class="muted" x="180" y="244" text-anchor="middle">the self is this body</text>
+  </g>
+  <text class="rubric mind anim" x="180" y="221" text-anchor="middle">consciousness emerges</text>
+
+  <!-- death: the elements separate -->
+  <g class="out anim">
+    <path class="flow" d="M180 256V318"/>
+    <polygon class="valve" points="168,276 192,276 168,300 192,300"/>
+    <text class="sans" x="204" y="284">death:</text>
+    <text class="sans" x="204" y="302">elements separate</text>
+    <path class="flow" d="M180 316C180 330 51 324 51 336" marker-end="url(#head)"/>
+    <path class="flow" d="M180 316C180 328 137 326 137 336" marker-end="url(#head)"/>
+    <path class="flow" d="M180 316C180 328 223 326 223 336" marker-end="url(#head)"/>
+    <path class="flow" d="M180 316C180 330 309 324 309 336" marker-end="url(#head)"/>
+    <rect class="box" x="12" y="340" width="78" height="34"/>
+    <rect class="box" x="98" y="340" width="78" height="34"/>
+    <rect class="box" x="184" y="340" width="78" height="34"/>
+    <rect class="box" x="270" y="340" width="78" height="34"/>
+    <text class="muted" x="51" y="362" text-anchor="middle">earth</text>
+    <text class="muted" x="137" y="362" text-anchor="middle">water</text>
+    <text class="muted" x="223" y="362" text-anchor="middle">fire</text>
+    <text class="muted" x="309" y="362" text-anchor="middle">air</text>
+    <text class="muted" x="180" y="396" text-anchor="middle">the person ends: no rebirth</text>
+  </g>
+</svg>

@@ -9,11 +9,15 @@ test('written blocks are links, unwritten ones say "in preparation"', async ({ p
   await page.goto('/');
   const schools = page.locator('#schools');
   await expect(schools.getByRole('link', { name: /Vedānta/ })).toHaveAttribute('href', '/vedanta');
-  const carvaka = schools.locator('.row', { hasText: 'Cārvāka' });
-  await expect(carvaka).toContainText('in preparation');
-  await expect(carvaka.locator('.row-tag')).toHaveCount(0);
+  // Needs any stub on the map, not a particular one: naming one breaks the test once it is written.
+  const stub = page.locator('.row.prep').first();
+  await expect(stub).toContainText('in preparation');
+  await expect(stub.locator('.row-tag')).toHaveCount(0);
   await expect(page.locator('.intro .legend')).toContainText('bold');
-  await expect(schools.getByRole('link', { name: /Cārvāka/ })).toHaveCount(0);
+  const title = (await stub.locator('.row-title').textContent()) ?? '';
+  expect(title).not.toBe('');
+  const escaped = title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  await expect(page.getByRole('link', { name: new RegExp(`^${escaped},`) })).toHaveCount(0);
 });
 
 test('schools are grouped by whether they accept the Veda, with their pramāṇas', async ({ page }) => {
