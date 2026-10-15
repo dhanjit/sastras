@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 260">
+  <title>The two pramāṇas of the Tattvārthasūtra</title>
+  <desc>A tree. At the root, the five kinds of knowledge as pramāṇas in the Tattvārthasūtra. One branch is parokṣa, indirect, with two kinds: mati, through the senses and mind, and śruta, scriptural knowledge. The other branch is pratyakṣa, direct, known by the soul itself, with three kinds: avadhi, clairvoyance; manaḥparyāya, knowing other minds; and kevala, omniscience.</desc>
+
+  <!-- root -->
+  <rect class="hi" x="4" y="4" width="248" height="30"/>
+  <text x="14" y="24">pramāṇa, in the Tattvārthasūtra</text>
+
+  <!-- trunk and the two branches -->
+  <path class="line" d="M22 34V164M22 70H34M22 164H34"/>
+  <text x="40" y="75">parokṣa: indirect</text>
+  <text x="40" y="169">pratyakṣa: direct, known by the soul itself</text>
+
+  <!-- indirect: two kinds -->
+  <path class="line" d="M52 82V128M52 104H64M52 128H64"/>
+  <text x="70" y="109">mati: through the senses and mind</text>
+  <text x="70" y="133">śruta: scriptural knowledge</text>
+
+  <!-- direct: three kinds -->
+  <path class="line" d="M52 176V246M52 198H64M52 222H64M52 246H64"/>
+  <text x="70" y="203">avadhi: clairvoyance</text>
+  <text x="70" y="227">manaḥparyāya: knowing other minds</text>
+  <text x="70" y="251">kevala: omniscience</text>
+</svg>

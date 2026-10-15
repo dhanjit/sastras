@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 342">
+  <title>Karma flowing into the self, stopped and shed</title>
+  <desc>A thick arrow labelled āsrava, inflow, runs down from the activity of body, speech and mind into a box: the self (jīva), holding the karma bound to it (bandha). On the inflow sits a valve labelled saṃvara: right conduct stops the inflow. A second arrow labelled nirjarā, shedding through austerities, runs out of the bottom of the box. In the animation the stock of karma rises while the inflow runs, the valve shuts, the stock drains away, and the empty self is labelled mokṣa: the self is free.</desc>
+  <style>
+    #fig-jaina-karma .level { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); animation: jaina-karma--level 2s ease-in-out 1 both; }
+    #fig-jaina-karma .shut { opacity: 0.3; stroke-dasharray: 4 3; animation: jaina-karma--shut 0.3s ease-in 0.6s 1 both; }
+    #fig-jaina-karma .closed { animation: jaina-karma--show 0.3s ease-in 0.6s 1 both; }
+    #fig-jaina-karma .free { animation: jaina-karma--show 0.4s ease-out 1.7s 1 both; }
+    @keyframes jaina-karma--level { 0% { transform: scaleY(0.35); } 30% { transform: scaleY(1); } 40% { transform: scaleY(1); } 90% { transform: scaleY(0); } 100% { transform: scaleY(0); } }
+    @keyframes jaina-karma--shut { from { opacity: 1; stroke-dasharray: none; } }
+    @keyframes jaina-karma--show { from { opacity: 0; } }
+  </style>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <!-- where karma comes from -->
+  <text x="180" y="18" text-anchor="middle">activity of body, speech and mind</text>
+
+  <!-- inflow (āsrava), cut by the valve (saṃvara) -->
+  <path class="flow" d="M180 28V105"/>
+  <path class="flow shut anim" d="M180 105V146" marker-end="url(#head)"/>
+  <polygon class="valve" points="168,93 192,117 168,117 192,93"/>
+  <polygon class="rubric-fill closed anim" points="168,93 192,117 168,117 192,93"/>
+  <text x="164" y="58" text-anchor="end">āsrava</text>
+  <text class="sans" x="164" y="76" text-anchor="end">inflow</text>
+  <text x="200" y="100">saṃvara</text>
+  <text class="sans" x="200" y="118">stops the inflow</text>
+  <text class="sans" x="200" y="136">by right conduct</text>
+
+  <!-- the stock: karma bound to the self -->
+  <rect class="stock" x="60" y="150" width="240" height="104"/>
+  <rect class="line-fill level anim" x="61" y="203" width="238" height="50"/>
+  <text x="180" y="173" text-anchor="middle">the self (jīva)</text>
+  <text x="180" y="195" text-anchor="middle">karma bound to it (bandha)</text>
+  <text class="rubric free anim" x="180" y="235" text-anchor="middle">mokṣa: the self is free</text>
+
+  <!-- outflow (nirjarā) -->
+  <path class="flow" d="M180 254V330" marker-end="url(#head)"/>
+  <text x="164" y="288" text-anchor="end">nirjarā</text>
+  <text class="sans" x="164" y="306" text-anchor="end">shedding</text>
+  <text class="sans" x="196" y="297">through austerities</text>
+</svg>

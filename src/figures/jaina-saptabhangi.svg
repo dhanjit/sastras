@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 8 360 302">
+  <title>The seven predications of syādvāda</title>
+  <desc>A grid of seven numbered rows, each a claim qualified by syāt: a thing is; is not; is and is not; is inexpressible; is and is inexpressible; is not and is inexpressible; is, is not and is inexpressible. Three columns, headed is, is not and inexpressible, carry a filled dot where that part is in the claim and an empty ring where it is not, so the seven rows show every combination of the three parts.</desc>
+
+  <!-- column heads, set vertically to fit a phone -->
+  <text class="sans" x="277" y="110" transform="rotate(-90 277 110)">is</text>
+  <text class="sans" x="311" y="110" transform="rotate(-90 311 110)">is not</text>
+  <text class="sans" x="345" y="110" transform="rotate(-90 345 110)">inexpressible</text>
+  <text x="34" y="110">syāt, a thing …</text>
+  <line class="line" x1="8" y1="120" x2="352" y2="120"/>
+
+  <!-- the seven forms -->
+  <text class="sans muted" x="10" y="144">1</text>
+  <text x="34" y="144">is</text>
+  <circle class="ink-fill" cx="272" cy="139" r="6"/>
+  <circle class="line" cx="306" cy="139" r="5"/>
+  <circle class="line" cx="340" cy="139" r="5"/>
+  <text class="sans muted" x="10" y="170">2</text>
+  <text x="34" y="170">is not</text>
+  <circle class="line" cx="272" cy="165" r="5"/>
+  <circle class="ink-fill" cx="306" cy="165" r="6"/>
+  <circle class="line" cx="340" cy="165" r="5"/>
+  <text class="sans muted" x="10" y="196">3</text>
+  <text x="34" y="196">is and is not</text>
+  <circle class="ink-fill" cx="272" cy="191" r="6"/>
+  <circle class="ink-fill" cx="306" cy="191" r="6"/>
+  <circle class="line" cx="340" cy="191" r="5"/>
+  <text class="sans muted" x="10" y="222">4</text>
+  <text x="34" y="222">is inexpressible</text>
+  <circle class="line" cx="272" cy="217" r="5"/>
+  <circle class="line" cx="306" cy="217" r="5"/>
+  <circle class="ink-fill" cx="340" cy="217" r="6"/>
+  <text class="sans muted" x="10" y="248">5</text>
+  <text x="34" y="248">is and is inexpressible</text>
+  <circle class="ink-fill" cx="272" cy="243" r="6"/>
+  <circle class="line" cx="306" cy="243" r="5"/>
+  <circle class="ink-fill" cx="340" cy="243" r="6"/>
+  <text class="sans muted" x="10" y="274">6</text>
+  <text x="34" y="274">is not and is inexpressible</text>
+  <circle class="line" cx="272" cy="269" r="5"/>
+  <circle class="ink-fill" cx="306" cy="269" r="6"/>
+  <circle class="ink-fill" cx="340" cy="269" r="6"/>
+  <text class="sans muted" x="10" y="300">7</text>
+  <text x="34" y="300">is, is not and is inexpressible</text>
+  <circle class="ink-fill" cx="272" cy="295" r="6"/>
+  <circle class="ink-fill" cx="306" cy="295" r="6"/>
+  <circle class="ink-fill" cx="340" cy="295" r="6"/>
+</svg>
