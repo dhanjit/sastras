@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 360 372">
+  <title>The treatises and authors on this page, in order</title>
+  <desc>A vertical time line, read downwards, with events evenly spaced rather than to scale. 499 CE, or about 510: the Āryabhaṭīya of Āryabhaṭa. 628: Brahmagupta's Brāhmasphuṭasiddhānta. About 830: Mahāvīra, on division by zero. 1150: Bhāskara II's Siddhāntaśiromaṇi. The late 1300s: Mādhava, where the Kerala line of teachers and pupils begins; from here the time line is drawn thick. 1501: Nīlakaṇṭha's Tantrasaṅgraha. About 1530, or about 1550: Jyeṣṭhadeva's Yuktibhāṣā. The early 1600s: the Kerala line still unbroken at least to here.</desc>
+
+  <text class="sans muted" x="10" y="18">evenly spaced, not to scale</text>
+
+  <!-- the time line; thick where the Kerala line runs -->
+  <path class="line" d="M142 28V211"/>
+  <path class="flow" d="M142 211V343"/>
+
+  <!-- 499 -->
+  <circle class="stock" cx="142" cy="35" r="5"/>
+  <text x="130" y="40" text-anchor="end">499 CE</text>
+  <text class="sans muted" x="130" y="58" text-anchor="end">or c. 510</text>
+  <text x="156" y="40">Āryabhaṭīya</text>
+  <text class="sans muted" x="156" y="58">Āryabhaṭa</text>
+
+  <!-- 628 -->
+  <circle class="stock" cx="142" cy="79" r="5"/>
+  <text x="130" y="84" text-anchor="end">628</text>
+  <text x="156" y="84">Brāhmasphuṭasiddhānta</text>
+  <text class="sans muted" x="156" y="102">Brahmagupta</text>
+
+  <!-- c. 830 -->
+  <circle class="stock" cx="142" cy="123" r="5"/>
+  <text x="130" y="128" text-anchor="end">c. 830</text>
+  <text x="156" y="128">Mahāvīra</text>
+  <text class="sans muted" x="156" y="146">on division by zero</text>
+
+  <!-- 1150 -->
+  <circle class="stock" cx="142" cy="167" r="5"/>
+  <text x="130" y="172" text-anchor="end">1150</text>
+  <text x="156" y="172">Siddhāntaśiromaṇi</text>
+  <text class="sans muted" x="156" y="190">Bhāskara II</text>
+
+  <!-- late 1300s -->
+  <circle class="hi" cx="142" cy="211" r="6"/>
+  <text x="130" y="216" text-anchor="end">late 1300s</text>
+  <text x="156" y="216">Mādhava</text>
+  <text class="sans muted" x="156" y="234">the Kerala line begins</text>
+
+  <!-- 1501 -->
+  <circle class="stock" cx="142" cy="255" r="5"/>
+  <text x="130" y="260" text-anchor="end">1501</text>
+  <text x="156" y="260">Tantrasaṅgraha</text>
+  <text class="sans muted" x="156" y="278">Nīlakaṇṭha</text>
+
+  <!-- c. 1530 -->
+  <circle class="stock" cx="142" cy="299" r="5"/>
+  <text x="130" y="304" text-anchor="end">c. 1530</text>
+  <text class="sans muted" x="130" y="322" text-anchor="end">or c. 1550</text>
+  <text x="156" y="304">Yuktibhāṣā</text>
+  <text class="sans muted" x="156" y="322">Jyeṣṭhadeva</text>
+
+  <!-- early 1600s -->
+  <circle class="stock" cx="142" cy="343" r="5"/>
+  <text x="130" y="348" text-anchor="end">early 1600s</text>
+  <text x="156" y="348">the Kerala line</text>
+  <text class="sans muted" x="156" y="366">unbroken at least to here</text>
+</svg>
