@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 36 360 298">
+  <title>Running totals of the series for π/4</title>
+  <desc>A chart of the running totals of 1 − 1/3 + 1/5 − 1/7 + …, for the first eight terms, read left to right. The first dot is at 1, the second drops to 1 − 1/3, the third rises to 1 − 1/3 + 1/5, and so on. The dots zigzag above and below a dashed horizontal line marked π/4, and each swing is smaller than the one before, so the totals close in on π/4 slowly.</desc>
+  <style>
+    #fig-ganita-madhava-series .t2 { animation: ganita-madhava-series--show 0.3s ease-out 0.2s 1 both; }
+    #fig-ganita-madhava-series .t3 { animation: ganita-madhava-series--show 0.3s ease-out 0.4s 1 both; }
+    #fig-ganita-madhava-series .t4 { animation: ganita-madhava-series--show 0.3s ease-out 0.6s 1 both; }
+    #fig-ganita-madhava-series .t5 { animation: ganita-madhava-series--show 0.3s ease-out 0.8s 1 both; }
+    #fig-ganita-madhava-series .t6 { animation: ganita-madhava-series--show 0.3s ease-out 1s 1 both; }
+    #fig-ganita-madhava-series .t7 { animation: ganita-madhava-series--show 0.3s ease-out 1.2s 1 both; }
+    #fig-ganita-madhava-series .t8 { animation: ganita-madhava-series--show 0.3s ease-out 1.4s 1 both; }
+    @keyframes ganita-madhava-series--show { from { opacity: 0; } }
+  </style>
+
+  <!-- the target: π/4 -->
+  <path class="line dash" d="M56 192.5H348"/>
+  <text class="rubric" x="50" y="198" text-anchor="end">π/4</text>
+
+  <!-- running totals: each group adds one term -->
+  <g>
+    <circle class="stock" cx="70" cy="53" r="5"/>
+    <text x="82" y="58">1</text>
+  </g>
+  <g class="t2 anim">
+    <path class="line" d="M70 53L108 269.7"/>
+    <circle class="stock" cx="108" cy="269.7" r="5"/>
+    <text x="118" y="276">1 − 1/3</text>
+  </g>
+  <g class="t3 anim">
+    <path class="line" d="M108 269.7L146 139.7"/>
+    <circle class="stock" cx="146" cy="139.7" r="5"/>
+    <text x="154" y="130">1 − 1/3 + 1/5</text>
+  </g>
+  <g class="t4 anim">
+    <path class="line" d="M146 139.7L184 232.5"/>
+    <circle class="stock" cx="184" cy="232.5" r="5"/>
+  </g>
+  <g class="t5 anim">
+    <path class="line" d="M184 232.5L222 160.3"/>
+    <circle class="stock" cx="222" cy="160.3" r="5"/>
+  </g>
+  <g class="t6 anim">
+    <path class="line" d="M222 160.3L260 219.4"/>
+    <circle class="stock" cx="260" cy="219.4" r="5"/>
+  </g>
+  <g class="t7 anim">
+    <path class="line" d="M260 219.4L298 169.4"/>
+    <circle class="stock" cx="298" cy="169.4" r="5"/>
+  </g>
+  <g class="t8 anim">
+    <path class="line" d="M298 169.4L336 212.7"/>
+    <circle class="stock" cx="336" cy="212.7" r="5"/>
+  </g>
+
+  <!-- how many terms each total has -->
+  <text class="sans muted" x="70" y="306" text-anchor="middle">1</text>
+  <text class="sans muted" x="108" y="306" text-anchor="middle">2</text>
+  <text class="sans muted" x="146" y="306" text-anchor="middle">3</text>
+  <text class="sans muted" x="184" y="306" text-anchor="middle">4</text>
+  <text class="sans muted" x="222" y="306" text-anchor="middle">5</text>
+  <text class="sans muted" x="260" y="306" text-anchor="middle">6</text>
+  <text class="sans muted" x="298" y="306" text-anchor="middle">7</text>
+  <text class="sans muted" x="336" y="306" text-anchor="middle">8</text>
+  <text class="sans muted" x="203" y="328" text-anchor="middle">terms added</text>
+</svg>
