@@ -67,6 +67,44 @@ a.term { text-decoration: underline dotted var(--rubric); text-underline-offset:
 #gloss-pop[data-side='above'] { border-top-width: 0; border-bottom: 6px solid transparent; }
 #gloss-pop b { font: 700 1rem var(--serif); }
 
+/* figures: hand-drawn SVG, inlined by remark-figure; docs/figure-guide.md has the rules and the vocabulary */
+.fig { margin: 1.75rem 0; }
+.fig svg { display: block; width: 100%; height: auto; max-width: 30rem; margin-inline: auto; overflow: visible; }
+.fig figcaption { font: 0.875rem/1.5 var(--sans); color: var(--ink-muted); margin-top: 0.6rem; text-align: center; }
+.fig-replay { margin-left: 0.5rem; font: 0.75rem var(--sans); color: var(--rubric); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 0.1rem 0.6rem; cursor: pointer; min-height: 24px; }
+.fig text { fill: var(--ink); font-family: var(--serif); font-size: 15px; }
+.fig .sans { font-family: var(--sans); }
+.fig .small { font-size: 13px; }
+.fig .muted { fill: var(--ink-muted); }
+.fig .rubric { fill: var(--rubric); }
+.fig .box { fill: none; stroke: var(--rule); stroke-width: 1.2; }
+.fig .stock { fill: var(--leaf-2); stroke: var(--rule); stroke-width: 1.2; }   /* what accumulates */
+.fig .hi { fill: var(--leaf-2); stroke: var(--rubric); stroke-width: 1.5; }    /* the thing being explained */
+.fig .line { fill: none; stroke: var(--ink-muted); stroke-width: 1.5; }
+.fig .flow { fill: none; stroke: var(--ink); stroke-width: 2.5; }              /* input/output */
+.fig .loop { fill: none; stroke: var(--rubric); stroke-width: 2; }             /* feedback loop */
+.fig .valve { fill: var(--leaf); stroke: var(--rubric); stroke-width: 1.5; }   /* throttle/cut */
+.fig .dash { stroke-dasharray: 4 3; }
+.fig .ink-fill { fill: var(--ink); } .fig .rubric-fill { fill: var(--rubric); } .fig .line-fill { fill: var(--line); }
+/*
+ * Animation. A script in <head> arms the page before first paint (html.figs-armed): animated figures then hold their
+ * first frame and show Replay. The layout script plays each one when it comes on screen (.in-view); Replay drops the
+ * animation for one style pass (.restart) so it starts over. Without the script, with reduced motion and in print
+ * there is no animation: the figure shows its final still frame, and no Replay.
+ * !important because a figure's own <style> may set the animation shorthand, which resets the play state.
+ */
+html:not(.figs-armed) .fig .anim, .fig.restart .anim { animation-name: none !important; }
+html.figs-armed .fig:not(.in-view) .anim { animation-play-state: paused !important; }
+html:not(.figs-armed) .fig-replay { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .fig .anim { animation: none !important; }
+  .fig-replay { display: none; }
+}
+@media print {
+  .fig .anim { animation: none !important; }
+  .fig-replay { display: none; }
+}
+
 /* sources, texts, correction */
 .sources, .read { padding-left: 1.4rem; margin: 0; font-size: 0.9375rem; }
 .sources li, .read li { margin-bottom: 0.4rem; }

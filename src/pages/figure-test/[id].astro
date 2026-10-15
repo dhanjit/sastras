@@ -1,0 +1,30 @@
+---
+import { toHtml } from 'hast-util-to-html';
+import Base from '../../layouts/Base.astro';
+import { figureElement, prepareFigure } from '../../lib/figure-svg';
+
+/**
+ * Test-only pages for the e2e figure tests: one per figure in src/figures/, drawn through the same code as a block
+ * page. Built only when E2E_FIGURES=1 (playwright.config.ts sets it); the figures integration fails any other build
+ * that contains them.
+ */
+export function getStaticPaths() {
+  if (process.env.E2E_FIGURES !== '1') return [];
+  const files = import.meta.glob<string>('../../figures/*.svg', { query: '?raw', import: 'default', eager: true });
+  return Object.entries(files).map(([path, svg]) => {
+    const id = path.slice(path.lastIndexOf('/') + 1, -'.svg'.length);
+    const { errors, figure } = prepareFigure(id, svg);
+    if (!figure) throw new Error(`Figure errors:\n- ${errors.join('\n- ')}`);
+    return { params: { id }, props: { id, figure } };
+  });
+}
+const { id, figure } = Astro.props;
+const html = toHtml(figureElement(id, figure, [{ type: 'text', value: `The figure ${id}, drawn as a block page draws it.` }]));
+---
+<Base title={`Figure test: ${id}`} description={`Test page for the figure ${id}.`} path={`/figure-test/${id}`} noindex>
+  <div class="prose">
+    <p>A test page for the figure <code>{id}</code>. The figure sits below a spacer, so it starts off screen.</p>
+    <div style="height: 120vh" aria-hidden="true"></div>
+    <Fragment set:html={html} />
+  </div>
+</Base>

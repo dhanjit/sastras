@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 40 360 150">
+  <title>A stock with an inflow, an outflow and a reinforcing loop</title>
+  <desc>A thick arrow flows through a valve into a box labelled stock, and another flows out of it through a second valve. A curved arrow marked R runs from the stock back to the inflow valve: the more the stock holds, the faster it fills.</desc>
+  <style>
+    #fig-example-system .level { transform-box: fill-box; transform-origin: 50% 100%; animation: example-system--rise 1.4s ease-out 1 both; }
+    #fig-example-system .feedback { animation: example-system--show 0.6s ease-out 1.1s 1 both; }
+    @keyframes example-system--rise { from { transform: scaleY(0.15); } }
+    @keyframes example-system--show { from { opacity: 0; } }
+  </style>
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="ink-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+    <marker id="loop-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+      <path class="rubric-fill" d="M0 0L10 5L0 10z"/>
+    </marker>
+  </defs>
+
+  <!-- the stock, and the level it holds -->
+  <rect class="stock" x="120" y="105" width="120" height="70"/>
+  <rect class="line-fill level anim" x="121" y="135" width="118" height="39"/>
+  <text x="180" y="126" text-anchor="middle">stock</text>
+
+  <!-- inflow and outflow, each through a valve -->
+  <path class="flow" d="M10 140H118" marker-end="url(#head)"/>
+  <path class="flow" d="M240 140H348" marker-end="url(#head)"/>
+  <polygon class="valve" points="52,128 72,152 72,128 52,152"/>
+  <polygon class="valve" points="286,128 306,152 306,128 286,152"/>
+  <text class="sans" x="62" y="176" text-anchor="middle">inflow</text>
+  <text class="sans" x="296" y="176" text-anchor="middle">outflow</text>
+
+  <!-- reinforcing loop: the stock opens the inflow valve wider -->
+  <g class="feedback anim">
+    <path class="loop" d="M180 104C180 40 62 40 62 122" marker-end="url(#loop-head)"/>
+    <circle class="hi" cx="121" cy="86" r="11"/>
+    <text class="sans rubric" x="121" y="91" text-anchor="middle">R</text>
+  </g>
+</svg>
